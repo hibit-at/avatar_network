@@ -1,0 +1,1 @@
+web: gunicorn kaogaii2.wsgi

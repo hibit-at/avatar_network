@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content%}
+{% load humanize %}
+
+<h3>Item Page</h3>
+<h3>{{item}}</h3>
+<p>
+<a href="https://booth.pm/ja/items/{{item.item_id}}" target="blank">
+<img src="{{item.imageURL}}" class="main">
+</a>
+</p>
+<p>
+{% if item.price > 0 %}
+<span class="price">
+\ {{item.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</p>
+<p>
+<a href="https://booth.pm/ja/items/{{item.item_id}}">
+Booth Link
+</a>
+</p>
+
+{% if item.avatar.all|length > 0 %}
+
+<hr>
+<div class="boxContainer">
+<h4>対応アバター</h4>
+{% for avatar in item.avatar.all|dictsort:'price' %}
+<div class="box">
+
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+<img src="{{avatar.imageURL}}" class="thumb">
+</a>
+
+<p>
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+{{avatar}}
+</a>
+ by
+<a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
+{{avatar.creator}}
+</a>
+<br>
+{% if avatar.price > 0 %}
+<span class="price">
+\ {{avatar.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</p>
+
+</div>
+{% endfor %}
+</div>
+
+{% endif %}
+
+{% endblock %}

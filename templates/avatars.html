@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load humanize %}
+
+<h3 class="deco">Avatars List</h3>
+
+<form method="get" action="{% url 'app:avatars' %}?page={{page}}">
+<input type="hidden" name="page" value="{{page}}">
+{{form}}
+<input type="submit" class="btn btn-primary" value="Filter">
+</form>
+
+<div class="div-equal-box">
+<div>
+{% if page > 10 %}
+<a href="{% url 'app:avatars' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+<<
+</a>
+{% endif %}
+</div>
+<div>
+{% if page > 1 %}
+<a href="{% url 'app:avatars' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+<
+</a>
+{% endif %}
+</div>
+<div>
+page {{page}}
+</div>
+<div>
+<a href="{% url 'app:avatars' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+>
+</a>
+</div>
+<div>
+<a href="{% url 'app:avatars' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+>>
+</a>
+</div>
+</div>
+
+<p>
+{% for avatar in avatars %}
+<div class="boxrow">
+<div style="width:200px">
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+<img src="{{avatar.imageURL}}" class="thumb">
+</a>
+</div>
+<div style="width:auto;margin-left:20px">
+<p>
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+{{avatar}}
+</a>
+</p>
+<p>
+by 
+<a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
+{{avatar.creator}}
+</a>
+</p>
+<p>
+対応アイテム：<span class="price">{{avatar.items.all|length}}</span> 点
+</p>
+{% if avatar.price > 0 %}
+<span class="price">
+\ {{avatar.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</div>
+</div>
+{% endfor %}
+
+<div class="div-equal-box">
+<div>
+{% if page > 10 %}
+<a href="{% url 'app:avatars' %}?page={{page|add:-10}}">
+<<
+</a>
+{% endif %}
+</div>
+<div>
+{% if page > 1 %}
+<a href="{% url 'app:avatars' %}?page={{page|add:-1}}">
+<
+</a>
+{% endif %}
+</div>
+<div>
+page {{page}}
+</div>
+<div>
+<a href="{% url 'app:avatars' %}?page={{page|add:1}}">
+>
+</a>
+</div>
+<div>
+<a href="{% url 'app:avatars' %}?page={{page|add:10}}">
+>>
+</a>
+</div>
+</div>
+
+{% endblock %}

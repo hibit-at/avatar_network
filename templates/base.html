@@ -1,0 +1,39 @@
+{% load static %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+<id ="pagetop">
+<nav>
+<div class="navbar">
+<div style="width:auto;padding-left:50px;font-weight:bold;font-size:30px">
+<a href="{% url 'app:index' %}">
+Avatar Network
+</a>
+/
+<a href="{% url 'app:avatars' %}">
+Avatars
+</a>
+/
+<a href="{% url 'app:items' %}">
+Items
+</a>
+/
+<a href="{% url 'app:creators' %}">
+Creators
+</a>
+</div>
+</div>
+</nav>
+
+<div style="margin-left:100px;margin-right:100px;margin-top:50px">
+{% block content %}
+
+{% endblock %}
+<hr>
+<h3>
+<a href="{% url 'app:index' %}">
+Top
+</a>
+</h3>
+</div>

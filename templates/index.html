@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block content%}
+{% load humanize %}
+
+<div style="text-align:center;font-size:20px">
+<p class="deco">
+Welcome to Avatar Network
+</p>
+<p>
+<a href="{% url 'app:avatars' %}">
+アバター一覧から探す
+</a>
+</p>
+<p>
+<a href="{% url 'app:items' %}">
+アイテム一覧から探す
+</a>
+</p>
+<p>
+<a href="{% url 'app:creators' %}">
+クリエイター一覧から探す
+</a>
+</p>
+</div>
+<hr>
+<h3 class="deco">Lucky Avatars</h3>
+<div class="boxContainer">
+{% for avatar in avatars %}
+<div class="box">
+
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+<img src="{{avatar.imageURL}}" class="thumb">
+</a>
+
+<p>
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+{{avatar}}
+</a>
+ by
+<a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
+{{avatar.creator}}
+</a>
+<br>
+{% if avatar.price > 0 %}
+<span class="price">
+\ {{avatar.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</p>
+</div>
+{% endfor %}
+</div>
+<hr>
+<h3 class="deco">Lucky Items</h3>
+<div class="boxContainer">
+{% for item in items %}
+<div class="box">
+
+<a href="{% url 'app:item' item_id=item.item_id %}">
+<img src="{{item.imageURL}}" class="thumb">
+</a>
+
+<p>
+<a href="{% url 'app:item' item_id=item.item_id %}">
+{{item}}
+</a>
+ by
+<a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
+{{item.creator}}
+</a>
+<br>
+{% if item.price > 0 %}
+<span class="price">
+\ {{item.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</p>
+</div>
+{% endfor %}
+</div>
+
+<hr>
+
+<h3 class="deco">Recent Updates</h3>
+
+<ul>
+<li>Avatars
+<ul>
+{% for avatar in  recent_avatars%}
+</a>
+<li>
+<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id%}">
+{{avatar}}
+</a>
+{% if avatar.price > 0 %}
+<span class="price">
+\ {{avatar.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+ by 
+<a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
+{{avatar.creator}}
+</a>
+</li>
+{% endfor %}
+</ul>
+<li>Items
+<ul>
+{% for item in recent_items %}
+<li>
+<a href="{% url 'app:item' item_id=item.item_id%}">
+{{item}}
+</a>
+{% if item.price > 0 %}
+<span class="price">
+\ {{item.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+ by 
+<a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
+{{item.creator}}
+</a>
+</li>
+{% endfor %}
+</ul>
+</ul>
+
+{% endblock  %}

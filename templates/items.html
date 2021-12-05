@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load humanize %}
+
+<h3 class="deco">Items List</h3>
+
+<form method="get" action="{% url 'app:items' %}?page={{page}}">
+<input type="hidden" name="page" value="{{page}}">
+{{form}}
+<input type="submit" class="btn btn-primary" value="Filter">
+</form>
+
+<div class="div-equal-box">
+<div>
+{% if page > 10 %}
+<a href="{% url 'app:items' %}?page={{page|add:-10}}">
+<<
+</a>
+{% endif %}
+</div>
+<div>
+{% if page > 1 %}
+<a href="{% url 'app:items' %}?page={{page|add:-1}}">
+<
+</a>
+{% endif %}
+</div>
+<div>
+page {{page}}
+</div>
+<div>
+<a href="{% url 'app:items' %}?page={{page|add:1}}">
+>
+</a>
+</div>
+<div>
+<a href="{% url 'app:items' %}?page={{page|add:10}}">
+>>
+</a>
+</div>
+</div>
+
+{% for item in items %}
+<div class="boxrow">
+<div style="width:200px">
+<a href="{% url 'app:item' item_id=item.item_id %}">
+<img src="{{item.imageURL}}" class="thumb">
+</a>
+</div>
+<div style="width:auto;margin-left:20px">
+<p>
+<a href="{% url 'app:item' item_id=item.item_id %}">
+{{item}}
+</a>
+</p>
+<p>
+by 
+<a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
+{{item.creator}}
+</a>
+</p>
+<p>
+対応アバター：<span class="price">{{item.avatar.all|length}}</span> 点
+<p>
+{% if item.price > 0 %}
+<span class="price">
+\ {{item.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+\ Free
+</span>
+{% endif %}
+</p>
+</div>
+</div>
+{% endfor %}
+
+<div class="div-equal-box">
+<div>
+{% if page > 10 %}
+<a href="{% url 'app:items' %}?page={{page|add:-10}}">
+<<
+</a>
+{% endif %}
+</div>
+<div>
+{% if page > 1 %}
+<a href="{% url 'app:items' %}?page={{page|add:-1}}">
+<
+</a>
+{% endif %}
+</div>
+<div>
+page {{page}}
+</div>
+<div>
+<a href="{% url 'app:items' %}?page={{page|add:1}}">
+>
+</a>
+</div>
+<div>
+<a href="{% url 'app:items' %}?page={{page|add:10}}">
+>>
+</a>
+</div>
+</div>
+{% endblock %}

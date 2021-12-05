@@ -5,16 +5,16 @@ from django.db.models.fields import related
 # Create your models here.
 
 class Creator(models.Model):
-    creator_id = models.CharField(max_length=50, primary_key=True)
-    creator_name = models.CharField(max_length=50)
+    creator_id = models.CharField(max_length=100, primary_key=True)
+    creator_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.creator_name
 
 class Avatar(models.Model):
     avatar_id = models.IntegerField(primary_key=True)
-    avatar_name = models.CharField(max_length=50)
-    imageURL = models.CharField(max_length=50)
+    avatar_name = models.CharField(max_length=100)
+    imageURL = models.CharField(max_length=100)
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, related_name='avatars')
     price = models.IntegerField()
     created_at = models.DateTimeField()
@@ -24,9 +24,9 @@ class Avatar(models.Model):
 
 class Item(models.Model):
     item_id = models.IntegerField(primary_key=True)
-    item_name = models.CharField(max_length=50)
+    item_name = models.CharField(max_length=100)
     avatar = models.ManyToManyField(Avatar, related_name='items')
-    imageURL = models.CharField(max_length=50)
+    imageURL = models.CharField(max_length=100)
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, related_name='items')
     price = models.IntegerField()
     created_at = models.DateTimeField()

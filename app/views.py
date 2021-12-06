@@ -26,9 +26,13 @@ def creator(request, creator_id=''):
     return render(request, 'creator.html', params)
 
 
-def creators(request, page=1):
+def creators(request, page=1, word='', free_only=False):
     if 'page' in request.GET:
         page = int(request.GET['page'])
+    if 'word' in request.GET:
+        word = request.GET['word']
+    if 'free_only' in request.GET:
+        free_only = request.GET['free_only']
     span = 9
     start = (page-1)*span
     end = page*span

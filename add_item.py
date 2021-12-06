@@ -94,11 +94,20 @@ while(True):
         main_txt = re.findall(pat,txt)[0]
         pat = r'https://booth.pm/ja/items/(\d+)'
         link_ids = re.findall(pat,main_txt)
-        link_ids = list(set(link_ids))
+        pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
+        link_ids2 = re.findall(pat,main_txt)
+        print(link_ids2)
+        link_ids.extend(link_ids2)
         pat = r'<script id="json_modules" type="application/json">(.*?)</script>'
         scr_txt = re.findall(pat,txt)[0]
         pat = r'https://booth.pm/ja/items/(\d+)'
-        link_ids.extend(re.findall(pat,scr_txt))
+        link_ids3 = re.findall(pat,scr_txt)
+        pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
+        link_ids4 = re.findall(pat,scr_txt)
+        link_ids.extend(link_ids3)
+        link_ids.extend(link_ids4)
+        link_ids = list(set(link_ids))
+        print(link_ids)
         for link_id in link_ids:
             print(link_id)
             if Avatar.objects.filter(avatar_id = link_id).exists():

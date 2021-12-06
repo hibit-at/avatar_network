@@ -9,6 +9,7 @@
 Booth Link
 </a>
 </p>
+{% if creator.avatars.all|length > 0 %}
 <hr>
 <h4 class="deco">Avatars</h4>
 <div class="boxContainer">
@@ -37,10 +38,20 @@ Booth Link
 \ Free
 </span>
 {% endif %}
+{% if avatar.items.all|length > 0 %}
+<br>
+対応アイテム 
+<span class="price">
+{{avatar.items.all|length}} 
+</span>
+点
+{% endif %}
 </p>
 </div>
 {% endfor %}
 </div>
+{% endif %}
+{% if creator.items.all|length > 0 %}
 <hr>
 <h4 class="deco">Items</h4>
 <div class="boxContainer">
@@ -69,9 +80,18 @@ Booth Link
 \ Free
 </span>
 {% endif %}
+{% if item.avatar.all|length > 0 %}
+<br>
+対応アバター 
+<span class="price">
+{{item.avatar.all|length}} 
+</span>
+ 体
+{% endif %}
 </p>
 </div>
 {% endfor %}
 </div>
+{% endif %}
 
 {% endblock %}

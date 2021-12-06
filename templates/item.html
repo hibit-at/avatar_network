@@ -4,6 +4,11 @@
 
 <h3>Item Page</h3>
 <h3>{{item}}</h3>
+<p>by
+<a href="{% url 'app:creator' creator_id=item.creator.creator_id%}">
+{{item.creator}}
+</a>
+<p>
 <p>
 <a href="https://booth.pm/ja/items/{{item.item_id}}" target="blank">
 <img src="{{item.imageURL}}" class="main">

@@ -14,7 +14,7 @@ class Creator(models.Model):
 class Avatar(models.Model):
     avatar_id = models.IntegerField(primary_key=True)
     avatar_name = models.CharField(max_length=100)
-    imageURL = models.CharField(max_length=100)
+    imageURL = models.CharField(max_length=99)
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, related_name='avatars')
     price = models.IntegerField()
     created_at = models.DateTimeField()

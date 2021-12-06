@@ -76,7 +76,6 @@ while(True):
         # avatar add
         defaults = {
             'avatar_name': avatar_name,
-            'imageURL': '',
             'price': price,
             'imageURL': imageURL,
             'creator': Creator.objects.get(creator_id=creator_id),

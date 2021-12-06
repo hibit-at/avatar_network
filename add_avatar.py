@@ -67,6 +67,7 @@ while(True):
         avatar_name = avatar[1]
         avatar_name = name_validation(avatar_name)
         print(avatar_id, avatar_name, creator_id, creator_name, price)
+        print(imageURL)
         # creator add
         defaults = {'creator_name': creator_name}
         Creator.objects.update_or_create(

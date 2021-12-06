@@ -13,14 +13,14 @@
 <div class="div-equal-box">
 <div>
 {% if page > 10 %}
-<a href="{% url 'app:items' %}?page={{page|add:-10}}">
+<a href="{% url 'app:items' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <<
 </a>
 {% endif %}
 </div>
 <div>
 {% if page > 1 %}
-<a href="{% url 'app:items' %}?page={{page|add:-1}}">
+<a href="{% url 'app:items' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <
 </a>
 {% endif %}
@@ -29,12 +29,12 @@
 page {{page}}
 </div>
 <div>
-<a href="{% url 'app:items' %}?page={{page|add:1}}">
+<a href="{% url 'app:items' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >
 </a>
 </div>
 <div>
-<a href="{% url 'app:items' %}?page={{page|add:10}}">
+<a href="{% url 'app:items' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >>
 </a>
 </div>
@@ -79,14 +79,14 @@ by
 <div class="div-equal-box">
 <div>
 {% if page > 10 %}
-<a href="{% url 'app:items' %}?page={{page|add:-10}}">
+<a href="{% url 'app:items' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <<
 </a>
 {% endif %}
 </div>
 <div>
 {% if page > 1 %}
-<a href="{% url 'app:items' %}?page={{page|add:-1}}">
+<a href="{% url 'app:items' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <
 </a>
 {% endif %}
@@ -95,12 +95,12 @@ by
 page {{page}}
 </div>
 <div>
-<a href="{% url 'app:items' %}?page={{page|add:1}}">
+<a href="{% url 'app:items' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >
 </a>
 </div>
 <div>
-<a href="{% url 'app:items' %}?page={{page|add:10}}">
+<a href="{% url 'app:items' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >>
 </a>
 </div>

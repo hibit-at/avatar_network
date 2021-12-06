@@ -121,3 +121,15 @@ def items(request, page=1, word='', free_only=False):
     form = Filter(initial=initial)
     params['form'] = form
     return render(request, 'items.html', params)
+
+def info(request):
+    params = {}
+    avatars = Avatar.objects.annotate(num_items=Count('items'))
+    avatars = avatars.order_by('-num_items')
+    top_avatar_id = avatars[0].avatar_id
+    items = Item.objects.annotate(num_avatars=Count('avatar'))
+    items = items.order_by('-num_avatars')
+    top_item_id = items[0].item_id
+    params['top_avatar_id'] = top_avatar_id
+    params['top_item_id'] = top_item_id
+    return render(request, 'info.html', params)

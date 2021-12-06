@@ -11,4 +11,5 @@ urlpatterns = [
     path('creators', views.creators, name='creators'),
     path('item/<int:item_id>', views.item, name='item'),
     path('items', views.items, name='items'),
+    path('info', views.info, name='info'),
 ]

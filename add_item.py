@@ -62,6 +62,7 @@ while(True):
     for item, creator_id, creator_name, price, imageURL in forzip:
         item_id = item[0]
         item_name = item[1]
+        item_name = name_validation(item_name)
         print(item_id, item_name, creator_id, creator_name, price)
         # creator add
         defaults = {'creator_name': creator_name}

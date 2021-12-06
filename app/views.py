@@ -1,4 +1,6 @@
+from re import A
 from django.shortcuts import render
+from django.db.models import Q
 
 from app.forms import *
 from app.models import *
@@ -37,8 +39,21 @@ def creators(request, page=1, word='', free_only=False):
     start = (page-1)*span
     end = page*span
     creators = Creator.objects.annotate(total_item=Count('avatars__items'))
+    initial = {}
+    if free_only:
+        creators = creators.filter(Q(avatars__price=0)|Q(items__price=0))
+        creators = creators.prefetch_related(models.Prefetch('avatars', queryset=Avatar.objects.filter(price=0)))
+        creators = creators.prefetch_related(models.Prefetch('items', queryset=Item.objects.filter(price=0)))
+        initial['free_only'] = free_only
+    if word != '':
+        creators = creators.filter(creator_name__contains=word)
+        initial['word'] = word
+    form = Filter(initial=initial)
     creators = creators.order_by('-total_item')[start:end]
     params = {'creators': creators, 'page': page}
+    params['form'] = form
+    params['word'] = word
+    params['free_only'] = free_only
     return render(request, 'creators.html', params)
 
 

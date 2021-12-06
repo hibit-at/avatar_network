@@ -4,7 +4,7 @@
 
 <h3 class="deco">Avatars List</h3>
 
-<form method="get" action="{% url 'app:avatars' %}?page={{page}}">
+<form method="get" action="{% url 'app:avatars' %}">
 <input type="hidden" name="page" value="{{page}}">
 {{form}}
 <input type="submit" class="btn btn-primary" value="Filter">

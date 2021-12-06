@@ -2,17 +2,24 @@
 {% block content%}
 {% load humanize %}
 <h3 class="deco">Creators List</h3>
+
+<form method="get" action="{% url 'app:creators' %}">
+<input type="hidden" name="page" value="{{page}}">
+{{form}}
+<input type="submit" class="btn btn-primary" value="Filter">
+</form>
+
 <div class="div-equal-box">
 <div>
 {% if page > 10 %}
-<a href="{% url 'app:creators' %}?page={{page|add:-10}}">
+<a href="{% url 'app:creators' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <<
 </a>
 {% endif %}
 </div>
 <div>
 {% if page > 1 %}
-<a href="{% url 'app:creators' %}?page={{page|add:-1}}">
+<a href="{% url 'app:creators' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 <
 </a>
 {% endif %}
@@ -21,12 +28,12 @@
 page {{page}}
 </div>
 <div>
-<a href="{% url 'app:creators' %}?page={{page|add:1}}">
+<a href="{% url 'app:creators' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >
 </a>
 </div>
 <div>
-<a href="{% url 'app:creators' %}?page={{page|add:10}}">
+<a href="{% url 'app:creators' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
 >>
 </a>
 </div>

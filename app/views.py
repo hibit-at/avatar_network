@@ -133,3 +133,7 @@ def info(request):
     params['top_avatar_id'] = top_avatar_id
     params['top_item_id'] = top_item_id
     return render(request, 'info.html', params)
+
+
+def suspend(request):
+    return render(request, 'suspend.html')

@@ -56,11 +56,11 @@ page {{page}}
 </a>
 {% if avatar.price > 0 %}
 <span class="price">
-\ {{avatar.price|intcomma}}
+¥ {{avatar.price|intcomma}}
 </span>
 {% else %}
 <span class="free">
-\ Free
+¥ Free
 </span>
 {% endif %}
 {% if avatar.items.all|length > 0 %}
@@ -84,11 +84,11 @@ page {{page}}
 </a>
 {% if item.price > 0 %}
 <span class="price">
-\ {{item.price|intcomma}}
+¥ {{item.price|intcomma}}
 </span>
 {% else %}
 <span class="free">
-\ Free
+¥ Free
 </span>
 {% endif %}
 {% if item.avatar.all|length > 0 %}

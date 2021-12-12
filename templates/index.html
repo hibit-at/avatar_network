@@ -34,11 +34,11 @@ Welcome to Avatar Network
 
 <p>
 <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-{{avatar}}
+{{avatar|truncatechars:30}}
 </a>
  by
 <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
-{{avatar.creator}}
+{{avatar.creator|truncatechars:20}}
 </a>
 <br>
 {% if avatar.price > 0 %}
@@ -66,11 +66,11 @@ Welcome to Avatar Network
 
 <p>
 <a href="{% url 'app:item' item_id=item.item_id %}">
-{{item}}
+{{item|truncatechars:30}}
 </a>
  by
 <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
-{{item.creator}}
+{{item.creator|truncatechars:30}}
 </a>
 <br>
 {% if item.price > 0 %}

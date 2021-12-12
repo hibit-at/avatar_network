@@ -45,11 +45,11 @@ Booth Link
 
 <p>
 <a href="{% url 'app:item' item_id=item.item_id %}">
-{{item}}
+{{item|truncatechars:30}}
 </a>
  by
 <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
-{{item.creator}}
+{{item.creator|truncatechars:30}}
 </a>
 <br>
 {% if item.price > 0 %}

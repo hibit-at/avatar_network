@@ -2,7 +2,7 @@
 {% block content%}
 {% load humanize %}
 
-<h3>Item Page</h3>
+<h3 class="deco">Item Page</h3>
 <h3>{{item}}</h3>
 <p>by
 <a href="{% url 'app:creator' creator_id=item.creator.creator_id%}">
@@ -45,11 +45,11 @@ Booth Link
 
 <p>
 <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-{{avatar}}
+{{avatar|truncatechars:30}}
 </a>
  by
 <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
-{{avatar.creator}}
+{{avatar.creator|truncatechars:30}}
 </a>
 <br>
 {% if avatar.price > 0 %}

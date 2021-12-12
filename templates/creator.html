@@ -22,11 +22,7 @@ Booth Link
 
 <p>
 <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-{{avatar}}
-</a>
- by
-<a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">
-{{avatar.creator}}
+{{avatar|truncatechars:30}}
 </a>
 <br>
 {% if avatar.price > 0 %}
@@ -64,11 +60,7 @@ Booth Link
 
 <p>
 <a href="{% url 'app:item' item_id=item.item_id %}">
-{{item}}
-</a>
- by
-<a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
-{{item.creator}}
+{{item|truncatechars:30}}
 </a>
 <br>
 {% if item.price > 0 %}

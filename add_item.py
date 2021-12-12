@@ -2,6 +2,7 @@
 import requests
 import re
 import os
+import sys
 import django
 from datetime import datetime
 import pytz
@@ -26,7 +27,6 @@ def name_validation(org):
         after = target[1]
         if before in org:
             ans = ans.replace(before, after)
-            print(f'{before} is replaced to {after} in {org}')
     return ans
 
 page = 1
@@ -42,6 +42,7 @@ while(True):
         break
     pat = r'<div class="item-card__shop-name">(.*?)</div>'
     creator_names = re.findall(pat, txt)
+    creator_names = [name_validation(c) for c in creator_names]
     pat = r'data-tracking="click" rel="noopener" href="https://(.*?).booth.pm/">'
     creator_ids = re.findall(pat, txt)
     pat = r'<div class="price u-text-primary u-text-left u-tpg-caption2">¥ (.*?)</div>'
@@ -63,6 +64,10 @@ while(True):
         item_id = item[0]
         item_name = item[1]
         item_name = name_validation(item_name)
+        # with skip arg
+        args = sys.argv
+        if len(args) > 1 and args[1] == 'skip' and Item.objects.filter(item_name=item_name).exists():
+            continue
         print(item_id, item_name, creator_id, creator_name, price)
         # creator add
         defaults = {'creator_name': creator_name}
@@ -70,10 +75,6 @@ while(True):
             creator_id=creator_id,
             defaults=defaults,
         )
-        # if exist then skip
-        if Item.objects.filter(item_name=item_name).exists():
-            continue
-        print('new item has searched!')
         # item add
         defaults = {
             'item_name': item_name,
@@ -82,6 +83,8 @@ while(True):
             'imageURL' : imageURL,
             'created_at' : datetime.now(pytz.timezone('Asia/Tokyo'))
         }
+        if Item.objects.filter(item_id=item_id).exists():
+            defaults['created_at'] = Item.objects.get(item_id=item_id).created_at
         Item.objects.update_or_create(
             item_id=item_id,
             defaults=defaults,

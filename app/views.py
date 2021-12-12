@@ -1,6 +1,7 @@
 from re import A
+from django.db.models.fields import CharField, IntegerField
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value
 
 from app.forms import *
 from app.models import *
@@ -58,7 +59,20 @@ def creators(request, page=1, word='', free_only=False):
 
 
 def avatar(request, avatar_id=1):
-    avatar = Avatar.objects.get(avatar_id=avatar_id)
+    creator_id = Avatar.objects.get(avatar_id=avatar_id).creator.creator_id
+    items = Item.objects.annotate(
+        genuine=Case(
+            When(
+                creator__creator_id = creator_id,
+                then=Value(0),
+            ),
+            default=Value(1),
+            output_field=IntegerField(),
+        ),
+    )
+    items = items.order_by('genuine','price')
+    avatars = Avatar.objects.prefetch_related(models.Prefetch('items',queryset=items))
+    avatar = avatars.get(avatar_id=avatar_id)
     params = {'avatar': avatar}
     return render(request, 'avatar.html', params)
 

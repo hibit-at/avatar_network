@@ -36,7 +36,7 @@ Booth Link
 <h4>対応アイテム</h4>
 
 <div class="boxContainer">
-{% for item in avatar.items.all|dictsort:'price' %}
+{% for item in avatar.items.all %}
 <div class="box">
 
 <a href="{% url 'app:item' item_id=item.item_id %}">
@@ -47,6 +47,9 @@ Booth Link
 <a href="{% url 'app:item' item_id=item.item_id %}">
 {{item|truncatechars:30}}
 </a>
+{% if avatar.creator == item.creator %}
+✅
+{% endif %}
  by
 <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
 {{item.creator|truncatechars:30}}

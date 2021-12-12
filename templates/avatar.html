@@ -31,25 +31,21 @@ Booth Link
 </a>
 </p>
 
-{% if avatar.items.all|length > 0 %}
+{% comment "対応アイテム（純正）" %}{% endcomment %}
+
+{% if genuine_items|length > 0 %}
 <hr>
-<h4>対応アイテム</h4>
-
+<h4>対応アイテム（純正）</h4>
 <div class="boxContainer">
-{% for item in avatar.items.all %}
+{% for item in genuine_items %}
 <div class="box">
-
 <a href="{% url 'app:item' item_id=item.item_id %}">
 <img src="{{item.imageURL}}" class="thumb">
 </a>
-
 <p>
 <a href="{% url 'app:item' item_id=item.item_id %}">
 {{item|truncatechars:30}}
 </a>
-{% if avatar.creator == item.creator %}
-✅
-{% endif %}
  by
 <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
 {{item.creator|truncatechars:30}}
@@ -65,7 +61,41 @@ Booth Link
 </span>
 {% endif %}
 </p>
+</div>
+{% endfor %}
+</div>
+{% endif %}
 
+{% comment "対応アイテム" %}{% endcomment %}
+
+{% if normal_items|length > 0 %}
+<hr>
+<h4>対応アイテム</h4>
+<div class="boxContainer">
+{% for item in normal_items %}
+<div class="box">
+<a href="{% url 'app:item' item_id=item.item_id %}">
+<img src="{{item.imageURL}}" class="thumb">
+</a>
+<p>
+<a href="{% url 'app:item' item_id=item.item_id %}">
+{{item|truncatechars:30}}
+</a>
+ by
+<a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">
+{{item.creator|truncatechars:30}}
+</a>
+<br>
+{% if item.price > 0 %}
+<span class="price">
+¥ {{item.price|intcomma}}
+</span>
+{% else %}
+<span class="free">
+¥ Free
+</span>
+{% endif %}
+</p>
 </div>
 {% endfor %}
 </div>

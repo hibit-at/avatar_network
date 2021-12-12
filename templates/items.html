@@ -9,6 +9,8 @@
 <input type="submit" class="btn btn-primary" value="Filter">
 </form>
 
+{% comment "ページング" %}{% endcomment %}
+
 <div class="div-equal-box">
 <div>
 {% if page > 10 %}
@@ -38,6 +40,8 @@ page {{page}}
 </a>
 </div>
 </div>
+
+{% comment "コンテンツ" %}{% endcomment %}
 
 {% for item in items %}
 <div class="boxrow">
@@ -74,6 +78,8 @@ by
 </div>
 </div>
 {% endfor %}
+
+{% comment "ページング" %}{% endcomment %}
 
 <div class="div-equal-box">
 <div>

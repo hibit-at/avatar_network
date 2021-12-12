@@ -1,11 +1,11 @@
 from re import A
 from django.db.models.fields import CharField, IntegerField
 from django.shortcuts import render
-from django.db.models import Q, Case, When, Value
+from django.db.models import Q, Case, When, Value, Count
+from django.db.models.functions import Length
 
 from app.forms import *
 from app.models import *
-from django.db.models import Count
 
 # Create your views here.
 
@@ -42,9 +42,11 @@ def creators(request, page=1, word='', free_only=False):
     creators = Creator.objects.annotate(total_item=Count('avatars__items'))
     initial = {}
     if free_only:
-        creators = creators.filter(Q(avatars__price=0)|Q(items__price=0))
-        creators = creators.prefetch_related(models.Prefetch('avatars', queryset=Avatar.objects.filter(price=0)))
-        creators = creators.prefetch_related(models.Prefetch('items', queryset=Item.objects.filter(price=0)))
+        creators = creators.filter(Q(avatars__price=0) | Q(items__price=0))
+        creators = creators.prefetch_related(models.Prefetch(
+            'avatars', queryset=Avatar.objects.filter(price=0)))
+        creators = creators.prefetch_related(models.Prefetch(
+            'items', queryset=Item.objects.filter(price=0)))
         initial['free_only'] = free_only
     if word != '':
         creators = creators.filter(creator_name__contains=word)
@@ -59,21 +61,18 @@ def creators(request, page=1, word='', free_only=False):
 
 
 def avatar(request, avatar_id=1):
+    params = {}
     creator_id = Avatar.objects.get(avatar_id=avatar_id).creator.creator_id
-    items = Item.objects.annotate(
-        genuine=Case(
-            When(
-                creator__creator_id = creator_id,
-                then=Value(0),
-            ),
-            default=Value(1),
-            output_field=IntegerField(),
-        ),
-    )
-    items = items.order_by('genuine','price')
-    avatars = Avatar.objects.prefetch_related(models.Prefetch('items',queryset=items))
-    avatar = avatars.get(avatar_id=avatar_id)
-    params = {'avatar': avatar}
+    items = Item.objects.annotate(num_avatars = Count('avatar'))
+    items = items.filter(avatar__avatar_id=avatar_id)
+    genuine_items = items.filter(creator__creator_id=creator_id)
+    genuine_items = genuine_items.order_by('num_avatars','price')
+    normal_items = items.exclude(creator__creator_id=creator_id)
+    normal_items = normal_items.order_by('num_avatars','price')
+    avatar = Avatar.objects.get(avatar_id=avatar_id)
+    params['avatar'] = avatar
+    params['normal_items'] = normal_items
+    params['genuine_items'] = genuine_items
     return render(request, 'avatar.html', params)
 
 
@@ -135,6 +134,7 @@ def items(request, page=1, word='', free_only=False):
     form = Filter(initial=initial)
     params['form'] = form
     return render(request, 'items.html', params)
+
 
 def info(request):
     params = {}

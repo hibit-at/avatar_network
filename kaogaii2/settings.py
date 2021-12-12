@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'app',
 ]
 
+NUMBER_GROUPING = 3
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

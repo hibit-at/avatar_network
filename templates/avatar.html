@@ -2,7 +2,7 @@
 {% block content%}
 {% load humanize %}
 
-<h3 class="deco">Avatar's Page</h3>
+<h3 class="deco">Avatar Page</h3>
 <h3>{{avatar}}</h3>
 <p>by
 <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id%}">

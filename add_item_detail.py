@@ -2,7 +2,6 @@
 import requests
 import re
 import os
-import sys
 import django
 from datetime import datetime
 import pytz
@@ -27,6 +26,7 @@ def name_validation(org):
         after = target[1]
         if before in org:
             ans = ans.replace(before, after)
+            print(f'{before} is replaced to {after} in {org}')
     return ans
 
 page = 1
@@ -64,10 +64,6 @@ while(True):
         item_id = item[0]
         item_name = item[1]
         item_name = name_validation(item_name)
-        # with skip arg
-        args = sys.argv
-        if len(args) > 1 and args[1] == 'skip' and Item.objects.filter(item_name=item_name).exists():
-            continue
         print(item_id, item_name, creator_id, creator_name, price)
         # creator add
         defaults = {'creator_name': creator_name}
@@ -83,8 +79,6 @@ while(True):
             'imageURL' : imageURL,
             'created_at' : datetime.now(pytz.timezone('Asia/Tokyo'))
         }
-        if Item.objects.filter(item_id=item_id).exists():
-            defaults['created_at'] = Item.objects.get(item_id=item_id).created_at
         Item.objects.update_or_create(
             item_id=item_id,
             defaults=defaults,
@@ -99,6 +93,7 @@ while(True):
         link_ids = re.findall(pat,main_txt)
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat,main_txt)
+        print(link_ids2)
         link_ids.extend(link_ids2)
         pat = r'<script id="json_modules" type="application/json">(.*?)</script>'
         scr_txt = re.findall(pat,txt)[0]
@@ -111,9 +106,10 @@ while(True):
         link_ids = list(set(link_ids))
         print(link_ids)
         for link_id in link_ids:
+            print(link_id)
             if Avatar.objects.filter(avatar_id = link_id).exists():
                 avatar_object = Avatar.objects.get(avatar_id = link_id)
                 item_object.avatar.add(avatar_object)
-                print(f'{avatar_object}({link_id}) linked!')
+                print(f'{avatar_object} linked!')
                 
     page += 1

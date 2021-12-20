@@ -35,7 +35,7 @@ while(True):
     print(page)
     url = f'https://booth.pm/ja/browse/3D%E8%A1%A3%E8%A3%85%E3%83%BB%E8%A3%85%E9%A3%BE%E5%93%81?page={page}'
     txt = requests.get(url).text
-    pat = r'data-tracking="click_item" href="https://booth.pm/(.*?)/items/(.*?)">(.*?)</a></div>'
+    pat = r'data-tracking="click_item" href="https://booth.pm/ja/items/(.*?)">(.*?)</a></div>'
     items = re.findall(pat, txt)
     # print(items)
     if len(items) == 0:
@@ -61,8 +61,8 @@ while(True):
         imageURLs.append(f'https://booth.pximg.net/{res[0]}_base_resized.jpg')
     forzip = zip(items, creator_ids, creator_names, prices, imageURLs)
     for item, creator_id, creator_name, price, imageURL in forzip:
-        item_id = item[1]
-        item_name = item[2]
+        item_id = item[0]
+        item_name = item[1]
         item_name = name_validation(item_name)
         # with skip arg
         args = sys.argv
@@ -95,15 +95,17 @@ while(True):
         txt = requests.get(url).text
         pat = r'<script type="application/ld\+json">(.*?)</script>'
         main_txt = re.findall(pat,txt)[0]
-        pat = r'https://booth.pm/ja/items/(\d+)'
+        pat = r'https://booth.pm/(.*?)/items/(\d+)'
         link_ids = re.findall(pat,main_txt)
+        link_ids = [L[1] for L in link_ids]
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat,main_txt)
         link_ids.extend(link_ids2)
         pat = r'<script id="json_modules" type="application/json">(.*?)</script>'
         scr_txt = re.findall(pat,txt)[0]
-        pat = r'https://booth.pm/ja/items/(\d+)'
+        pat = r'https://booth.pm/(.*?)/items/(\d+)'
         link_ids3 = re.findall(pat,scr_txt)
+        link_ids3 = [L[1] for L in link_ids3]
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids4 = re.findall(pat,scr_txt)
         link_ids.extend(link_ids3)

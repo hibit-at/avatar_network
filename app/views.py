@@ -77,12 +77,14 @@ def avatar(request, avatar_id=1):
 
 
 def avatars(request, page=1, word='', free_only=False):
+    params = {}
     if 'page' in request.GET:
         page = int(request.GET['page'])
     if 'word' in request.GET:
         word = request.GET['word']
     if 'free_only' in request.GET:
         free_only = request.GET['free_only']
+    words = word.split()
     span = 18
     start = (page-1)*span
     end = page*span
@@ -92,10 +94,13 @@ def avatars(request, page=1, word='', free_only=False):
         avatars = avatars.filter(price=0)
         initial['free_only'] = free_only
     if word != '':
-        avatars = avatars.filter(avatar_name__contains=word)
         initial['word'] = word
+        for w in words:
+            avatars = avatars.filter(avatar_name__contains=w)
+    params['total'] = avatars.count()
     avatars = avatars.order_by('-num_items')[start:end]
-    params = {'avatars': avatars, 'page': page}
+    params['avatars'] = avatars
+    params['page'] = page
     params['free_only'] = free_only
     params['word'] = word
     form = Filter(initial=initial)
@@ -110,12 +115,14 @@ def item(request, item_id=''):
 
 
 def items(request, page=1, word='', free_only=False):
+    params = {}
     if 'page' in request.GET:
         page = int(request.GET['page'])
     if 'word' in request.GET:
         word = request.GET['word']
     if 'free_only' in request.GET:
         free_only = request.GET['free_only']
+    words = word.split()
     span = 18
     start = (page-1)*span
     end = page*span
@@ -125,10 +132,13 @@ def items(request, page=1, word='', free_only=False):
         items = items.filter(price=0)
         initial['free_only'] = free_only
     if word != '':
-        items = items.filter(item_name__contains=word)
         initial['word'] = word
+        for w in words:
+            items = items.filter(item_name__contains=w)
+    params['total'] = items.count()
     items = items.order_by('-num_avatars')[start:end]
-    params = {'items': items, 'page': page}
+    params['items'] = items
+    params['page'] = page
     params['free_only'] = free_only
     params['word'] = word
     form = Filter(initial=initial)

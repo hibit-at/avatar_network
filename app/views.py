@@ -123,6 +123,7 @@ def items(request, page=1, word='', free_only=False):
     if 'free_only' in request.GET:
         free_only = request.GET['free_only']
     words = word.split()
+    print(words)
     span = 18
     start = (page-1)*span
     end = page*span
@@ -134,7 +135,11 @@ def items(request, page=1, word='', free_only=False):
     if word != '':
         initial['word'] = word
         for w in words:
-            items = items.filter(item_name__contains=w)
+            or_words = w.split('|')
+            or_query = Q()
+            for o in or_words:
+                or_query = or_query | Q(item_name__contains=o)
+            items = items.filter(or_query)
     params['total'] = items.count()
     items = items.order_by('-num_avatars')[start:end]
     params['items'] = items

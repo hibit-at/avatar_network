@@ -135,9 +135,10 @@ def items(request, page=1, word='', free_only=False):
     if word != '':
         initial['word'] = word
         for w in words:
-            or_words = w.split('|')
+            or_words = w.split('||')
             or_query = Q()
             for o in or_words:
+                print(o)
                 or_query = or_query | Q(item_name__contains=o)
             items = items.filter(or_query)
     params['total'] = items.count()

@@ -138,3 +138,11 @@ a:hover {
 .div-equal-box div:hover {
     background-color: darkred;
 }
+
+.button {
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: salmon;
+    color: white;
+}

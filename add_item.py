@@ -4,7 +4,7 @@ import re
 import os
 import sys
 import django
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
@@ -30,8 +30,9 @@ def name_validation(org):
     return ans
 
 page = 1
+buffer = 0
 
-while(True):
+while(buffer < 100):
     print(page)
     url = f'https://booth.pm/ja/browse/3D%E8%A1%A3%E8%A3%85%E3%83%BB%E8%A3%85%E9%A3%BE%E5%93%81?page={page}'
     txt = requests.get(url).text
@@ -83,8 +84,15 @@ while(True):
             'imageURL' : imageURL,
             'created_at' : datetime.now(pytz.timezone('Asia/Tokyo'))
         }
+        # keep craete time
+        # if Item.objects.filter(item_id=item_id).exists():
+        #     defaults['created_at'] = Item.objects.get(item_id=item_id).created_at
+        # if recent updated
         if Item.objects.filter(item_id=item_id).exists():
-            defaults['created_at'] = Item.objects.get(item_id=item_id).created_at
+            item = Item.objects.get(item_id=item_id)
+            if item.created_at > datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7):
+                print('this item is recent updated. skip')
+                continue
         Item.objects.update_or_create(
             item_id=item_id,
             defaults=defaults,
@@ -117,5 +125,9 @@ while(True):
                 avatar_object = Avatar.objects.get(avatar_id = link_id)
                 item_object.avatar.add(avatar_object)
                 print(f'{avatar_object}({link_id}) linked!')
+        buffer += 1
+        print('buffer', buffer)
+        if buffer >= 100:
+            break
                 
     page += 1

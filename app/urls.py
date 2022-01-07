@@ -13,4 +13,5 @@ urlpatterns = [
     path('items', views.items, name='items'),
     path('info', views.info, name='info'),
     # path('',views.suspend, name='suspend'),
+    path('debug',views.debug, name='debug'),
 ]

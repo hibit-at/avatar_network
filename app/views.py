@@ -1,5 +1,5 @@
-from re import A
-from django.db.models.fields import CharField, IntegerField
+from django.db.models.expressions import ExpressionWrapper
+from django.db.models.fields import CharField, DateTimeField, IntegerField
 from django.shortcuts import render
 from django.db.models import Q, Case, When, Value, Count
 from django.db.models.functions import Length
@@ -14,8 +14,8 @@ def index(request):
     params = {}
     avatars = Avatar.objects.order_by('?')[:5]
     items = Item.objects.order_by('?')[:5]
-    recent_avatars = Avatar.objects.order_by('-created_at')[:7]
-    recent_items = Item.objects.order_by('-created_at')[:7]
+    recent_avatars = Avatar.objects.order_by('-avatar_id')[:7]
+    recent_items = Item.objects.order_by('-item_id')[:7]
     params['avatars'] = avatars
     params['items'] = items
     params['recent_avatars'] = recent_avatars
@@ -167,3 +167,13 @@ def info(request):
 
 def suspend(request):
     return render(request, 'suspend.html')
+
+def debug(request):
+    import datetime
+    from django.db.models import F
+    ago = datetime.datetime.now() - datetime.timedelta(days=6)
+    print(ago)
+    items = Item.objects.filter(created_at__gt = ago).order_by('-created_at')[:100]
+    params = {}
+    params['items'] = items
+    return render(request, 'debug.html', params)

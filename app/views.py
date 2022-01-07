@@ -173,7 +173,9 @@ def debug(request):
     from django.db.models import F
     ago = datetime.datetime.now() - datetime.timedelta(days=6)
     print(ago)
-    items = Item.objects.filter(created_at__gt = ago).order_by('-created_at')[:100]
+    cnt = Item.objects.filter(created_at__lt = ago).count()
+    items = Item.objects.filter(created_at__gt = ago).order_by('-created_at')[:200]
     params = {}
     params['items'] = items
+    params['cnt'] = cnt
     return render(request, 'debug.html', params)

@@ -52,23 +52,25 @@ def creators(request, page=1, word='', free_only=False):
         creators = creators.filter(creator_name__contains=word)
         initial['word'] = word
     form = Filter(initial=initial)
+    total = creators.count()
     creators = creators.order_by('-total_item')[start:end]
     params = {'creators': creators, 'page': page}
     params['form'] = form
     params['word'] = word
     params['free_only'] = free_only
+    params['total'] = total
     return render(request, 'creators.html', params)
 
 
 def avatar(request, avatar_id=1):
     params = {}
     creator_id = Avatar.objects.get(avatar_id=avatar_id).creator.creator_id
-    items = Item.objects.annotate(num_avatars = Count('avatar'))
+    items = Item.objects.annotate(num_avatars=Count('avatar'))
     items = items.filter(avatar__avatar_id=avatar_id)
     genuine_items = items.filter(creator__creator_id=creator_id)
-    genuine_items = genuine_items.order_by('num_avatars','price')
+    genuine_items = genuine_items.order_by('num_avatars', 'price')
     normal_items = items.exclude(creator__creator_id=creator_id)
-    normal_items = normal_items.order_by('num_avatars','price')
+    normal_items = normal_items.order_by('num_avatars', 'price')
     avatar = Avatar.objects.get(avatar_id=avatar_id)
     params['avatar'] = avatar
     params['normal_items'] = normal_items
@@ -168,13 +170,15 @@ def info(request):
 def suspend(request):
     return render(request, 'suspend.html')
 
+
 def debug(request):
     import datetime
     from django.db.models import F
     ago = datetime.datetime.now() - datetime.timedelta(days=6)
     print(ago)
-    cnt = Item.objects.filter(created_at__lt = ago).count()
-    items = Item.objects.filter(created_at__gt = ago).order_by('-created_at')[:200]
+    cnt = Item.objects.filter(created_at__lt=ago).count()
+    items = Item.objects.filter(
+        created_at__gt=ago).order_by('-created_at')[:200]
     params = {}
     params['items'] = items
     params['cnt'] = cnt

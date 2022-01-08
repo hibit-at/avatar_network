@@ -40,6 +40,10 @@ for item in Item.objects.filter(created_at__lt = criteria)[:100]:
         item.delete()
         continue
     pat = r'<script type="application/ld\+json">(.*?)</script>'
+    check = re.findall(pat,txt)
+    if len(check) == 0:
+        print('parse impossible')
+        continue
     main_txt = re.findall(pat,txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'
     link_ids = re.findall(pat,main_txt)

@@ -29,6 +29,11 @@ from app.models import Avatar, Item
 
 criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7)
 
+debug_list = Item.objects.filter(created_at__lt = criteria)[:100]
+
+for d in debug_list:
+    print(d)
+
 for item in Item.objects.filter(created_at__lt = criteria)[:100]:
     item_id = item.item_id
     print(f'{item_id} {item}')

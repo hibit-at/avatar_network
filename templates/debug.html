@@ -3,12 +3,12 @@
 
 <p>一週間以内に更新：{{new_cnt}}</p>
 {% for item in new_items %}
-<a href="https://booth.pm/ja/items/{{item_id}}">{{item}}</a>...{{item.created_at}}<br>
+<a href="https://booth.pm/ja/items/{{item.item_id}}">{{item}}</a>...{{item.created_at}}<br>
 {% endfor %}
 <hr>
 <p>一週間より前に更新：{{old_cnt}}</p>
 {% for item in old_items %}
-<a href="https://booth.pm/ja/items/{{item_id}}">{{item}}</a>...{{item.created_at}}<br>
+<a href="https://booth.pm/ja/items/{{item.item_id}}">{{item}}</a>...{{item.created_at}}<br>
 {% endfor %}
 
 {% endblock  %}

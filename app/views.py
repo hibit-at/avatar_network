@@ -176,10 +176,15 @@ def debug(request):
     from django.db.models import F
     ago = datetime.datetime.now() - datetime.timedelta(days=6)
     print(ago)
-    cnt = Item.objects.filter(created_at__lt=ago).count()
-    items = Item.objects.filter(
-        created_at__gt=ago).order_by('-created_at')[:200]
+    new_cnt = Item.objects.filter(created_at__gt=ago).count()
+    new_items = Item.objects.filter(
+        created_at__gt=ago).order_by('-created_at')[:30]
+    old_cnt = Item.objects.filter(created_at__lt=ago).count()
+    old_items = Item.objects.filter(
+        created_at__lt=ago).order_by('-created_at')[:30]
     params = {}
-    params['items'] = items
-    params['cnt'] = cnt
+    params['new_items'] = new_items
+    params['old_items'] = old_items
+    params['new_cnt'] = new_cnt
+    params['old_cnt'] = old_cnt
     return render(request, 'debug.html', params)

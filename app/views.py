@@ -174,7 +174,7 @@ def suspend(request):
 def debug(request):
     import datetime
     from django.db.models import F
-    ago = datetime.datetime.now() - datetime.timedelta(days=6)
+    ago = datetime.datetime.now() - datetime.timedelta(days=7)
     print(ago)
     new_cnt = Item.objects.filter(created_at__gt=ago).count()
     new_items = Item.objects.filter(

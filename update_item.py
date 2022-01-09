@@ -10,29 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
 django.setup()
 from app.models import Avatar, Item
 
-# targets = [
-#     ('&amp;', '&'),
-#     ('&gt;', '>'),
-#     ('&lt;', '<'),
-#     ('&#39;', "'"),
-#     ('&quot;', '"'),
-# ]
-
-# def org_rep(org):
-#     ans = org
-#     for target in targets:
-#         before = target[0]
-#         after = target[1]
-#         if before in org:
-#             ans = ans.replace(before, after)
-#     return ans
-
 criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7)
-
-debug_list = Item.objects.filter(created_at__lt = criteria)[:100]
-
-for d in debug_list:
-    print(d)
 
 for item in Item.objects.filter(created_at__lt = criteria)[:100]:
     item_id = item.item_id
@@ -48,6 +26,8 @@ for item in Item.objects.filter(created_at__lt = criteria)[:100]:
     check = re.findall(pat,txt)
     if len(check) == 0:
         print('parse impossible')
+        item.created_at = datetime.now(pytz.timezone('Asia/Tokyo'))
+        item.save()
         continue
     main_txt = re.findall(pat,txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'

@@ -51,7 +51,7 @@ page {{page}}
 {% if creator.avatars.all|length > 0 %}
 <li>Avatars</li>
 <ul>
-{% for avatar in creator.avatars.all|dictsort:"price" %} 
+{% for avatar in creator.avatars.all %} 
 <li>
 <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id%}">
 {{avatar}}
@@ -65,10 +65,10 @@ page {{page}}
 ¥ Free
 </span>
 {% endif %}
-{% if avatar.items.all|length > 0 %}
+{% if avatar.num_items > 0 %}
 対応アイテム 
 <span class="price">
-{{avatar.items.all|length}} 
+{{avatar.num_items}} 
 </span>
 点
 {% endif %}
@@ -79,7 +79,7 @@ page {{page}}
 {% if creator.items.all|length > 0 %}
 <li>Items</li>
 <ul>
-{% for item in creator.items.all|dictsort:"price" %}
+{% for item in creator.items.all %}
 <li>
 <a href="{% url 'app:item' item_id=item.item_id%}">
 {{item}}
@@ -93,10 +93,10 @@ page {{page}}
 ¥ Free
 </span>
 {% endif %}
-{% if item.avatar.all|length > 0 %}
+{% if item.num_avatars > 0 %}
 対応アバター 
 <span class="price">
-{{item.avatar.all|length}} 
+{{item.num_avatars}} 
 </span>
  体
 {% endif %}

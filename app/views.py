@@ -1,7 +1,7 @@
 from django.db.models.expressions import ExpressionWrapper
 from django.db.models.fields import CharField, DateTimeField, IntegerField
 from django.shortcuts import render
-from django.db.models import Q, Case, When, Value, Count
+from django.db.models import Q, Case, When, Value, Count, query
 from django.db.models.functions import Length
 
 from app.forms import *
@@ -39,20 +39,27 @@ def creators(request, page=1, word='', free_only=False):
     span = 9
     start = (page-1)*span
     end = page*span
-    creators = Creator.objects.annotate(total_item=Count('avatars__items'))
+    creators = Creator.objects.all()
+    avatar_query = Avatar.objects.annotate(num_items=Count('items'))
+    item_query = Item.objects.annotate(num_avatars=Count('avatar'))
     initial = {}
     if free_only:
         creators = creators.filter(Q(avatars__price=0) | Q(items__price=0))
-        creators = creators.prefetch_related(models.Prefetch(
-            'avatars', queryset=Avatar.objects.filter(price=0)))
-        creators = creators.prefetch_related(models.Prefetch(
-            'items', queryset=Item.objects.filter(price=0)))
+        avatar_query = avatar_query.filter(price=0)
+        item_query = item_query.filter(price=0)
         initial['free_only'] = free_only
     if word != '':
         creators = creators.filter(creator_name__contains=word)
         initial['word'] = word
     form = Filter(initial=initial)
     total = creators.count()
+    avatar_query = avatar_query.order_by('price')
+    item_query = item_query.order_by('price')
+    creators = creators.prefetch_related(models.Prefetch(
+        'avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(models.Prefetch(
+        'items', queryset=item_query))
+    creators = creators.annotate(total_item=Count('avatars__items'))
     creators = creators.order_by('-total_item')[start:end]
     params = {'creators': creators, 'page': page}
     params['form'] = form

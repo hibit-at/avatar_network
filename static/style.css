@@ -143,6 +143,7 @@ a:hover {
     font-size: 20px;
     border-radius: 5px;
     border-style: none;
-    background-color: salmon;
+    background-color: lightpink;
     color: white;
+    font-weight: bold;
 }

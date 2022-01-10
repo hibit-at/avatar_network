@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load humanize %}
+{% load static %}
 
 <h3 class="deco">Avatars List</h3>
 
@@ -72,6 +73,9 @@ by
 ¥ Free
 </span>
 {% endif %}
+<a href="https://booth.pm/ja/items/{{avatar.avatar_id}}" target="blank">
+<img src="{% static 'BOOTH_emoji.png' %}" style="height:25px;width:25px;margin-bottom:10px;border-radius:5px">
+</a>
 </div>
 </div>
 {% endfor %}

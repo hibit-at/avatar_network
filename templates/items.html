@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load humanize %}
+{% load static %}
 
 <h3 class="deco">Items List</h3>
 
@@ -42,8 +43,6 @@ page {{page}}
 </div>
 </div>
 
-{% comment "コンテンツ" %}{% endcomment %}
-
 {% for item in items %}
 <div class="boxrow">
 <div style="width:200px">
@@ -75,6 +74,9 @@ by
 ¥ Free
 </span>
 {% endif %}
+<a href="https://booth.pm/ja/items/{{item.item_id}}" target="blank">
+<img src="{% static 'BOOTH_emoji.png' %}" style="height:25px;width:25px;margin-bottom:10px;border-radius:5px">
+</a>
 </p>
 </div>
 </div>

@@ -53,8 +53,8 @@ def creators(request, page=1, word='', free_only=False):
         initial['word'] = word
     form = Filter(initial=initial)
     total = creators.count()
-    avatar_query = avatar_query.order_by('price')
-    item_query = item_query.order_by('price')
+    avatar_query = avatar_query.order_by('price','-num_items')
+    item_query = item_query.order_by('price','-num_avatars')
     creators = creators.prefetch_related(models.Prefetch(
         'avatars', queryset=avatar_query))
     creators = creators.prefetch_related(models.Prefetch(

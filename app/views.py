@@ -1,8 +1,5 @@
-from django.db.models.expressions import ExpressionWrapper
-from django.db.models.fields import CharField, DateTimeField, IntegerField
 from django.shortcuts import render
-from django.db.models import Q, Case, When, Value, Count, query
-from django.db.models.functions import Length
+from django.db.models import Q, Count
 
 from app.forms import *
 from app.models import *
@@ -53,8 +50,8 @@ def creators(request, page=1, word='', free_only=False):
         initial['word'] = word
     form = Filter(initial=initial)
     total = creators.count()
-    avatar_query = avatar_query.order_by('price','-num_items')
-    item_query = item_query.order_by('price','-num_avatars')
+    avatar_query = avatar_query.order_by('price', '-num_items')
+    item_query = item_query.order_by('price', '-num_avatars')
     creators = creators.prefetch_related(models.Prefetch(
         'avatars', queryset=avatar_query))
     creators = creators.prefetch_related(models.Prefetch(
@@ -107,7 +104,7 @@ def avatars(request, page=1, word='', free_only=False):
         for w in words:
             avatars = avatars.filter(avatar_name__contains=w)
     params['total'] = avatars.count()
-    avatars = avatars.order_by('-num_items','price')[start:end]
+    avatars = avatars.order_by('-num_items', 'price')[start:end]
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only
@@ -151,7 +148,7 @@ def items(request, page=1, word='', free_only=False):
                 or_query = or_query | Q(item_name__contains=o)
             items = items.filter(or_query)
     params['total'] = items.count()
-    items = items.order_by('-num_avatars','price')[start:end]
+    items = items.order_by('-num_avatars', 'price')[start:end]
     params['items'] = items
     params['page'] = page
     params['free_only'] = free_only

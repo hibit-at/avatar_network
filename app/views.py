@@ -107,7 +107,7 @@ def avatars(request, page=1, word='', free_only=False):
         for w in words:
             avatars = avatars.filter(avatar_name__contains=w)
     params['total'] = avatars.count()
-    avatars = avatars.order_by('-num_items')[start:end]
+    avatars = avatars.order_by('-num_items','price')[start:end]
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only
@@ -151,7 +151,7 @@ def items(request, page=1, word='', free_only=False):
                 or_query = or_query | Q(item_name__contains=o)
             items = items.filter(or_query)
     params['total'] = items.count()
-    items = items.order_by('-num_avatars')[start:end]
+    items = items.order_by('-num_avatars','price')[start:end]
     params['items'] = items
     params['page'] = page
     params['free_only'] = free_only

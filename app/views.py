@@ -21,7 +21,16 @@ def index(request):
 
 
 def creator(request, creator_id=''):
-    creator = Creator.objects.get(creator_id=creator_id)
+    creators = Creator.objects.all()
+    avatar_query = Avatar.objects.annotate(num_items=Count('items'))
+    avatar_query = avatar_query.order_by('price','-num_items')
+    item_query =Item.objects.annotate(num_avatars=Count('avatar'))
+    item_query = item_query.order_by('price','-num_avatars')
+    creators = creators.prefetch_related(models.Prefetch(
+        'avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(models.Prefetch(
+        'items', queryset=item_query))
+    creator = creators.get(creator_id=creator_id)
     params = {'creator': creator}
     return render(request, 'creator.html', params)
 

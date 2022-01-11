@@ -194,13 +194,13 @@ def debug(request):
         created_at__gt=ago).order_by('-created_at')[:30]
     avatar_old_cnt = Avatar.objects.filter(created_at__lt=ago).count()
     old_avatars = Avatar.objects.filter(
-        created_at__lt=ago).order_by('-created_at')[:30]
+        created_at__lt=ago).order_by('created_at')[:30]
     item_new_cnt = Item.objects.filter(created_at__gt=ago).count()
     new_items = Item.objects.filter(
         created_at__gt=ago).order_by('-created_at')[:30]
     item_old_cnt = Item.objects.filter(created_at__lt=ago).count()
     old_items = Item.objects.filter(
-        created_at__lt=ago).order_by('-created_at')[:30]
+        created_at__lt=ago).order_by('created_at')[:30]
     params = {}
     params['new_avatars'] = new_avatars
     params['old_avatars'] = old_avatars

@@ -12,7 +12,7 @@ from app.models import Avatar, Item
 
 criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7)
 
-for item in Item.objects.filter(created_at__lt = criteria)[:100]:
+for item in Item.objects.filter(created_at__lt = criteria).order_by('created_at')[:100]:
     item_id = item.item_id
     print(f'{item_id} {item}')
     # link process

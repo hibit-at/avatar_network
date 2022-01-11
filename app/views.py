@@ -186,18 +186,28 @@ def suspend(request):
 
 def debug(request):
     import datetime
-    from django.db.models import F
-    ago = datetime.datetime.now() - datetime.timedelta(days=7)
+    import pytz
+    ago = datetime.datetime.now(pytz.timezone('Asia/Tokyo')) - datetime.timedelta(days=7)
     print(ago)
-    new_cnt = Item.objects.filter(created_at__gt=ago).count()
+    avatar_new_cnt = Avatar.objects.filter(created_at__gt=ago).count()
+    new_avatars = Avatar.objects.filter(
+        created_at__gt=ago).order_by('-created_at')[:30]
+    avatar_old_cnt = Avatar.objects.filter(created_at__lt=ago).count()
+    old_avatars = Avatar.objects.filter(
+        created_at__lt=ago).order_by('-created_at')[:30]
+    item_new_cnt = Item.objects.filter(created_at__gt=ago).count()
     new_items = Item.objects.filter(
         created_at__gt=ago).order_by('-created_at')[:30]
-    old_cnt = Item.objects.filter(created_at__lt=ago).count()
+    item_old_cnt = Item.objects.filter(created_at__lt=ago).count()
     old_items = Item.objects.filter(
         created_at__lt=ago).order_by('-created_at')[:30]
     params = {}
+    params['new_avatars'] = new_avatars
+    params['old_avatars'] = old_avatars
+    params['avatar_new_cnt'] = avatar_new_cnt
+    params['avatar_old_cnt'] = avatar_old_cnt
     params['new_items'] = new_items
     params['old_items'] = old_items
-    params['new_cnt'] = new_cnt
-    params['old_cnt'] = old_cnt
+    params['item_new_cnt'] = item_new_cnt
+    params['item_old_cnt'] = item_old_cnt
     return render(request, 'debug.html', params)

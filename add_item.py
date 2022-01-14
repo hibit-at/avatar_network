@@ -59,8 +59,10 @@ while(True):
         # item add
         update_time = datetime.now(pytz.timezone('Asia/Tokyo'))
         # if already keep time
+        isExist = False
         if Item.objects.filter(item_id=item_id).exists():
             update_time = Item.objects.get(item_id=item_id).created_at
+            isExist = True
         else:
             print('new item has come!')
         defaults = {
@@ -75,6 +77,8 @@ while(True):
             defaults=defaults,
         )[0]
         # link process
+        if isExist:
+            continue
         url = f"https://booth.pm/ja/items/{item_id}"
         txt = requests.get(url).text
         if 'BOOTH | お探しの商品が見つかりませんでした… (404)' in txt:

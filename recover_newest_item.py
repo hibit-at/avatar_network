@@ -10,7 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
 django.setup()
 from app.models import Avatar, Item
 
-for item in Item.objects.order_by('-created_at')[:100]:
+for item in Item.objects.order_by('-created_at'):
     item_id = item.item_id
     print(f'{item_id} {item}')
     # link process

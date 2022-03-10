@@ -114,13 +114,13 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
         initial['word'] = word
         for w in words:
             avatars = avatars.filter(avatar_name__contains=w)
+    params['total'] = avatars.count()
     if sort_hot:
         avatars = avatars.order_by('-item_hot','price')[start:end]
         initial['sort_hot'] = sort_hot
     else:
         avatars = avatars.annotate(num_items=Count('items'))
         avatars = avatars.order_by('-num_items', 'price')[start:end]
-    params['total'] = avatars.count()
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only

@@ -118,7 +118,8 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
         avatars = avatars.order_by('-item_hot','price')[start:end]
         initial['sort_hot'] = sort_hot
     else:
-        avatars = avatars.order_by('-item_num_0', 'price')[start:end]
+        avatars = avatars.annotate(num_items=Count('items'))
+        avatars = avatars.order_by('-num_items', 'price')[start:end]
     params['total'] = avatars.count()
     params['avatars'] = avatars
     params['page'] = page

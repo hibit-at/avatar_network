@@ -147,3 +147,16 @@ a:hover {
     color: white;
     font-weight: bold;
 }
+
+.inside-navbar {
+    width: auto;
+    padding-left: 50px;
+    font-weight: bold;
+    font-size: 30px
+}
+
+.content {
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 50px
+}

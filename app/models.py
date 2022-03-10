@@ -21,6 +21,14 @@ class Avatar(models.Model):
         Creator, on_delete=models.CASCADE, related_name='avatars')
     price = models.IntegerField()
     created_at = models.DateTimeField()
+    item_hot = models.IntegerField(default=0)
+    item_num_0 = models.IntegerField(default=0)
+    item_num_1 = models.IntegerField(default=0)
+    item_num_2 = models.IntegerField(default=0)
+    item_num_3 = models.IntegerField(default=0)
+    item_num_4 = models.IntegerField(default=0)
+    item_num_5 = models.IntegerField(default=0)
+    item_num_6 = models.IntegerField(default=0)
 
     def __str__(self):
         return self.avatar_name

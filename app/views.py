@@ -91,7 +91,7 @@ def avatar(request, avatar_id=1):
     return render(request, 'avatar.html', params)
 
 
-def avatars(request, page=1, word='', free_only=False):
+def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     params = {}
     if 'page' in request.GET:
         page = int(request.GET['page'])
@@ -99,11 +99,13 @@ def avatars(request, page=1, word='', free_only=False):
         word = request.GET['word']
     if 'free_only' in request.GET:
         free_only = request.GET['free_only']
+    if 'sort_hot' in request.GET:
+        sort_hot = request.GET['sort_hot']
     words = word.split()
     span = 18
     start = (page-1)*span
     end = page*span
-    avatars = Avatar.objects.annotate(num_items=Count('items'))
+    avatars = Avatar.objects.all()
     initial = {}
     if free_only:
         avatars = avatars.filter(price=0)
@@ -112,8 +114,12 @@ def avatars(request, page=1, word='', free_only=False):
         initial['word'] = word
         for w in words:
             avatars = avatars.filter(avatar_name__contains=w)
+    if sort_hot:
+        avatars = avatars.order_by('-item_hot','price')[start:end]
+        initial['sort_hot'] = sort_hot
+    else:
+        avatars = avatars.order_by('-item_num_0', 'price')[start:end]
     params['total'] = avatars.count()
-    avatars = avatars.order_by('-num_items', 'price')[start:end]
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only

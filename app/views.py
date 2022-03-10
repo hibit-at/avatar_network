@@ -126,6 +126,7 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     params['word'] = word
     form = Filter(initial=initial)
     params['form'] = form
+    params['sort_hot'] = sort_hot
     return render(request, 'avatars.html', params)
 
 

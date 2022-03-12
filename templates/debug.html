@@ -1,21 +1,35 @@
-{% extends 'base.html' %} {% block content%}
-
-<h2>avatars</h2>
-<p>一週間以内に更新：{{avatar_new_cnt}}</p>
-{% for avatar in new_avatars %}
-<a href="https://booth.pm/ja/items/{{avatar.avatar_id}}">{{avatar}}</a>...{{avatar.created_at}}<br> {% endfor %}
-<hr>
-<p>一週間より前に更新：{{avatar_old_cnt}}</p>
-{% for avatar in old_avatars %}
-<a href="https://booth.pm/ja/items/{{avatar.avatar_id}}">{{avatar}}</a>...{{avatar.created_at}}<br> {% endfor %}
-
-<h2>items</h2>
-<p>一週間以内に更新：{{item_new_cnt}}</p>
-{% for item in new_items %}
-<a href="https://booth.pm/ja/items/{{item.item_id}}">{{item}}</a>...{{item.created_at}}<br> {% endfor %}
-<hr>
-<p>一週間より前に更新：{{item_old_cnt}}</p>
-{% for item in old_items %}
-<a href="https://booth.pm/ja/items/{{item.item_id}}">{{item}}</a>...{{item.created_at}}<br> {% endfor %}
-
-{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+    <h2>avatars</h2>
+    <p>
+        一週間以内に更新：{{ avatar_new_cnt }}
+    </p>
+    {% for avatar in new_avatars %}
+        <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}">{{ avatar }}</a>...{{ avatar.created_at }}
+        <br />
+    {% endfor %}
+    <hr />
+    <p>
+        一週間より前に更新：{{ avatar_old_cnt }}
+    </p>
+    {% for avatar in old_avatars %}
+        <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}">{{ avatar }}</a>...{{ avatar.created_at }}
+        <br />
+    {% endfor %}
+    <h2>items</h2>
+    <p>
+        一週間以内に更新：{{ item_new_cnt }}
+    </p>
+    {% for item in new_items %}
+        <a href="https://booth.pm/ja/items/{{ item.item_id }}">{{ item }}</a>...{{ item.created_at }}
+        <br />
+    {% endfor %}
+    <hr />
+    <p>
+        一週間より前に更新：{{ item_old_cnt }}
+    </p>
+    {% for item in old_items %}
+        <a href="https://booth.pm/ja/items/{{ item.item_id }}">{{ item }}</a>...{{ item.created_at }}
+        <br />
+    {% endfor %}
+{% endblock content %}

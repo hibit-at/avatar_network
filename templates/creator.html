@@ -1,96 +1,73 @@
-{% extends 'base.html' %}
-{% block content%}
-{% load humanize %}
-{% load static %}
-
-<h3 class="deco">Creator Page</h3>
-<h3>{{creator}}</h3>
-<p>
-<a href="https://{{creator.creator_id}}.booth.pm/" target="blank">
-BOOTH Link
-</a>
-</p>
-{% if creator.avatars.all|length > 0 %}
-<hr>
-<h4 class="deco">Avatars</h4>
-<div class="boxContainer">
-{% for avatar in creator.avatars.all %}
-<div class="box">
-
-<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-<img src="{{avatar.imageURL}}" class="thumb">
-</a>
-
-<p>
-<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-{{avatar|truncatechars:30}}
-</a>
-<br>
-{% if avatar.price > 0 %}
-<span class="price">
-¥ {{avatar.price|intcomma}}
-</span>
-{% else %}
-<span class="free">
-¥ Free
-</span>
-{% endif %}
-<a href="https://booth.pm/ja/items/{{avatar.avatar_id}}" target="blank">
-<img src="{% static 'BOOTH_emoji.png' %}" style="height:25px;width:25px;margin-bottom:10px;border-radius:5px">
-</a>
-{% if avatar.items.all|length > 0 %}
-<br>
-対応アイテム 
-<span class="price">
-{{avatar.items.all|length}} 
-</span>
-点
-{% endif %}
-</p>
-</div>
-{% endfor %}
-</div>
-{% endif %}
-{% if creator.items.all|length > 0 %}
-<hr>
-<h4 class="deco">Items</h4>
-<div class="boxContainer">
-{% for item in creator.items.all|dictsort:'price' %}
-<div class="box">
-
-<a href="{% url 'app:item' item_id=item.item_id %}">
-<img src="{{item.imageURL}}" class="thumb">
-</a>
-
-<p>
-<a href="{% url 'app:item' item_id=item.item_id %}">
-{{item|truncatechars:30}}
-</a>
-<br>
-{% if item.price > 0 %}
-<span class="price">
-¥ {{item.price|intcomma}}
-</span>
-{% else %}
-<span class="free">
-¥ Free
-</span>
-{% endif %}
-<a href="https://booth.pm/ja/items/{{item.item_id}}" target="blank">
-<img src="{% static 'BOOTH_emoji.png' %}" style="height:25px;width:25px;margin-bottom:10px;border-radius:5px">
-</a>
-{% if item.avatar.all|length > 0 %}
-<br>
-対応アバター 
-<span class="price">
-{{item.avatar.all|length}} 
-</span>
- 体
-{% endif %}
-</p>
-</div>
-{% endfor %}
-</div>
-{% endif %}
-
-{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+    {% load humanize %}
+    {% load static %}
+    <h3 class="deco">Creator Page</h3>
+    <h3>{{ creator }}</h3>
+    <p>
+        <a href="https://{{ creator.creator_id }}.booth.pm/" target="blank">BOOTH Link</a>
+    </p>
+    {% if creator.avatars.all|length > 0 %}
+        <hr />
+        <h4 class="deco">Avatars</h4>
+        <div class="boxContainer">
+            {% for avatar in creator.avatars.all %}
+                <div class="box">
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
+                    </a>
+                    <p>
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                        <br />
+                        {% if avatar.price > 0 %}
+                            <span class="price">¥ {{ avatar.price|intcomma }}</span>
+                        {% else %}
+                            <span class="free">¥ Free</span>
+                        {% endif %}
+                        <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
+                           target="blank">
+                            <img alt="emoji" src="{% static 'BOOTH_emoji.png' %}" class="emoji" />
+                        </a>
+                        {% if avatar.items.all|length > 0 %}
+                            <br />
+                            対応アイテム
+                            <span class="price">{{ avatar.items.all|length }}</span>
+                            点
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if creator.items.all|length > 0 %}
+        <hr />
+        <h4 class="deco">Items</h4>
+        <div class="boxContainer">
+            {% for item in creator.items.all|dictsort:'price' %}
+                <div class="box">
+                    <a href="{% url 'app:item' item_id=item.item_id %}">
+                        <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
+                    </a>
+                    <p>
+                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                        <br />
+                        {% if item.price > 0 %}
+                            <span class="price">¥ {{ item.price|intcomma }}</span>
+                        {% else %}
+                            <span class="free">¥ Free</span>
+                        {% endif %}
+                        <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
+                            <img alt="emoji" src="{% static 'BOOTH_emoji.png' %}" class="emoji" />
+                        </a>
+                        {% if item.avatar.all|length > 0 %}
+                            <br />
+                            対応アバター
+                            <span class="price">{{ item.avatar.all|length }}</span>
+                            体
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

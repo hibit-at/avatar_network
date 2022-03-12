@@ -160,3 +160,10 @@ a:hover {
     margin-right: 100px;
     margin-top: 50px
 }
+
+.emoji {
+    height: 25px;
+    width: 25px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}

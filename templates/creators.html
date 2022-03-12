@@ -1,141 +1,121 @@
-{% extends 'base.html' %}
-{% block content%}
-{% load humanize %}
-<h3 class="deco">Creators List</h3>
-
-<form method="get" action="{% url 'app:creators' %}">
-{{form}}
-<input type="submit" class="button" value="Filter">
-（{{total|intcomma}} creators）
-</form>
-
-<div class="div-equal-box">
-<div>
-{% if page > 10 %}
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
-<<
-</a>
-{% endif %}
-</div>
-<div>
-{% if page > 1 %}
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
-<
-</a>
-{% endif %}
-</div>
-<div>
-page {{page}}
-</div>
-<div>
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
->
-</a>
-</div>
-<div>
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
->>
-</a>
-</div>
-</div>
-<p>
-
-
-{% for creator in creators %}
-<div class="creator">
-<p>
-<a href="{% url 'app:creator' creator_id=creator.creator_id  %}">
-{{creator}}
-</a>
-<ul>
-{% if creator.avatars.all|length > 0 %}
-<li>Avatars</li>
-<ul>
-{% for avatar in creator.avatars.all %} 
-<li>
-<a href="{% url 'app:avatar' avatar_id=avatar.avatar_id%}">
-{{avatar}}
-</a>
-{% if avatar.price > 0 %}
-<span class="price">
-¥ {{avatar.price|intcomma}}
-</span>
-{% else %}
-<span class="free">
-¥ Free
-</span>
-{% endif %}
-{% if avatar.num_items > 0 %}
-対応アイテム 
-<span class="price">
-{{avatar.num_items}} 
-</span>
-点
-{% endif %}
-</li>
-{% endfor %}
-</ul>
-{% endif %}
-{% if creator.items.all|length > 0 %}
-<li>Items</li>
-<ul>
-{% for item in creator.items.all %}
-<li>
-<a href="{% url 'app:item' item_id=item.item_id%}">
-{{item}}
-</a>
-{% if item.price > 0 %}
-<span class="price">
-¥ {{item.price|intcomma}}
-</span>
-{% else %}
-<span class="free">
-¥ Free
-</span>
-{% endif %}
-{% if item.num_avatars > 0 %}
-対応アバター 
-<span class="price">
-{{item.num_avatars}} 
-</span>
- 体
-{% endif %}
-</li>
-{% endfor %}
-</ul>
-{% endif %}
-</ul>
-</p>
-</div>
-{% endfor %}
-<div class="div-equal-box">
-<div>
-{% if page > 10 %}
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:-10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
-<<
-</a>
-{% endif %}
-</div>
-<div>
-{% if page > 1 %}
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:-1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
-<
-</a>
-{% endif %}
-</div>
-<div>
-page {{page}}
-</div>
-<div>
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:1}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
->
-</a>
-</div>
-<div>
-<a class="Link" href="{% url 'app:creators' %}?page={{page|add:10}}{% if word != '' %}&word={{word}}{% endif %}{% if free_only %}&free_only=on{% endif %}">
->>
-</a>
-</div>
-</div>
-
-{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+    {% load humanize %}
+    <h3 class="deco">Creators List</h3>
+    <form method="get" action="{% url 'app:creators' %}">
+        {{ form }}
+        <input type="submit" class="button" value="Filter" />
+        （{{ total|intcomma }} creators）
+    </form>
+    <div class="div-equal-box">
+        <div>
+            {% if page > 10 %}
+                <a class="Link"
+                   href="{% url 'app:creators' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                    <<
+                </a>
+            {% endif %}
+        </div>
+        <div>
+            {% if page > 1 %}
+                <a class="Link"
+                   href="{% url 'app:creators' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                    <
+                </a>
+            {% endif %}
+        </div>
+        <div>page {{ page }}</div>
+        <div>
+            <a class="Link"
+               href="{% url 'app:creators' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                >
+            </a>
+        </div>
+        <div>
+            <a class="Link"
+               href="{% url 'app:creators' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                >>
+            </a>
+        </div>
+    </div>
+    {% for creator in creators %}
+        <div class="creator">
+            <p>
+                <a href="{% url 'app:creator' creator_id=creator.creator_id %}">{{ creator }}</a>
+                <ul>
+                    {% if creator.avatars.all|length > 0 %}
+                        <li>Avatars</li>
+                        <ul>
+                            {% for avatar in creator.avatars.all %}
+                                <li>
+                                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                                    {% if avatar.price > 0 %}
+                                        <span class="price">¥ {{ avatar.price|intcomma }}</span>
+                                    {% else %}
+                                        <span class="free">¥ Free</span>
+                                    {% endif %}
+                                    {% if avatar.num_items > 0 %}
+                                        対応アイテム
+                                        <span class="price">{{ avatar.num_items }}</span>
+                                        点
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if creator.items.all|length > 0 %}
+                        <li>Items</li>
+                        <ul>
+                            {% for item in creator.items.all %}
+                                <li>
+                                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                                    {% if item.price > 0 %}
+                                        <span class="price">¥ {{ item.price|intcomma }}</span>
+                                    {% else %}
+                                        <span class="free">¥ Free</span>
+                                    {% endif %}
+                                    {% if item.num_avatars > 0 %}
+                                        対応アバター
+                                        <span class="price">{{ item.num_avatars }}</span>
+                                        体
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </ul>
+            </p>
+        </div>
+    {% endfor %}
+    <div class="div-equal-box">
+        <div>
+            {% if page > 10 %}
+                <a class="Link"
+                   href="{% url 'app:creators' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                    <<
+                </a>
+            {% endif %}
+        </div>
+        <div>
+            {% if page > 1 %}
+                <a class="Link"
+                   href="{% url 'app:creators' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                    <
+                </a>
+            {% endif %}
+        </div>
+        <div>page {{ page }}</div>
+        <div>
+            <a class="Link"
+               href="{% url 'app:creators' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                >
+            </a>
+        </div>
+        <div>
+            <a class="Link"
+               href="{% url 'app:creators' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                >>
+            </a>
+        </div>
+    </div>
+{% endblock content %}

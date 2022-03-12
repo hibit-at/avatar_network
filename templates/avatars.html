@@ -12,7 +12,7 @@
         <div>
             {% if page > 10 %}
                 <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                     <<
                 </a>
             {% endif %}
@@ -20,7 +20,7 @@
         <div>
             {% if page > 1 %}
                 <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                     <
                 </a>
             {% endif %}
@@ -28,13 +28,13 @@
         <div>page {{ page }}</div>
         <div>
             <a class="Link"
-               href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                 >
             </a>
         </div>
         <div>
             <a class="Link"
-               href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                 >>
             </a>
         </div>
@@ -44,7 +44,7 @@
             <div class="boxrow">
                 <div style="width:200px">
                     <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                        <img src="{{ avatar.imageURL }}" class="thumb" />
+                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
                     </a>
                 </div>
                 <div style="width:auto;margin-left:20px">
@@ -66,8 +66,7 @@
                     {% endif %}
                     <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
                        target="blank">
-                        <img src="{% static 'BOOTH_emoji.png' %}"
-                             style="height:25px;width:25px;margin-bottom:10px;border-radius:5px" />
+                        <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
                     </a>
                 </div>
             </div>
@@ -76,7 +75,7 @@
             <div>
                 {% if page > 10 %}
                     <a class="Link"
-                       href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                       href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                         <<
                     </a>
                 {% endif %}
@@ -84,7 +83,7 @@
             <div>
                 {% if page > 1 %}
                     <a class="Link"
-                       href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                       href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                         <
                     </a>
                 {% endif %}
@@ -92,13 +91,13 @@
             <div>page {{ page }}</div>
             <div>
                 <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                     >
                 </a>
             </div>
             <div>
                 <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
                     >>
                 </a>
             </div>

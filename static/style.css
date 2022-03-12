@@ -167,3 +167,8 @@ a:hover {
     margin-bottom: 10px;
     border-radius: 5px;
 }
+
+.welcome {
+    text-align: center;
+    font-size: 20px;
+}

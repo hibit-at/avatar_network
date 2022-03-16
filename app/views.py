@@ -13,10 +13,12 @@ def index(request):
     items = Item.objects.order_by('?')[:5]
     recent_avatars = Avatar.objects.order_by('-avatar_id')[:7]
     recent_items = Item.objects.order_by('-item_id')[:7]
+    hot_avatars = Avatar.objects.order_by('-item_hot')[:5]
     params['avatars'] = avatars
     params['items'] = items
     params['recent_avatars'] = recent_avatars
     params['recent_items'] = recent_items
+    params['hot_avatars'] = hot_avatars
     return render(request, 'index.html', params)
 
 

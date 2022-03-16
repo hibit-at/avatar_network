@@ -61,13 +61,34 @@
                         <span class="free">¥ Free</span>
                     {% endif %}
                     <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
-                        <img src="{% static 'BOOTH_emoji.png' %}"
-                             class="emoji" alt="emoji" />
+                        <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
                     </a>
                 </p>
             </div>
         {% endfor %}
     </div>
+    <hr />
+    <h3 class="deco">Weekly Hot</h3>
+    <ul>
+        {% for avatar in hot_avatars %}
+            <li>
+                <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                {% if avatar.price > 0 %}
+                    <span class="price">¥ {{ avatar.price|intcomma }}</span>
+                {% else %}
+                    <span class="free">¥ Free</span>
+                {% endif %}
+                by
+                <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                <span class="free">(+{{avatar.item_hot}})</span>
+            </li>
+        {% endfor %}
+        <a href="{% url 'app:avatars' %}?sort_hot=on">
+            <p>
+                More Results
+            </p>
+        </a>
+    </ul>
     <hr />
     <h3 class="deco">Recent Updates</h3>
     <ul>

@@ -53,8 +53,35 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% if normal_items|length > 0 %}
+    {% if total > 0 %}
         <hr />
+        <div class="div-equal-box">
+            <div>
+                {% if page > 10 %}
+                    <a class="Link"
+                       href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}">
+                        <<
+                    </a>
+                {% endif %}
+            </div>
+            <div>
+                {% if page > 1 %}
+                    <a class="Link"
+                       href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }} ">
+                        <
+                    </a>
+                {% endif %}
+            </div>
+            <div>page {{ page }}</div>
+            <div>
+                <a class="Link"
+                   href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}">></a>
+            </div>
+            <div>
+                <a class="Link"
+                   href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}">>></a>
+            </div>
+        </div>
         <h4>対応アイテム</h4>
         <div class="boxContainer">
             {% for item in normal_items %}

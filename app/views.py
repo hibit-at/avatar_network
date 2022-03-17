@@ -78,17 +78,25 @@ def creators(request, page=1, word='', free_only=False):
     return render(request, 'creators.html', params)
 
 
-def avatar(request, avatar_id=1):
+def avatar(request, avatar_id=1, page=1):
     params = {}
+    if 'page' in request.GET:
+        page = int(request.GET['page'])
+    span = 200
+    start = (page-1)*span
+    end = page*span
     creator_id = Avatar.objects.get(avatar_id=avatar_id).creator.creator_id
     items = Item.objects.annotate(num_avatars=Count('avatar'))
     items = items.filter(avatar__avatar_id=avatar_id)
     genuine_items = items.filter(creator__creator_id=creator_id)
     genuine_items = genuine_items.order_by('num_avatars', 'price')
     normal_items = items.exclude(creator__creator_id=creator_id)
-    normal_items = normal_items.order_by('num_avatars', 'price')
+    total = normal_items.count()
+    normal_items = normal_items.order_by('num_avatars', 'price')[start:end]
     avatar = Avatar.objects.get(avatar_id=avatar_id)
+    params['page'] = page
     params['avatar'] = avatar
+    params['total'] = total
     params['normal_items'] = normal_items
     params['genuine_items'] = genuine_items
     return render(request, 'avatar.html', params)

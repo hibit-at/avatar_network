@@ -5,6 +5,7 @@
     <h3 class="deco">Avatars List</h3>
     <form method="get" action="{% url 'app:avatars' %}">
         {{ form }}
+        {% if sort_hot %}<input type="hidden" name="sort_hot" value="on" />{% endif %}
         <input type="submit" value="Filter" class="button" />
         （{{ total|intcomma }} avatars）
         {% if sort_hot %}

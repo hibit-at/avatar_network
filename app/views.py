@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.db.models import Q, Count
+from django.urls import reverse
 
 from app.forms import *
 from app.models import *
@@ -118,7 +119,14 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
             avatars = avatars.filter(avatar_name__contains=w)
     params['total'] = avatars.count()
     if sort_hot:
-        avatars = avatars.order_by('-item_hot','price')[start:end]
+        if sort_hot == 'off':
+            redirect_url = reverse('app:avatars')
+            redirect_url += '?word=' + word
+            if free_only:
+                redirect_url += '&free_only=on'
+            return redirect(redirect_url)
+        avatars = avatars.annotate(num_items=Count('items'))
+        avatars = avatars.order_by('-item_hot','-num_items','price')[start:end]
         initial['sort_hot'] = sort_hot
     else:
         avatars = avatars.annotate(num_items=Count('items'))

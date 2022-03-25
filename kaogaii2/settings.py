@@ -92,7 +92,7 @@ if os.path.exists('local.py'):
         }
     }
 else:
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['*']
     SECRET_KEY = os.environ['SK']
     db_from_env = dj_database_url.config()

@@ -29,6 +29,20 @@
             /
             <a href="{% url 'app:info' %}">Info</a>
         </div>
+        <div>
+            {% if user.is_authenticated %}
+                ようこそ、{{ user }} さん！
+                <a href="{% url 'app:userpage' tid=user %}">
+                    <img src="{{ social.extra_data.profile_image_url }}" class="icon">
+                </a>
+                <a href="{% url 'app:logout' %}">ログアウト</a>
+            {% else %}
+                <form method="post" action="{% url 'twitter_login' %}">
+                    {% csrf_token %}
+                    <button class="button">ログイン（Twitter認証）</button>
+                </form>
+            {% endif %}
+        </div>
     </div>
 </nav>
 <div class="content">

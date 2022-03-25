@@ -3,3 +3,4 @@ db.sqlite3
 __pycache__
 analysis.py
 add_test.py
+venv

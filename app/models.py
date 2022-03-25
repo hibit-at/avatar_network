@@ -1,6 +1,5 @@
 from django.db import models
-from django.db.models.base import Model
-from django.db.models.fields import related
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -46,3 +45,29 @@ class Item(models.Model):
 
     def __str__(self):
         return self.item_name
+
+
+class Customer(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
+    VRCID = models.CharField(max_length=100)
+    message = models.CharField(max_length=100)
+    isSupporter = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.VRCID != '':
+            return str(self.VRCID)
+        else:
+            return str(self.user)
+
+
+class Folder(models.Model):
+    editor = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    name = models.TextField(max_length=50, default='')
+    description = models.TextField(max_length=100)
+    fav_avatar = models.ManyToManyField(Avatar)
+    fav_item = models.ManyToManyField(Item)
+    isOpen = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

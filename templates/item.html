@@ -21,6 +21,30 @@
     <p>
         <a href="https://booth.pm/ja/items/{{ item.item_id }}">BOOTH Link</a>
     </p>
+    {% if user.is_authenticated %}
+        <hr />
+        <h4>お気に入りフォルダ</h4>
+        <div class="boxContainer">
+            {% for folder in folders %}
+                <div class="box" style="height:120px">
+                    <a href="{% url 'app:folder' pk=folder.pk %}">
+                        <img src={% static 'folder.png' %}  width="60px" height="60px">
+                        {{ folder }}
+                    </a>
+                    {% if folder.notadd %}
+                        <br>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button class="button" name="add" value="{{ folder.pk }}">+Add</button>
+                        </form>
+                    {% else %}
+                        <br>
+                        <button class="button_already" disabled>Added</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% if item.avatar.all|length > 0 %}
         <hr />
         <div class="boxContainer">

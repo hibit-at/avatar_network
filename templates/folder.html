@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load humanize %}
+    {% load static %}
+    <h3 class="deco">Folder Page</h3>
+    <h3>{{ folder }}</h3>
+    <p>
+        by {{ folder.editor }}
+    </p>
+    <p>
+        Description : {{ folder.description }}
+    </p>
+    {% if folder.editor == user.customer %}
+        <form method="post">
+            {% csrf_token %}
+            <p>
+                Name :
+                <input type="text" name="name" value="{{ folder.name }}">
+                <button class="button">Change</button>
+            </p>
+            <p>
+                Description :
+                <textarea name="description" rows="4" cols="40">{{folder.description}}</textarea>
+                <button class="button">Change</button>
+            </p>
+        </form>
+    {% endif %}
+    {% if folder.fav_avatar.all|length > 0 %}
+        <hr />
+        <h4 class="deco">Avatars</h4>
+        <div class="boxContainer">
+            {% for avatar in folder.fav_avatar.all %}
+                <div class="box">
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
+                    </a>
+                    <p>
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                        {% if folder.editor == user.customer %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <button class="danger"
+                                        style="font-size:15px"
+                                        name="avatar_remove"
+                                        value="{{ avatar.avatar_id }}">Remove</button>
+                            </form>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if folder.fav_item.all|length > 0 %}
+        <hr />
+        <h4 class="deco">Items</h4>
+        <div class="boxContainer">
+            {% for item in folder.fav_item.all|dictsort:'price' %}
+                <div class="box">
+                    <a href="{% url 'app:item' item_id=item.item_id %}">
+                        <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
+                    </a>
+                    <p>
+                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                        {% if folder.editor == user.customer %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <button class="danger"
+                                        style="font-size:15px"
+                                        name="item_remove"
+                                        value="{{ item.item_id }}">Remove</button>
+                            </form>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if user.customer == folder.editor %}
+        <hr>
+        <h3 class="deco">Delete Folder</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" size="60px" name="delete">
+        </input>
+        <button class="danger">Delete</button>
+        <ul>
+            <li>フォルダを削除します。誤操作防止のため、プレイリスト名と同じ文字列をテキスト欄に記入してください。</li>
+            <li>確認画面等は一切出ないので、ご注意ください。</li>
+        </ul>
+    </form>
+{% endif %}
+{% endblock content %}

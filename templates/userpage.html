@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <h3 class="deco">{{ customer }} さんの個人ページ</h3>
+    <p>
+        VRChatID : {{ customer.VRCID }}
+        {% if customer == user.customer %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="VRCID" value="{{ customer.VRCID }}">
+                <button type="submit" class="button">Change</button>
+            </form>
+        {% endif %}
+    </p>
+    <p>
+        Message : {{ customer.message }}
+        {% if customer == user.customer %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="text"
+                       name="message"
+                       size="100px"
+                       value="{{ customer.message }}">
+                <button type="submit" class="button">Change</button>
+            </form>
+        {% endif %}
+    </p>
+    <hr />
+    <h3 class="deco">Folder</h3>
+    <div class="boxContainer">
+        {% for folder in folders %}
+            <div class="box" style="height:120px">
+                <a href="{% url 'app:folder' pk=folder.pk %}">
+                    <img src={% static 'folder.png' %}  width="60px" height="60px">
+                    {{ folder }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    {% if user.customer == customer %}
+        <form method="post">
+            {% csrf_token %}
+            <button class="button" name="create_new">+Create New</button>
+            <span style="color:red">{{error}}</span>
+        </form>
+    {% endif %}
+{% endblock content %}

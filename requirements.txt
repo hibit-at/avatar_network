@@ -3,3 +3,4 @@ gunicorn
 django-heroku
 requests
 django-allauth
+pytz

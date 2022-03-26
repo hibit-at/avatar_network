@@ -7,11 +7,18 @@ a:hover {
 }
 
 .navbar {
-    width: 100%;
-    height: 75px;
     background-color: lightpink;
-    padding: 10px;
     color: white;
+    width: 100%;
+    padding: 10px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, .1);
+    z-index: 999;
+    display: flex;
 }
 
 .navbar a {
@@ -178,7 +185,7 @@ a:hover {
 .content {
     margin-left: 100px;
     margin-right: 100px;
-    margin-top: 50px
+    margin-top: 100px
 }
 
 .emoji {
@@ -200,4 +207,8 @@ a:hover {
     box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, .3);
     margin-right: 10px;
     margin-left: 10px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
 }

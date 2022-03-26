@@ -62,7 +62,7 @@ class Customer(models.Model):
 
 
 class Folder(models.Model):
-    editor = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    editor = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='folder')
     name = models.TextField(max_length=50, default='')
     description = models.TextField(max_length=100)
     fav_avatar = models.ManyToManyField(Avatar)

@@ -78,4 +78,4 @@ def add_avatar(avatar_id):
     )
 
 if __name__ == '__main__':
-    add_avatar(1777704)
+    add_avatar(0)

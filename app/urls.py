@@ -17,4 +17,5 @@ urlpatterns = [
     path('debug/', views.debug, name='debug'),
     path('userpage/<slug:tid>', views.userpage, name='userpage'),
     path('folder/<int:pk>', views.folder, name='folder'),
+    path('recommend/',views.recommend, name='recommend'),
 ]

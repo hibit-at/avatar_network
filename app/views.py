@@ -6,6 +6,25 @@ from allauth.socialaccount.models import SocialAccount
 from app.forms import *
 from app.models import *
 
+# utils
+
+targets = [
+    ('&amp;', '&'),
+    ('&gt;', '>'),
+    ('&lt;', '<'),
+    ('&#39;', "'"),
+    ('&quot;', '"'),
+]
+
+
+def name_validation(org):
+    ans = org
+    for target in targets:
+        before = target[0]
+        after = target[1]
+        if before in org:
+            ans = ans.replace(before, after)
+    return ans
 
 # Create your views here.
 
@@ -387,6 +406,63 @@ def folder(request, pk=0):
             folder.description = description
             folder.save()
             return redirect('app:folder', pk=pk)
-                
 
     return render(request, 'folder.html', params)
+
+
+def recommend(request):
+    params = {}
+    user = request.user
+    if user.is_authenticated:
+        social = SocialAccount.objects.get(user=user)
+        params['social'] = social
+    avatars = AvatarQueue.objects.all()
+    params['avatars'] = avatars
+    if request.method == "POST":
+        post = request.POST
+        print(post)
+        if 'avatar_id' in post:
+            avatar_id = post['avatar_id'].split('/')[-1]
+            if Avatar.objects.filter(avatar_id=avatar_id).exists():
+                params['error'] = '! ERROR : このアバターは既に登録されています。'
+                return render(request, 'recommend.html', params)
+            if AvatarQueue.objects.filter(avatar_id=avatar_id).exists():
+                params['error'] = '! ERROR : このアバターは既に推薦キューに入っています。'
+                return render(request, 'recommend.html', params)
+            import requests
+            import re
+            url = f'https://booth.pm/ja/items/{avatar_id}'
+            text = requests.get(url).text
+            pat = r'<title>(.*?) - BOOTH</title>'
+            res = re.findall(pat, text)
+            if len(res) == 0:
+                params['error'] = 'URL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            avatar_name = name_validation(res[0])
+            pat = r'"content":"(.*?)"'
+            res = re.findall(pat, text)
+            if len(res) == 0:
+                params['error'] = 'URL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            describe = res[0][:200]
+            print(describe)
+            AvatarQueue.objects.create(
+                avatar_id=avatar_id,
+                avatar_name=avatar_name,
+                describe=describe,
+            )
+        if 'approve' in post:
+            avatar_id = post['approve']
+            import sys
+            sys.path.append('../')
+            from manual_add_avatar import add_avatar
+            add_avatar(avatar_id)
+            AvatarQueue.objects.get(avatar_id=avatar_id).delete()
+            return redirect('app:recommend')
+        if 'decline' in post:
+            avatar_id = post['decline']
+            AvatarQueue.objects.get(avatar_id=avatar_id).delete()
+            return redirect('app:recommend')
+            
+
+    return render(request, 'recommend.html', params)

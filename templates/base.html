@@ -52,6 +52,8 @@
                                     <a class="dropdown-item" href="{% url 'app:folder' pk=folder.pk %}">{{ folder }}</a>
                                 {% endfor %}
                                 <hr>
+                                <a class="dropdown-item" href="{% url 'app:recommend' %}">追加提案</a>
+                                <hr>
                                 <a class="dropdown-item" href="{% url 'app:logout' %}">ログアウト</a>
                             </div>
                         </div>

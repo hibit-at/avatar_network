@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+    <h3 class="deco">アバター＆アイテム追加提案</h3>
+    <p>
+        ※この機能は試験的に追加しています。
+    </p>
+    <p>
+        認証ユーザーは URL をもとにアバターかアイテムを提案できます。
+    </p>
+    <p>
+        提案されたものに対して、審査権限者（現在は hibit のみ）が承認を押すと追加されます。
+    </p>
+    <p>
+        最終的にどういう仕様にするかは考え中......
+    </p>
+    {% if error != None %}
+        <p style="color:red">
+            {{ error }}
+        </p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        Avata URL :
+        <input type="text" size="80px" name="avatar_id"/>
+        <button class="button">推薦</button>
+        <p>
+            記入例 : https://booth.pm/ja/items/3681787
+        </p>
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        Item URL :
+        <input type="text" size="80px" name="item_id"/>
+        <button class="button">工事中</button>
+        <p>
+            記入例 : https://booth.pm/ja/items/2254519
+        </p>
+    </form>
+    <hr>
+    <h3 class="deco">AvatarQueue</h3>
+    {% for avatar in avatars %}
+        <ul>
+            <li>
+                {% if user.is_staff %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ avatar }}
+                    <button class="btn btn-success" name="approve" value="{{avatar.avatar_id}}">承認</button>
+                    <button class="btn btn-danger" name="decline" value="{{avatar.avatar_id}}">拒否</button>
+                </form>
+                {% endif %}
+                <ul>
+                    <li>{{ avatar.describe }}</li>
+                </ul>
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock content %}

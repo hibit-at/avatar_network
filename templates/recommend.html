@@ -17,7 +17,7 @@
         <p style="color:red">
             {{ error }}
         </p>
-    {% endif %} 
+    {% endif %}
     {% if success != None %}
         <p style="color:blue">
             {{ success }}
@@ -36,7 +36,7 @@
         {% csrf_token %}
         Item URL :
         <input type="text" size="80px" name="item_id"/>
-        <button class="button">工事中</button>
+        <button class="button">推薦</button>
         <p>
             記入例 : https://booth.pm/ja/items/2254519
         </p>
@@ -46,16 +46,35 @@
     {% for avatar in avatars %}
         <ul>
             <li>
-                {{ avatar }} ... <a href="https://booth.pm/ja/items/{{avatar.avatar_id}}">https://booth.pm/ja/items/{{avatar.avatar_id}}</a>
+                {{ avatar }} ... <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}">https://booth.pm/ja/items/{{ avatar.avatar_id }}</a>
                 {% if user.is_staff %}
-                <form method="post">
-                    {% csrf_token %}
-                    <button class="btn btn-success" name="approve" value="{{avatar.avatar_id}}">承認</button>
-                    <button class="btn btn-danger" name="decline" value="{{avatar.avatar_id}}">拒否</button>
-                </form>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-success" name="approve" value="{{ avatar.avatar_id }}">承認</button>
+                        <button class="btn btn-danger" name="decline" value="{{ avatar.avatar_id }}">拒否</button>
+                    </form>
                 {% endif %}
                 <ul>
                     <li>{{ avatar.describe }}</li>
+                </ul>
+            </li>
+        </ul>
+    {% endfor %}
+    <hr>
+    <h3 class="deco">ItemQueue</h3>
+    {% for item in items %}
+        <ul>
+            <li>
+                {{ item }} ... <a href="https://booth.pm/ja/items/{{ item.item_id }}">https://booth.pm/ja/items/{{ item.item_id }}</a>
+                {% if user.is_staff %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-success" name="approve_item" value="{{ item.item_id }}">承認</button>
+                        <button class="btn btn-danger" name="decline_item" value="{{ item.item_id }}">拒否</button>
+                    </form>
+                {% endif %}
+                <ul>
+                    <li>{{ item.describe }}</li>
                 </ul>
             </li>
         </ul>

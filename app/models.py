@@ -85,3 +85,6 @@ class ItemQueue(models.Model):
     item_id = models.CharField(max_length=100)
     item_name = models.CharField(max_length=200)
     describe = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.item_name)

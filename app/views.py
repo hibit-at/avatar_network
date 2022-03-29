@@ -421,8 +421,9 @@ def recommend(request):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    avatars = AvatarQueue.objects.all()
-    params['avatars'] = avatars
+    params['avatars'] = AvatarQueue.objects.all()
+    params['items'] = ItemQueue.objects.all()
+    
     if request.method == "POST":
         post = request.POST
         print(post)
@@ -460,6 +461,40 @@ def recommend(request):
             )
             params['success'] = f'{avatar_name} をキューに追加しました。'
             return render(request, 'recommend.html', params)
+        if 'item_id' in post:
+            item_id = post['item_id'].split('/')[-1]
+            if Item.objects.filter(item_id=item_id).exists():
+                params['error'] = '! ERROR : このアイテムは既に登録されています。'
+                return render(request, 'recommend.html', params)
+            if ItemQueue.objects.filter(item_id=item_id).exists():
+                params['error'] = '! ERROR : このアイテムは既に推薦キューに入っています。'
+                return render(request, 'recommend.html', params)
+            import requests
+            import re
+            url = f'https://booth.pm/ja/items/{item_id}'
+            text = requests.get(url).text
+            print(text)
+            pat = r'<title>(.*?) - BOOTH</title>'
+            res = re.findall(pat, text)
+            if len(res) == 0:
+                params['error'] = 'URL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            item_name = name_validation(res[0])
+            pat = r'"description":"(.*?)"'
+            res = re.findall(pat, text)
+            print(res)
+            if len(res) == 0:
+                params['error'] = 'URL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            describe = res[0][:200]
+            print(describe)
+            ItemQueue.objects.create(
+                item_id=item_id,
+                item_name=item_name,
+                describe=describe,
+            )
+            params['success'] = f'{item_name} をキューに追加しました。'
+            return render(request, 'recommend.html', params)
         if 'approve' in post:
             avatar_id = post['approve']
             import sys
@@ -471,6 +506,18 @@ def recommend(request):
         if 'decline' in post:
             avatar_id = post['decline']
             AvatarQueue.objects.get(avatar_id=avatar_id).delete()
+            return redirect('app:recommend')
+        if 'approve_item' in post:
+            item_id = post['approve_item']
+            import sys
+            sys.path.append('../')
+            from manual_add_item import add_item
+            add_item(item_id)
+            ItemQueue.objects.get(item_id=item_id).delete()
+            return redirect('app:recommend')
+        if 'decline_item' in post:
+            item_id = post['decline_item']
+            ItemQueue.objects.get(item_id=item_id).delete()
             return redirect('app:recommend')
             
 

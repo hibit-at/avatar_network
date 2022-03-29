@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.db.models import Q, Count
 from django.urls import reverse
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.decorators import login_required
 
 from app.forms import *
 from app.models import *
@@ -410,6 +411,7 @@ def folder(request, pk=0):
     return render(request, 'folder.html', params)
 
 
+@login_required
 def recommend(request):
     params = {}
     user = request.user

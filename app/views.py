@@ -361,6 +361,9 @@ def userpage(request, tid=''):
                     params['error'] = 'ERROR : 空のフォルダがある状態では新規フォルダは作成できません。'
                     return render(request, 'userpage.html', params)
             count = Folder.objects.filter(editor=customer).count()
+            if count > 1 and not customer.isSupporter:
+                params['error'] = 'ERROR : 複数のフォルダを作成するには、サポーターになる必要があります。'
+                return render(request, 'userpage.html', params)
             Folder.objects.create(
                 editor=user.customer,
                 name=f'{user.customer}\'s favorite {count+1}',

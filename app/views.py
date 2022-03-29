@@ -455,6 +455,8 @@ def recommend(request):
                 avatar_name=avatar_name,
                 describe=describe,
             )
+            params['success'] = f'{avatar_name} をキューに追加しました。'
+            return render(request, 'recommend.html', params)
         if 'approve' in post:
             avatar_id = post['approve']
             import sys

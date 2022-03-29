@@ -34,9 +34,9 @@ def add_avatar(avatar_id):
         return ans
 
 
-    pat = r'<title>(.*?) - BOOTH</title>'
+    pat = r'<title>(.*?) - (.*?) - BOOTH</title>'
     res = re.findall(pat, text)
-    avatar_name = name_validation(res[0])
+    avatar_name = name_validation(res[0][0])
     print(avatar_name)
 
     pat = r'<div class="variation-price u-text-right">¥ (.*?)</div>'

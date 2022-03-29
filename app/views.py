@@ -435,14 +435,16 @@ def recommend(request):
             import re
             url = f'https://booth.pm/ja/items/{avatar_id}'
             text = requests.get(url).text
+            print(text)
             pat = r'<title>(.*?) - BOOTH</title>'
             res = re.findall(pat, text)
             if len(res) == 0:
                 params['error'] = 'URL の解析に失敗しました。'
                 return render(request, 'recommend.html', params)
             avatar_name = name_validation(res[0])
-            pat = r'"content":"(.*?)"'
+            pat = r'"description":"(.*?)"'
             res = re.findall(pat, text)
+            print(res)
             if len(res) == 0:
                 params['error'] = 'URL の解析に失敗しました。'
                 return render(request, 'recommend.html', params)

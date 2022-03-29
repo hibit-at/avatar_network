@@ -17,7 +17,7 @@
         <p style="color:red">
             {{ error }}
         </p>
-    {% endif %}
+    {% endif %} 
     {% if success != None %}
         <p style="color:blue">
             {{ success }}
@@ -46,10 +46,10 @@
     {% for avatar in avatars %}
         <ul>
             <li>
+                {{ avatar }} (<a href="https://booth.pm/ja/items/{{avatar.avatar_id}}">https://booth.pm/ja/items/{{avatar.avatar_id}}</a>)
                 {% if user.is_staff %}
                 <form method="post">
                     {% csrf_token %}
-                    {{ avatar }}
                     <button class="btn btn-success" name="approve" value="{{avatar.avatar_id}}">承認</button>
                     <button class="btn btn-danger" name="decline" value="{{avatar.avatar_id}}">拒否</button>
                 </form>

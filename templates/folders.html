@@ -13,7 +13,7 @@
             </p>
             <ul>
                 {% if folder.fav_avatar.all|length > 0 %}
-                    <li>Avatars</li>
+                    <li>{{folder.fav_avatar.all|length}} Avatars</li>
                     <ul>
                         {% for avatar in folder.fav_avatar.all|slice:":3" %}
                             <li>
@@ -26,7 +26,7 @@
                     </ul>
                 {% endif %}
                 {% if folder.fav_item.all|length > 0 %}
-                    <li>Items</li>
+                    <li>{{folder.fav_item.all|length}} Items</li>
                     <ul>
                         {% for item in folder.fav_item.all|slice:":3" %}
                             <li>

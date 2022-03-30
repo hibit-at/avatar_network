@@ -15,21 +15,27 @@
                 {% if folder.fav_avatar.all|length > 0 %}
                     <li>Avatars</li>
                     <ul>
-                        {% for avatar in folder.fav_avatar.all %}
+                        {% for avatar in folder.fav_avatar.all|slice:":3" %}
                             <li>
                                 <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
                             </li>
                         {% endfor %}
+                        {% if folder.fav_avatar.all|length >= 3 %}
+                        ...
+                        {% endif %}
                     </ul>
                 {% endif %}
                 {% if folder.fav_item.all|length > 0 %}
                     <li>Items</li>
                     <ul>
-                        {% for item in folder.fav_item.all %}
+                        {% for item in folder.fav_item.all|slice:":3" %}
                             <li>
                                 <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
                             </li>
                         {% endfor %}
+                        {% if folder.fav_item.all|length >= 3 %}
+                        ...
+                        {% endif %}
                     </ul>
                 {% endif %}
             </ul>

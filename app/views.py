@@ -380,6 +380,8 @@ def folder(request, pk=0):
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
     folder = Folder.objects.get(pk=pk)
+    if user.customer != folder.editor:
+        return redirect('app:index')
     params['folder'] = folder
     if request.method == 'POST':
         post = request.POST

@@ -408,6 +408,7 @@ def folder(request, pk=0):
             folder.save()
             description = post['description']
             folder.description = description
+            folder.isOpen = 'public' in post
             folder.save()
             return redirect('app:folder', pk=pk)
 
@@ -423,7 +424,7 @@ def recommend(request):
         params['social'] = social
     params['avatars'] = AvatarQueue.objects.all()
     params['items'] = ItemQueue.objects.all()
-    
+
     if request.method == "POST":
         post = request.POST
         print(post)
@@ -519,6 +520,16 @@ def recommend(request):
             item_id = post['decline_item']
             ItemQueue.objects.get(item_id=item_id).delete()
             return redirect('app:recommend')
-            
 
     return render(request, 'recommend.html', params)
+
+
+def folders(request):
+    params = {}
+    user = request.user
+    if user.is_authenticated:
+        social = SocialAccount.objects.get(user=user)
+        params['social'] = social
+    folders = Folder.objects.filter(isOpen=True)
+    params['folders'] = folders
+    return render(request, 'folders.html', params)

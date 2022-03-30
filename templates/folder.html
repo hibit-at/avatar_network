@@ -3,7 +3,7 @@
     {% load humanize %}
     {% load static %}
     <h3 class="deco">Folder Page</h3>
-    <h3>{{ folder }}</h3>
+    <h3>{{ folder }} {% if folder.isOpen %}(Public){% else %}(Private){% endif %}</h3>
     <p>
         by {{ folder.editor }}
     </p>
@@ -16,7 +16,10 @@
             <p>
                 Name :
                 <input type="text" name="name" value="{{ folder.name }}">
-                <button class="button">Change</button>
+            </p>
+            <p>
+                Public:
+                <input type="checkbox" name="public" style="width:20px;height:20px;" {% if folder.isOpen %}checked{% endif %}>
             </p>
             <p>
                 Description :

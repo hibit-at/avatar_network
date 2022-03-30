@@ -18,4 +18,5 @@ urlpatterns = [
     path('userpage/<slug:tid>', views.userpage, name='userpage'),
     path('folder/<int:pk>', views.folder, name='folder'),
     path('recommend/',views.recommend, name='recommend'),
+    path('folders/',views.folders,name='folders'),
 ]

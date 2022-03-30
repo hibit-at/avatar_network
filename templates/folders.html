@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    {% load humanize %}
+    <h3 class="deco">Folders List</h3>
+    {% for folder in folders %}
+        <div class="creator">
+            <p>
+                <a href="{% url 'app:folder' pk=folder.pk %}">{{ folder }} by {{ folder.editor }}</a>
+            </p>
+            <p>
+                {{ folder.description }}
+            </p>
+            <ul>
+                {% if folder.fav_avatar.all|length > 0 %}
+                    <li>Avatars</li>
+                    <ul>
+                        {% for avatar in folder.fav_avatar.all %}
+                            <li>
+                                <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if creator.items.all|length > 0 %}
+                    <li>Items</li>
+                    <ul>
+                        {% for item in creator.items.all %}
+                            <li>
+                                <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </ul>
+        </p>
+    </div>
+{% endfor %}
+{% endblock content %}

@@ -22,10 +22,10 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-                {% if creator.items.all|length > 0 %}
+                {% if folder.fav_item.all|length > 0 %}
                     <li>Items</li>
                     <ul>
-                        {% for item in creator.items.all %}
+                        {% for item in folder.fav_item.all %}
                             <li>
                                 <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
                             </li>

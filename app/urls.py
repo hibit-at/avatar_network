@@ -19,4 +19,5 @@ urlpatterns = [
     path('folder/<int:pk>', views.folder, name='folder'),
     path('recommend/',views.recommend, name='recommend'),
     path('folders/',views.folders,name='folders'),
+    path('debug_folders/',views.debug_folders, name='debug_folders'),
 ]

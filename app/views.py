@@ -533,3 +533,18 @@ def folders(request):
     folders = Folder.objects.filter(isOpen=True)
     params['folders'] = folders
     return render(request, 'folders.html', params)
+
+
+@login_required
+def debug_folders(request):
+    params = {}
+    user = request.user
+    # admin only
+    if not user.is_staff:
+        return redirect('app:index')
+    if user.is_authenticated:
+        social = SocialAccount.objects.get(user=user)
+        params['social'] = social
+    folders = Folder.objects.all()
+    params['folders'] = folders
+    return render(request, 'folders.html', params)

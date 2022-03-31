@@ -9,7 +9,7 @@
                 <a href="{% url 'app:folder' pk=folder.pk %}"><b>{{ folder }}</b> by {{ folder.editor }}</a>
             </p>
             <p>
-                {{ folder.description }}
+                {{ folder.description|truncatechars:30 }}
             </p>
             {% if folder.fav_avatar.all|length > 0 %}
                 <div class="boxContainer">
@@ -23,8 +23,8 @@
                             </a>
                         </div>
                     {% endfor %}
-            {% endif %}
-            {% if folder.item_length > 0 %}
+                {% endif %}
+                {% if folder.item_length > 0 %}
                     {% for item in folder.select_items %}
                         <div class="box" style="width:160px;height:160px">
                             <a href="{% url 'app:item' item_id=item.item_id %}">

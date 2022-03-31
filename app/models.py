@@ -68,6 +68,7 @@ class Folder(models.Model):
     fav_avatar = models.ManyToManyField(Avatar)
     fav_item = models.ManyToManyField(Item)
     isOpen = models.BooleanField(default=False)
+    isNSFW = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

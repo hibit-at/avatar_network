@@ -3,7 +3,7 @@
     {% load humanize %}
     {% load static %}
     <h3 class="deco">Folder Page</h3>
-    <h3>{{ folder }} {% if folder.isOpen %}(Public){% else %}(Private){% endif %}</h3>
+    <h3>{{ folder }} {% if folder.isOpen %}(Public){% else %}(Private){% endif %}{% if folder.isNSFW %}(NSFW){% endif %}</h3>
     <p>
         by {{ folder.editor }}
     </p>
@@ -20,6 +20,12 @@
             <p>
                 Public:
                 <input type="checkbox" name="public" style="width:20px;height:20px;" {% if folder.isOpen %}checked{% endif %}>
+                「Folders」からこのフォルダーの内容を閲覧できるようになります。
+            </p>
+            <p>
+                NSFW:
+                <input type="checkbox" name="NSFW" style="width:20px;height:20px;" {% if folder.isNSFW %}checked{% endif %}>
+                公開フォルダの一覧ではサムネイルにぼかしがつきます。
             </p>
             <p>
                 Description :

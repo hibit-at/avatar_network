@@ -411,6 +411,7 @@ def folder(request, pk=0):
             description = post['description']
             folder.description = description
             folder.isOpen = 'public' in post
+            folder.isNSFW = 'NSFW' in post
             folder.save()
             return redirect('app:folder', pk=pk)
 

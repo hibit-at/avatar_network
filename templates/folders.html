@@ -19,7 +19,7 @@
                                 <img alt="thumb"
                                      src="{{ avatar.imageURL }}"
                                      class="thumb"
-                                     style="width:150px;height:150px"/>
+                                     {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
                             </a>
                         </div>
                     {% endfor %}
@@ -33,7 +33,7 @@
                                 <img alt="thumb"
                                      src="{{ item.imageURL }}"
                                      class="thumb"
-                                     style="width:150px;height:150px"/>
+                                     {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
                             </a>
                         </div>
                     {% endfor %}

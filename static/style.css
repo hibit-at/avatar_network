@@ -155,6 +155,15 @@ a:hover {
     font-weight: bold;
 }
 
+.highlight {
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: orange;
+    color: white;
+    font-weight: bold;
+}
+
 .button_already {
     font-size: 20px;
     border-radius: 5px;

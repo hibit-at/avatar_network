@@ -40,7 +40,7 @@
     </div>
     {% for creator in creators %}
         <div class="creator">
-            <p>
+            <p style="display:inline">
                 <a href="{% url 'app:creator' creator_id=creator.creator_id %}">{{ creator }}</a>
                 <ul>
                     {% if creator.avatars.all|length > 0 %}

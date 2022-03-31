@@ -21,30 +21,33 @@
     <p>
         <a href="https://booth.pm/ja/items/{{ item.item_id }}">BOOTH Link</a>
     </p>
-    {% if user.is_authenticated %}
-        <hr />
-        <h4>お気に入りフォルダ</h4>
-        <div class="boxContainer">
+    <div class="btn-group dropright">
+        <button type="button"
+                class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                style="background-color:lightpink;border-style:none;font-size:20px;font-weight:bold">
+            Favorite
+        </button>
+        <div class="dropdown-menu">
+            <!-- Dropdown menu links -->
             {% for folder in folders %}
-                <div class="box" style="height:120px">
-                    <a href="{% url 'app:folder' pk=folder.pk %}">
-                        <img src={% static 'folder.png' %}  width="60px" height="60px">
-                        {{ folder }}
-                    </a>
+                <a class="dropdown-item"
+                   href="{% url 'app:folder' pk=folder.pk %}"
+                   style="display:inline;margin-top:20px">{{ folder }}
                     {% if folder.notadd %}
-                        <br>
-                        <form method="post">
+                        <form method="post" style="display:inline">
                             {% csrf_token %}
                             <button class="button" name="add" value="{{ folder.pk }}">+Add</button>
                         </form>
                     {% else %}
-                        <br>
                         <button class="button_already" disabled>Added</button>
                     {% endif %}
-                </div>
+                </a>
             {% endfor %}
         </div>
-    {% endif %}
+    </div>
     {% if item.avatar.all|length > 0 %}
         <hr />
         <div class="boxContainer">

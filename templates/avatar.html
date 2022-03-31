@@ -7,47 +7,54 @@
     <p>
         by
         <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-        <p>
-            <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
-               target="blank">
-                <img alt="main" class="main"  src="{{ avatar.imageURL }}" />
-            </a>
-        </p>
-        <p>
-            {% if avatar.price > 0 %}
-                <span class="price">¥ {{ avatar.price|intcomma }}</span>
-            {% else %}
-                <span class="free">¥ Free</span>
-            {% endif %}
-        </p>
+    </p>
+    <p>
+    </p>
+    <p>
+        <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
+           target="blank">
+            <img alt="main" class="main"  src="{{ avatar.imageURL }}" />
+        </a>
+    </p>
+    <p >
+        {% if avatar.price > 0 %}
+            <span class="price">¥ {{ avatar.price|intcomma }}</span>
+        {% else %}
+            <span class="free">¥ Free</span>
+        {% endif %}
     </p>
     <p>
         <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
            target="blank">BOOTH Link</a>
     </p>
     {% if user.is_authenticated %}
-    <hr />
-    <h4>お気に入りフォルダ</h4>
-    <div class="boxContainer">
-        {% for folder in folders %}
-            <div class="box" style="height:120px">
-                <a href="{% url 'app:folder' pk=folder.pk %}">
-                    <img src={% static 'folder.png' %}  width="60px" height="60px">
-                    {{ folder }}
-                </a>
-                {% if folder.notadd %}
-                <br>
-                <form method="post">
-                    {% csrf_token %}
-                    <button class="button" name="add" value="{{ folder.pk }}">+Add</button>
-                </form>
-                {% else %}
-                <br>
-                <button class="button_already" disabled>Added</button>
-                {% endif %}
+        <div class="btn-group dropright">
+            <button type="button"
+                    class="btn btn-secondary dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    style="background-color:lightpink;border-style:none;font-size:20px;font-weight:bold">
+                Favorite
+            </button>
+            <div class="dropdown-menu">
+                <!-- Dropdown menu links -->
+                {% for folder in folders %}
+                    <a class="dropdown-item"
+                       href="{% url 'app:folder' pk=folder.pk %}"
+                       style="display:inline;margin-top:20px">{{ folder }}
+                        {% if folder.notadd %}
+                            <form method="post" style="display:inline">
+                                {% csrf_token %}
+                                <button class="button" name="add" value="{{ folder.pk }}">+Add</button>
+                            </form>
+                        {% else %}
+                            <button class="button_already" disabled>Added</button>
+                        {% endif %}
+                    </a>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
+        </div>
     {% endif %}
     {% if genuine_items|length > 0 %}
         <hr />

@@ -53,6 +53,7 @@ class Customer(models.Model):
     VRCID = models.CharField(max_length=100)
     message = models.CharField(max_length=100)
     isSupporter = models.BooleanField(default=False)
+    highlight = models.ForeignKey(Creator, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         if self.VRCID != '':

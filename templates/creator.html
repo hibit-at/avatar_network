@@ -7,6 +7,12 @@
     <p>
         <a href="https://{{ creator.creator_id }}.booth.pm/" target="blank">BOOTH Link</a>
     </p>
+    {% comment %} {% if user.customer.isSupporter %}
+        <form method="post" style="display:inline">
+            {% csrf_token %}
+            <button class="highlight" name="highlight">Highlight</button>
+        </form>
+    {% endif %} {% endcomment %}
     {% if creator.avatars.all|length > 0 %}
         <hr />
         <h4 class="deco">Avatars</h4>

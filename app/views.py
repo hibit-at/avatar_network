@@ -75,7 +75,13 @@ def creator(request, creator_id=''):
     creators = creators.prefetch_related(models.Prefetch(
         'items', queryset=item_query))
     creator = creators.get(creator_id=creator_id)
-    params = {'creator': creator}
+    params['creator'] = creator
+    if request.method == 'POST':
+        post = request.POST
+        if 'highlight' in post:
+            user.customer.highlight = creator
+            user.save()
+            
     return render(request, 'creator.html', params)
 
 

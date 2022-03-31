@@ -23,9 +23,11 @@
                             </a>
                         </div>
                     {% endfor %}
-                {% endif %}
-                {% if folder.item_length > 0 %}
-                    {% for item in folder.select_items %}
+                </div>
+            {% endif %}
+            {% if folder.fav_item.all|length > 0 %}
+                <div class="boxContainer">
+                    {% for item in folder.fav_item.all|slice:":10" %}
                         <div class="box" style="width:160px;height:160px">
                             <a href="{% url 'app:item' item_id=item.item_id %}">
                                 <img alt="thumb"
@@ -35,8 +37,8 @@
                             </a>
                         </div>
                     {% endfor %}
-                {% endif %}
-            </p>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock content %}

@@ -533,7 +533,7 @@ def folders(request):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    folders = Folder.objects.filter(isOpen=True)
+    folders = Folder.objects.filter(isOpen=True).order_by('-pk')
     params['folders'] = folders
     return render(request, 'folders.html', params)
 

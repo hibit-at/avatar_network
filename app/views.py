@@ -533,6 +533,11 @@ def folders(request):
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
     folders = Folder.objects.filter(isOpen=True)
+    for folder in folders:
+        isBr = False
+        if folder.fav_avatar.count() + folder.fav_item.count() > 10:
+            isBr = True 
+        setattr(folder,'isBr',isBr)           
     params['folders'] = folders
     return render(request, 'folders.html', params)
 

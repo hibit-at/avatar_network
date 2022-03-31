@@ -6,39 +6,37 @@
     {% for folder in folders %}
         <div class="creator">
             <p>
-                <a href="{% url 'app:folder' pk=folder.pk %}">{{ folder }} by {{ folder.editor }}</a>
+                <a href="{% url 'app:folder' pk=folder.pk %}"><b>{{ folder }}</b> by {{ folder.editor }}</a>
             </p>
             <p>
                 {{ folder.description }}
             </p>
-            <ul>
-                {% if folder.fav_avatar.all|length > 0 %}
-                    <li>{{folder.fav_avatar.all|length}} Avatars</li>
-                    <ul>
-                        {% for avatar in folder.fav_avatar.all|slice:":3" %}
-                            <li>
-                                <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if folder.fav_avatar.all|length >= 3 %}
-                        ...
-                        {% endif %}
-                    </ul>
-                {% endif %}
-                {% if folder.fav_item.all|length > 0 %}
-                    <li>{{folder.fav_item.all|length}} Items</li>
-                    <ul>
-                        {% for item in folder.fav_item.all|slice:":3" %}
-                            <li>
-                                <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if folder.fav_item.all|length >= 3 %}
-                        ...
-                        {% endif %}
-                    </ul>
-                {% endif %}
-            </ul>
+            {% if folder.fav_avatar.all|length > 0 %}
+                <div class="boxContainer">
+                    {% for avatar in folder.fav_avatar.all|slice:":10" %}
+                        <div class="box" style="width:160px;height:160px">
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                                <img alt="thumb"
+                                     src="{{ avatar.imageURL }}"
+                                     class="thumb"
+                                     style="width:150px;height:150px"/>
+                            </a>
+                        </div>
+                    {% endfor %}
+            {% endif %}
+            {% if folder.item_length > 0 %}
+                    {% for item in folder.select_items %}
+                        <div class="box" style="width:160px;height:160px">
+                            <a href="{% url 'app:item' item_id=item.item_id %}">
+                                <img alt="thumb"
+                                     src="{{ item.imageURL }}"
+                                     class="thumb"
+                                     style="width:150px;height:150px"/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </p>
     </div>
 {% endfor %}

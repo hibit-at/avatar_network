@@ -41,20 +41,24 @@
         </div>
     </div>
     {% for item in items %}
-        <div class="boxrow">
-            <div style="width:200px">
-                <a href="{% url 'app:item' item_id=item.item_id %}">
-                    <img src="{{ item.imageURL }}" class="thumb" alt="thumb" />
-                </a>
-            </div>
-            <div style="width:auto;margin-left:20px">
-                <p>
-                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                </p>
-                <p>
-                    by
-                    <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
-                </p>
+        {% if item.isHighlight %}
+            <div class="boxrow-highlight">
+            {% else %}
+                <div class="boxrow">
+                {% endif %}
+                <div style="width:200px">
+                    <a href="{% url 'app:item' item_id=item.item_id %}">
+                        <img src="{{ item.imageURL }}" class="thumb" alt="thumb" />
+                    </a>
+                </div>
+                <div style="width:auto;margin-left:20px">
+                    <p>
+                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                    </p>
+                    <p>
+                        by
+                        <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
+                    </p>
                 対応アバター：<span class="price">{{ item.avatar.all|length }}</span> 点
                 <p>
                     {% if item.price > 0 %}

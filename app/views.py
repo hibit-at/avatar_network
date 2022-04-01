@@ -75,13 +75,21 @@ def creator(request, creator_id=''):
     creators = creators.prefetch_related(models.Prefetch(
         'items', queryset=item_query))
     creator = creators.get(creator_id=creator_id)
+    if Customer.objects.filter(highlight=creator).exists():
+        setattr(creator, 'isHighlight', True)
     params['creator'] = creator
     if request.method == 'POST':
         post = request.POST
+        print(post)
         if 'highlight' in post:
             user.customer.highlight = creator
-            user.save()
-            
+            user.customer.save()
+            return redirect('app:creator', creator_id=creator_id)
+        if 'cancel' in post:
+            user.customer.highlight = None
+            user.customer.save()
+            return redirect('app:creator', creator_id=creator_id)
+
     return render(request, 'creator.html', params)
 
 
@@ -122,6 +130,9 @@ def creators(request, page=1, word='', free_only=False):
         'items', queryset=item_query))
     creators = creators.annotate(total_item=Count('avatars__items'))
     creators = creators.order_by('-total_item')[start:end]
+    for creator in creators:
+        if Customer.objects.filter(highlight=creator).exists():
+            setattr(creator, 'isHighlight', True)
     # params = {'creators': creators, 'page': page}
     params['creators'] = creators
     params['page'] = page
@@ -156,6 +167,10 @@ def avatar(request, avatar_id=1, page=1):
     normal_items = items.exclude(creator__creator_id=creator_id)
     total = normal_items.count()
     normal_items = normal_items.order_by('num_avatars', 'price')[start:end]
+    for normal_item in normal_items:
+        if Customer.objects.filter(highlight=normal_item.creator):
+            print("hit")
+            setattr(normal_item,'isHighlight',True)
     params['page'] = page
     params['avatar'] = avatar
     params['total'] = total
@@ -214,6 +229,9 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     else:
         avatars = avatars.annotate(num_items=Count('items'))
         avatars = avatars.order_by('-num_items', 'price')[start:end]
+    for avatar in avatars:
+        if Customer.objects.filter(highlight=avatar.creator).exists():
+            setattr(avatar, 'isHighlight', True)
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only
@@ -236,6 +254,12 @@ def item(request, item_id=''):
         for folder in folders:
             setattr(folder, 'notadd', item not in folder.fav_item.all())
         params['folders'] = folders
+    avatars = item.avatar.all().order_by('price')
+    for avatar in avatars:
+        if Customer.objects.filter(highlight=avatar.creator).exists():
+            print("hit")
+            setattr(avatar,'isHighlight',True)
+    params['avatars'] = avatars
     if request.method == "POST":
         post = request.POST
         print(post)
@@ -278,8 +302,12 @@ def items(request, page=1, word='', free_only=False):
                 print(o)
                 or_query = or_query | Q(item_name__contains=o)
             items = items.filter(or_query)
+
     params['total'] = items.count()
     items = items.order_by('-num_avatars', 'price')[start:end]
+    for item in items:
+        if Customer.objects.filter(highlight=item.creator).exists():
+            setattr(item, 'isHighlight', True)
     params['items'] = items
     params['page'] = page
     params['free_only'] = free_only

@@ -39,8 +39,18 @@ a:hover {
     width: 250px;
     height: 320px;
     padding: 10px;
+    border-style: none;
+}
+
+.box-highlight {
+    float: left;
+    width: 250px;
+    height: 320px;
+    padding: 10px;
     border-style: solid;
-    border-color: white;
+    border-color: gold;
+    border-radius: 10px;
+    background: linear-gradient(to bottom right, white 60%, gold);
 }
 
 .thumb {
@@ -65,6 +75,16 @@ a:hover {
     border-color: lightpink;
 }
 
+.creator-highlight {
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-style: solid;
+    background: linear-gradient(to right, white 60%, gold);
+    border-width: 4px;
+    border-color: gold
+}
+
 .boxrow {
     display: flex;
     border-radius: 15px;
@@ -74,6 +94,19 @@ a:hover {
     height: 250px;
     border-style: solid;
     border-color: lightpink;
+}
+
+.boxrow-highlight {
+    display: flex;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 250px;
+    border-style: solid;
+    background: linear-gradient(to right, white 60%, gold);
+    border-width: 4px;
+    border-color: gold
 }
 
 .price {

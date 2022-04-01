@@ -47,21 +47,25 @@
     </div>
     <p>
         {% for avatar in avatars %}
-            <div class="boxrow">
-                <div style="width:200px">
-                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
-                    </a>
-                </div>
-                <div style="width:auto;margin-left:20px">
-                    <p>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                    </p>
-                    <p>
-                        by
-                        <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                    </p>
-                    <p>
+            {% if avatar.isHighlight %}
+                <div class="boxrow-highlight">
+                {% else %}
+                    <div class="boxrow">
+                    {% endif %}
+                    <div style="width:200px">
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                            <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
+                        </a>
+                    </div>
+                    <div style="width:auto;margin-left:20px">
+                        <p>
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                        </p>
+                        <p>
+                            by
+                            <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                        </p>
+                        <p>
                         対応アイテム：<span class="price">{{ avatar.items.all|length }}</span> 点
                         {% if sort_hot %}<span class="free">(+{{ avatar.item_hot }})</span>{% endif %}
                     </p>

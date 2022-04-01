@@ -50,8 +50,8 @@ class Item(models.Model):
 class Customer(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, primary_key=True)
-    VRCID = models.CharField(max_length=100)
-    message = models.CharField(max_length=100)
+    VRCID = models.CharField(max_length=100,blank=True)
+    message = models.CharField(max_length=100,blank=True)
     isSupporter = models.BooleanField(default=False)
     highlight = models.ForeignKey(Creator, on_delete=models.SET_NULL, null=True, blank=True)
 

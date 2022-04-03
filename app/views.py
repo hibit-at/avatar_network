@@ -56,6 +56,8 @@ def index(request):
     params['recent_avatars'] = recent_avatars
     params['recent_items'] = recent_items
     params['hot_avatars'] = hot_avatars
+    supporters = Customer.objects.filter(isSupporter=True).exclude(user__is_staff=True)
+    params['supporters'] = supporters
     return render(request, 'index.html', params)
 
 

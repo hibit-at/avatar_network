@@ -83,7 +83,7 @@
                 {% endif %}
                 by
                 <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                <span class="free">(+{{avatar.item_hot}})</span>
+                <span class="free">(+{{ avatar.item_hot }})</span>
             </li>
         {% endfor %}
         <a href="{% url 'app:avatars' %}?sort_hot=on">
@@ -127,5 +127,19 @@
                 {% endfor %}
             </ul>
         </li>
+    </ul>
+    <hr />
+    <h4 class="deco">
+        Supporters
+    </h4>
+    <p>
+        以下の方々にご支援いただいています。ありがとうございます。
+    </p>
+    <ul>
+        {% for supporter in supporters %}
+            <li>
+                {{ supporter }} 様
+            </li>
+        {% endfor %}
     </ul>
 {% endblock content %}

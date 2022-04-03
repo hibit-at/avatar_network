@@ -42,7 +42,7 @@
                 {% for folder in folders %}
                     <a class="dropdown-item"
                        href="{% url 'app:folder' pk=folder.pk %}"
-                       style="display:inline;margin-top:20px">{{ folder }}
+                       style="display:inline;line-height:40px">{{ folder }}
                         {% if folder.notadd %}
                             <form method="post" style="display:inline">
                                 {% csrf_token %}

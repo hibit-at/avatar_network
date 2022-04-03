@@ -587,3 +587,11 @@ def debug_folders(request):
     folders = Folder.objects.all()
     params['folders'] = folders
     return render(request, 'folders.html', params)
+
+def please(request):
+    params = {}
+    user = request.user
+    if user.is_authenticated:
+        social = SocialAccount.objects.get(user=user)
+        params['social'] = social
+    return render(request, 'please.html', params)

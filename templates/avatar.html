@@ -117,30 +117,60 @@
         <h4>対応アイテム</h4>
         <div class="boxContainer">
             {% for item in normal_items %}
-            {% if item.isHighlight %}
-            <div class="box-highlight">
-            {% else %}
-                <div class="box">
-            {% endif %}
-                    <a href="{% url 'app:item' item_id=item.item_id %}">
-                        <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
-                    </a>
-                    <p>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
-                        by
-                        <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
-                        <br />
-                        {% if item.price > 0 %}
-                            <span class="price">¥ {{ item.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
+                {% if item.isHighlight %}
+                    <div class="box-highlight">
+                    {% else %}
+                        <div class="box">
                         {% endif %}
-                        <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
-                            <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}" />
+                        <a href="{% url 'app:item' item_id=item.item_id %}">
+                            <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
                         </a>
-                    </p>
+                        <p>
+                            <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                            by
+                            <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
+                            <br />
+                            {% if item.price > 0 %}
+                                <span class="price">¥ {{ item.price|intcomma }}</span>
+                            {% else %}
+                                <span class="free">¥ Free</span>
+                            {% endif %}
+                            <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
+                                <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}" />
+                            </a>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if total > 200 %}
+                <hr />
+                <div class="div-equal-box">
+                    <div>
+                        {% if page > 10 %}
+                            <a class="Link"
+                               href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}">
+                                <<
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if page > 1 %}
+                            <a class="Link"
+                               href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }} ">
+                                <
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div>page {{ page }}</div>
+                    <div>
+                        <a class="Link"
+                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}">></a>
+                    </div>
+                    <div>
+                        <a class="Link"
+                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}">>></a>
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endblock content %}
+            {% endif %}
+        {% endif %}
+    {% endblock content %}

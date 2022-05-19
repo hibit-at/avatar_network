@@ -306,7 +306,8 @@ def items(request, page=1, word='', free_only=False):
             items = items.filter(or_query)
 
     params['total'] = items.count()
-    items = items.order_by('-num_avatars', 'price')[start:end]
+    # items = items.order_by('-num_avatars', 'price')[start:end]
+    items = items.order_by('-weight', 'price')[start:end]
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)
@@ -463,7 +464,7 @@ def recommend(request):
         params['social'] = social
     params['avatars'] = AvatarQueue.objects.all()
     params['items'] = ItemQueue.objects.all()
-
+    params['relations'] = RelationQueue.objects.all()
     if request.method == "POST":
         post = request.POST
         print(post)
@@ -559,6 +560,51 @@ def recommend(request):
             item_id = post['decline_item']
             ItemQueue.objects.get(item_id=item_id).delete()
             return redirect('app:recommend')
+        if 'relation_avatar' in post and 'relation_item' in post:
+            relation_avatar = post['relation_avatar']
+            relation_item = post['relation_item']
+            if relation_avatar == '':
+                params['error'] = 'AvatarURL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            if relation_item == '':
+                params['error'] = 'ItemURL の解析に失敗しました。'
+                return render(request, 'recommend.html', params)
+            avatar_id = relation_avatar.split('/')[-1]
+            item_id = relation_item.split('/')[-1]
+            if not Avatar.objects.filter(avatar_id = avatar_id).exists():
+                params['error'] = 'このアバターはシステムに登録されていません。先に登録お願いします。'
+                return render(request, 'recommend.html', params)
+            if not Item.objects.filter(item_id = item_id).exists():
+                params['error'] = 'このアイテムはシステムに登録されていません。先に登録お願いします。'
+                return render(request, 'recommend.html', params)
+            avatar = Avatar.objects.get(avatar_id=avatar_id)
+            item = Item.objects.get(item_id=item_id)
+            print(avatar)
+            print(item)
+            if item in avatar.items.all():
+                params['error'] = 'すでにアバターとアイテムは関連付けられています。'
+                return render(request, 'recommend.html', params)
+            if RelationQueue.objects.filter(avatar=avatar,item=item).exists():
+                params['error'] = 'すでに同じ内容の推薦があります'
+                return render(request, 'recommend.html', params)
+            relation = RelationQueue.objects.create(
+                avatar = avatar,
+                item = item,
+            )
+            print(relation)
+            params['success'] = f'{relation} をキューに追加しました。'
+            return render(request, 'recommend.html', params)
+        if 'approve_relation' in post:
+            pk = post['approve_relation']
+            print(pk)
+            relation = RelationQueue.objects.get(pk=pk)
+            avatar = relation.avatar
+            item = relation.item
+            avatar.items.add(item)
+            relation.delete()
+        if 'decline_relation' in post:
+            pk = post['decline_relation']
+            RelationQueue.objects.get(pk=pk).delete()
 
     return render(request, 'recommend.html', params)
 

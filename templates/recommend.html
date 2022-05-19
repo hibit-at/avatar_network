@@ -41,6 +41,16 @@
             記入例 : https://booth.pm/ja/items/2254519
         </p>
     </form>
+    <p>※この下のフォームでは、アバターとアイテムの関連付けを推薦できます</p>
+    <form method="post">
+        {% csrf_token %}
+        <p>Relation Avatar URL : <input type="text" size="80px" name="relation_avatar"/></p>
+        <p>Relation Item URL : <input type="text" size="80px" name="relation_item" /></p>
+        <p>
+            記入例は上の Avatar と Item と同様。
+            <button class="button">推薦</button>
+        </P> 
+    </form>
     <hr>
     <h3 class="deco">AvatarQueue</h3>
     {% for avatar in avatars %}
@@ -76,6 +86,22 @@
                 <ul>
                     <li>{{ item.describe }}</li>
                 </ul>
+            </li>
+        </ul>
+    {% endfor %}
+    <hr>
+    <h3 class="deco">RelationQueue</h3>
+    {% for relation in relations %}
+        <ul>
+            <li>
+                {{ relation }}
+                {% if user.is_staff %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-success" name="approve_relation" value="{{ relation.pk }}">承認</button>
+                        <button class="btn btn-danger" name="decline_relation" value="{{ relation.pk }}">拒否</button>
+                    </form>
+                {% endif %}
             </li>
         </ul>
     {% endfor %}

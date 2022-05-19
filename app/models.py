@@ -1,3 +1,4 @@
+from pydoc import describe
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -42,6 +43,7 @@ class Item(models.Model):
         Creator, on_delete=models.CASCADE, related_name='items')
     price = models.IntegerField()
     created_at = models.DateTimeField()
+    weight = models.FloatField(default=0)
 
     def __str__(self):
         return self.item_name
@@ -50,10 +52,11 @@ class Item(models.Model):
 class Customer(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, primary_key=True)
-    VRCID = models.CharField(max_length=100,blank=True)
-    message = models.CharField(max_length=100,blank=True)
+    VRCID = models.CharField(max_length=100, blank=True)
+    message = models.CharField(max_length=100, blank=True)
     isSupporter = models.BooleanField(default=False)
-    highlight = models.ForeignKey(Creator, on_delete=models.SET_NULL, null=True, blank=True)
+    highlight = models.ForeignKey(
+        Creator, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         if self.VRCID != '':
@@ -63,7 +66,8 @@ class Customer(models.Model):
 
 
 class Folder(models.Model):
-    editor = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='folder')
+    editor = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, related_name='folder')
     name = models.TextField(max_length=50, default='')
     description = models.TextField(max_length=100)
     fav_avatar = models.ManyToManyField(Avatar)
@@ -74,14 +78,15 @@ class Folder(models.Model):
     def __str__(self):
         return self.name
 
+
 class AvatarQueue(models.Model):
     avatar_id = models.CharField(max_length=100)
     avatar_name = models.CharField(max_length=200)
     describe = models.CharField(max_length=500)
 
-
     def __str__(self):
         return str(self.avatar_name)
+
 
 class ItemQueue(models.Model):
     item_id = models.CharField(max_length=100)
@@ -90,3 +95,11 @@ class ItemQueue(models.Model):
 
     def __str__(self):
         return str(self.item_name)
+
+
+class RelationQueue(models.Model):
+    avatar = models.ForeignKey(Avatar,on_delete=models.CASCADE)
+    item = models.ForeignKey(Item,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.avatar} >---< {self.item}'

@@ -59,7 +59,7 @@
                         by
                         <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
                     </p>
-                対応アバター：<span class="price">{{ item.avatar.all|length }}</span> 点 （重み補正：{{item.weight|floatformat:2}} 点）
+                対応アバター：<span class="price">{{ item.avatar.all|length }}</span> 点
                 <p>
                     {% if item.price > 0 %}
                         <span class="price">¥ {{ item.price|intcomma }}</span>

@@ -306,8 +306,8 @@ def items(request, page=1, word='', free_only=False):
             items = items.filter(or_query)
 
     params['total'] = items.count()
-    # items = items.order_by('-num_avatars', 'price')[start:end]
-    items = items.order_by('-weight', 'price')[start:end]
+    items = items.order_by('-num_avatars', 'price')[start:end]
+    # items = items.order_by('-weight', 'price')[start:end]
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)

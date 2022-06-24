@@ -90,7 +90,7 @@
                 <div>
                     {% if page > 10 %}
                         <a class="Link"
-                           href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}">
+                           href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}{% if sort_latest %}&sort_latest=on{% endif %}">
                             <<
                         </a>
                     {% endif %}
@@ -98,7 +98,7 @@
                 <div>
                     {% if page > 1 %}
                         <a class="Link"
-                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }} ">
+                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }}{% if sort_latest %}&sort_latest=on{% endif %}">
                             <
                         </a>
                     {% endif %}
@@ -106,15 +106,24 @@
                 <div>page {{ page }}</div>
                 <div>
                     <a class="Link"
-                       href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}">></a>
+                       href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}{% if sort_latest %}&sort_latest=on{% endif %}">></a>
                 </div>
                 <div>
                     <a class="Link"
-                       href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}">>></a>
+                       href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}{% if sort_latest %}&sort_latest=on{% endif %}">>></a>
                 </div>
             </div>
         {% endif %}
-        <h4>対応アイテム</h4>
+        <h4>
+            <form method="get" action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                対応アイテム
+                {% if sort_latest %}
+                    <button name="sort_latest" value="off" class="button">Price</button>
+                {% else %}
+                    <button name="sort_latest" value="on" class="button">Latest</button>
+                {% endif %}
+            </form>
+        </h4>
         <div class="boxContainer">
             {% for item in normal_items %}
                 {% if item.isHighlight %}
@@ -148,7 +157,7 @@
                     <div>
                         {% if page > 10 %}
                             <a class="Link"
-                               href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}">
+                               href="{% url 'app:avatar'  avatar_id=avatar.avatar_id %}?page={{ page|add:-10 }}{% if sort_latest %}&sort_latest=on{% endif %}">
                                 <<
                             </a>
                         {% endif %}
@@ -156,7 +165,7 @@
                     <div>
                         {% if page > 1 %}
                             <a class="Link"
-                               href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }} ">
+                               href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:-1 }}{% if sort_latest %}&sort_latest=on{% endif %}">
                                 <
                             </a>
                         {% endif %}
@@ -164,11 +173,11 @@
                     <div>page {{ page }}</div>
                     <div>
                         <a class="Link"
-                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}">></a>
+                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}{% if sort_latest %}&sort_latest=on{% endif %}">></a>
                     </div>
                     <div>
                         <a class="Link"
-                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}">>></a>
+                           href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:10 }}{% if sort_latest %}&sort_latest=on{% endif %}">>></a>
                     </div>
                 </div>
             {% endif %}

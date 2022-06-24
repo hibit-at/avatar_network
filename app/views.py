@@ -56,7 +56,8 @@ def index(request):
     params['recent_avatars'] = recent_avatars
     params['recent_items'] = recent_items
     params['hot_avatars'] = hot_avatars
-    supporters = Customer.objects.filter(isSupporter=True).exclude(user__is_staff=True)
+    supporters = Customer.objects.filter(
+        isSupporter=True).exclude(user__is_staff=True)
     params['supporters'] = supporters
     return render(request, 'index.html', params)
 
@@ -145,7 +146,7 @@ def creators(request, page=1, word='', free_only=False):
     return render(request, 'creators.html', params)
 
 
-def avatar(request, avatar_id=1, page=1):
+def avatar(request, avatar_id=1, page=1, sort_latest=False):
     params = {}
     user = request.user
     avatar = Avatar.objects.get(avatar_id=avatar_id)
@@ -158,6 +159,9 @@ def avatar(request, avatar_id=1, page=1):
         params['folders'] = folders
     if 'page' in request.GET:
         page = int(request.GET['page'])
+    if 'sort_latest' in request.GET:
+        sort_latest = request.GET['sort_latest']
+    params['sort_latest'] = sort_latest
     span = 200
     start = (page-1)*span
     end = page*span
@@ -168,11 +172,19 @@ def avatar(request, avatar_id=1, page=1):
     genuine_items = genuine_items.order_by('num_avatars', 'price')
     normal_items = items.exclude(creator__creator_id=creator_id)
     total = normal_items.count()
-    normal_items = normal_items.order_by('num_avatars', 'price')[start:end]
+    print(sort_latest)
+    if sort_latest:
+        if sort_latest == 'off':
+            redirect_url = reverse('app:avatar',args=[avatar_id])
+            # redirect_url += '?page=' + page
+            return redirect(redirect_url)
+        normal_items = normal_items.order_by('-item_id')[start:end]
+    else:
+        normal_items = normal_items.order_by('num_avatars', 'price')[start:end]
     for normal_item in normal_items:
         if Customer.objects.filter(highlight=normal_item.creator):
             print("hit")
-            setattr(normal_item,'isHighlight',True)
+            setattr(normal_item, 'isHighlight', True)
     params['page'] = page
     params['avatar'] = avatar
     params['total'] = total
@@ -260,7 +272,7 @@ def item(request, item_id=''):
     for avatar in avatars:
         if Customer.objects.filter(highlight=avatar.creator).exists():
             print("hit")
-            setattr(avatar,'isHighlight',True)
+            setattr(avatar, 'isHighlight', True)
     params['avatars'] = avatars
     if request.method == "POST":
         post = request.POST
@@ -571,10 +583,10 @@ def recommend(request):
                 return render(request, 'recommend.html', params)
             avatar_id = relation_avatar.split('/')[-1]
             item_id = relation_item.split('/')[-1]
-            if not Avatar.objects.filter(avatar_id = avatar_id).exists():
+            if not Avatar.objects.filter(avatar_id=avatar_id).exists():
                 params['error'] = 'このアバターはシステムに登録されていません。先に登録お願いします。'
                 return render(request, 'recommend.html', params)
-            if not Item.objects.filter(item_id = item_id).exists():
+            if not Item.objects.filter(item_id=item_id).exists():
                 params['error'] = 'このアイテムはシステムに登録されていません。先に登録お願いします。'
                 return render(request, 'recommend.html', params)
             avatar = Avatar.objects.get(avatar_id=avatar_id)
@@ -584,12 +596,12 @@ def recommend(request):
             if item in avatar.items.all():
                 params['error'] = 'すでにアバターとアイテムは関連付けられています。'
                 return render(request, 'recommend.html', params)
-            if RelationQueue.objects.filter(avatar=avatar,item=item).exists():
+            if RelationQueue.objects.filter(avatar=avatar, item=item).exists():
                 params['error'] = 'すでに同じ内容の推薦があります'
                 return render(request, 'recommend.html', params)
             relation = RelationQueue.objects.create(
-                avatar = avatar,
-                item = item,
+                avatar=avatar,
+                item=item,
             )
             print(relation)
             params['success'] = f'{relation} をキューに追加しました。'
@@ -633,6 +645,7 @@ def debug_folders(request):
     folders = Folder.objects.all()
     params['folders'] = folders
     return render(request, 'folders.html', params)
+
 
 def please(request):
     params = {}

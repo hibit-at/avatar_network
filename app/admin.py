@@ -13,6 +13,6 @@ class ItemAdmin(admin.ModelAdmin):
 admin.site.register(Creator)
 admin.site.register(Avatar, AvatarAdmin)
 admin.site.register(Item, ItemAdmin)
-admin.site.register(Customer)
+admin.site.register(Customer, search_fields = ['user__username'])
 admin.site.register(Folder)
 admin.site.register(RelationQueue)

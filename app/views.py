@@ -305,6 +305,7 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     start = (page-1)*span
     end = page*span
     items = Item.objects.annotate(num_avatars=Count('avatar'))
+    params['total'] = items.count()
     initial = {}
     if free_only:
         items = items.filter(price=0)
@@ -349,9 +350,6 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     #     avatars = avatars.annotate(num_items=Count('items'))
     #     avatars = avatars.order_by('-num_items', 'price')[start:end]
 
-
-
-    params['total'] = items.count()
     # items = items.order_by('-num_avatars', 'price')[start:end]
     # items = items.order_by('-weight', 'price')[start:end]
     for item in items:

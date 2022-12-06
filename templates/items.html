@@ -5,15 +5,21 @@
     <h3 class="deco">Items List</h3>
     <form method="get" action="{% url 'app:items' %}">
         {{ form }}
+        {% if sort_latest %}<input type="hidden" name="sort_latest" value="on" />{% endif %}
         <input type="submit" value="Filter" class="button" />
         （{{ total|intcomma }} items）
+        {% if sort_latest %}
+            <button name="sort_latest" value="off" class="button">Total</button>
+        {% else %}
+            <button name="sort_latest" value="on" class="button">Latest</button>
+        {% endif %}
     </form>
     {% comment "ページング" %}{% endcomment %}
     <div class="div-equal-box">
         <div>
             {% if page > 10 %}
                 <a class="Link"
-                   href="{% url 'app:items' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:items' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                     <<
                 </a>
             {% endif %}
@@ -21,7 +27,7 @@
         <div>
             {% if page > 1 %}
                 <a class="Link"
-                   href="{% url 'app:items' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:items' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                     <
                 </a>
             {% endif %}
@@ -29,13 +35,13 @@
         <div>page {{ page }}</div>
         <div>
             <a class="Link"
-               href="{% url 'app:items' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:items' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                 >
             </a>
         </div>
         <div>
             <a class="Link"
-               href="{% url 'app:items' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:items' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                 >>
             </a>
         </div>
@@ -77,7 +83,7 @@
         <div>
             {% if page > 10 %}
                 <a class="Link"
-                   href="{% url 'app:items' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:items' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                     <<
                 </a>
             {% endif %}
@@ -85,7 +91,7 @@
         <div>
             {% if page > 1 %}
                 <a class="Link"
-                   href="{% url 'app:items' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+                   href="{% url 'app:items' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                     <
                 </a>
             {% endif %}
@@ -93,13 +99,13 @@
         <div>page {{ page }}</div>
         <div>
             <a class="Link"
-               href="{% url 'app:items' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:items' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                 >
             </a>
         </div>
         <div>
             <a class="Link"
-               href="{% url 'app:items' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}">
+               href="{% url 'app:items' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_latest %}&sort_latest=on{% endif %}">
                 >>
             </a>
         </div>

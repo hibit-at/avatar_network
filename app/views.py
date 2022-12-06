@@ -285,7 +285,7 @@ def item(request, item_id=''):
     return render(request, 'item.html', params)
 
 
-def items(request, page=1, word='', free_only=False):
+def items(request, page=1, word='', free_only=False, sort_latest=False):
     params = {}
     user = request.user
     if user.is_authenticated:
@@ -297,6 +297,8 @@ def items(request, page=1, word='', free_only=False):
         word = request.GET['word']
     if 'free_only' in request.GET:
         free_only = request.GET['free_only']
+    if 'sort_latest' in request.GET:
+        sort_latest = request.GET['sort_latest']
     words = word.split()
     print(words)
     span = 18
@@ -307,6 +309,7 @@ def items(request, page=1, word='', free_only=False):
     if free_only:
         items = items.filter(price=0)
         initial['free_only'] = free_only
+
     if word != '':
         initial['word'] = word
         for w in words:
@@ -317,8 +320,39 @@ def items(request, page=1, word='', free_only=False):
                 or_query = or_query | Q(item_name__contains=o)
             items = items.filter(or_query)
 
+    if sort_latest:
+        if sort_latest == 'off':
+            print('off!')
+            redirect_url = reverse('app:items')
+            redirect_url += '?word=' + word
+            if free_only:
+                redirect_url += '&free_only=on'
+            return redirect(redirect_url)
+        print('latest!')
+        items  = items.order_by('-item_id','-num_avatars','price')[start:end]
+    else:
+        items = items.order_by('-num_avatars','price')[start:end]
+
+
+    # if sort_hot:
+    #     if sort_hot == 'off':
+    #         redirect_url = reverse('app:avatars')
+    #         redirect_url += '?word=' + word
+    #         if free_only:
+    #             redirect_url += '&free_only=on'
+    #         return redirect(redirect_url)
+    #     avatars = avatars.annotate(num_items=Count('items'))
+    #     avatars = avatars.order_by(
+    #         '-item_hot', '-num_items', 'price')[start:end]
+    #     initial['sort_hot'] = sort_hot
+    # else:
+    #     avatars = avatars.annotate(num_items=Count('items'))
+    #     avatars = avatars.order_by('-num_items', 'price')[start:end]
+
+
+
     params['total'] = items.count()
-    items = items.order_by('-num_avatars', 'price')[start:end]
+    # items = items.order_by('-num_avatars', 'price')[start:end]
     # items = items.order_by('-weight', 'price')[start:end]
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
@@ -329,6 +363,7 @@ def items(request, page=1, word='', free_only=False):
     params['word'] = word
     form = Filter(initial=initial)
     params['form'] = form
+    params['sort_latest'] = sort_latest
     return render(request, 'items.html', params)
 
 

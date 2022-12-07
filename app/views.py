@@ -3,6 +3,7 @@ from django.db.models import Q, Count
 from django.urls import reverse
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from app.forms import *
 from app.models import *
@@ -687,3 +688,15 @@ def please(request):
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
     return render(request, 'please.html', params)
+
+def api_avatar(request):
+    avatars = Avatar.objects.all()
+    res = []
+    for avatar in avatars:
+        row = {}
+        row['name'] = avatar.avatar_name
+        row['num_items'] = avatar.items.count()
+        res.append(row)
+    import json
+    res = json.dumps(res,ensure_ascii=False,indent=4)
+    return HttpResponse(res)

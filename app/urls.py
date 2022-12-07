@@ -21,4 +21,5 @@ urlpatterns = [
     path('debug_folders/', views.debug_folders, name='debug_folders'),
     # path('please/', views.please, name='please'),
     path('api/avatar/', views.api_avatar, name='api_avatar'),
+    path('api/item/', views.api_item, name='api_item'),
 ]

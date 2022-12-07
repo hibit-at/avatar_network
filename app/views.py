@@ -700,3 +700,15 @@ def api_avatar(request):
     import json
     res = json.dumps(res,ensure_ascii=False,indent=4)
     return HttpResponse(res)
+
+def api_item(request):
+    items = Item.objects.all()
+    res = []
+    for item in items:
+        row = {}
+        row['name'] = item.item_name
+        row['num_avatars'] = item.avatar.count()
+        res.append(row)
+    import json
+    res = json.dumps(res,ensure_ascii=False,indent=4)
+    return HttpResponse(res)

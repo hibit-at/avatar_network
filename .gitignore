@@ -4,3 +4,5 @@ __pycache__
 analysis.py
 add_test.py
 venv
+avatar.json
+item.json

@@ -695,6 +695,7 @@ def api_avatar(request):
     for avatar in avatars:
         row = {}
         row['name'] = avatar.avatar_name
+        row['price'] = avatar.price
         row['num_items'] = avatar.items.count()
         res.append(row)
     import json
@@ -707,6 +708,7 @@ def api_item(request):
     for item in items:
         row = {}
         row['name'] = item.item_name
+        row['price'] = item.price
         row['num_avatars'] = item.avatar.count()
         res.append(row)
     import json

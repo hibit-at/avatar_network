@@ -43,23 +43,23 @@
                     <a class="dropdown-item"
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
-                        {{ folder }}
-                        {% if folder.notadd_want %}
-                            <form method="post" style="display:inline">
-                                {% csrf_token %}
-                                <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
-                            </form>
+                       {% if folder.notadd_want %}
+                       <form method="post" style="display:inline">
+                           {% csrf_token %}
+                           <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                        </form>
                         {% else %}
-                            <button class="button_already" disabled>Added</button>
+                        <button class="button_already" disabled>Added</button>
                         {% endif %}
                         {% if folder.notadd %}
-                            <form method="post" style="display:inline">
-                                {% csrf_token %}
-                                <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
-                            </form>
+                        <form method="post" style="display:inline">
+                            {% csrf_token %}
+                            <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
+                        </form>
                         {% else %}
-                            <button class="button_already" disabled>Added</button>
+                        <button class="button_already" disabled>Added</button>
                         {% endif %}
+                        {{ folder }}
                     </a>
                 {% endfor %}
             </div>

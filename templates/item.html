@@ -36,7 +36,7 @@
                 {% for folder in folders %}
                     <a class="dropdown-item"
                        href="{% url 'app:folder' pk=folder.pk %}"
-                       style="display:inline;line-height:40px">{{ folder }}
+                       style="display:inline;line-height:40px">
                         {% if folder.notadd_want %}
                             <form method="post" style="display:inline">
                                 {% csrf_token %}
@@ -53,6 +53,7 @@
                         {% else %}
                             <button class="button_already" disabled>Added</button>
                         {% endif %}
+                        {{ folder }}
                     </a>
                 {% endfor %}
             </div>

@@ -154,9 +154,11 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        folders = Folder.objects.filter(editor=request.user.customer)
+        folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
         for folder in folders:
             setattr(folder, 'notadd', avatar not in folder.fav_avatar.all())
+            setattr(folder, 'notadd_want',
+                    avatar not in folder.want_avatar.all())
         params['folders'] = folders
     if 'page' in request.GET:
         page = int(request.GET['page'])
@@ -176,7 +178,7 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
     print(sort_latest)
     if sort_latest:
         if sort_latest == 'off':
-            redirect_url = reverse('app:avatar',args=[avatar_id])
+            redirect_url = reverse('app:avatar', args=[avatar_id])
             # redirect_url += '?page=' + page
             return redirect(redirect_url)
         normal_items = normal_items.order_by('-item_id')[start:end]
@@ -198,6 +200,13 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
             pk = post['add']
             folder = Folder.objects.get(pk=pk)
             folder.fav_avatar.add(avatar)
+            return redirect('app:avatar', avatar_id=avatar_id)
+        if 'add_want' in post:
+            print('want!')
+            pk = post['add_want']
+            print(pk)
+            folder = Folder.objects.get(pk=pk)
+            folder.want_avatar.add(avatar)
             return redirect('app:avatar', avatar_id=avatar_id)
     return render(request, 'avatar.html', params)
 
@@ -265,9 +274,10 @@ def item(request, item_id=''):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        folders = Folder.objects.filter(editor=request.user.customer)
+        folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
         for folder in folders:
             setattr(folder, 'notadd', item not in folder.fav_item.all())
+            setattr(folder, 'notadd_want', item not in folder.want_item.all())
         params['folders'] = folders
     avatars = item.avatar.all().order_by('price')
     for avatar in avatars:
@@ -282,6 +292,12 @@ def item(request, item_id=''):
             pk = post['add']
             folder = Folder.objects.get(pk=pk)
             folder.fav_item.add(item)
+            return redirect('app:item', item_id=item_id)
+        if 'add_want' in post:
+            print('want')
+            pk = post['add_want']
+            folder = Folder.objects.get(pk=pk)
+            folder.want_item.add(item)
             return redirect('app:item', item_id=item_id)
     return render(request, 'item.html', params)
 
@@ -331,10 +347,9 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
                 redirect_url += '&free_only=on'
             return redirect(redirect_url)
         print('latest!')
-        items  = items.order_by('-item_id','-num_avatars','price')[start:end]
+        items = items.order_by('-item_id', '-num_avatars', 'price')[start:end]
     else:
-        items = items.order_by('-num_avatars','price')[start:end]
-
+        items = items.order_by('-num_avatars', 'price')[start:end]
 
     # if sort_hot:
     #     if sort_hot == 'off':
@@ -479,6 +494,16 @@ def folder(request, pk=0):
             item = Item.objects.get(item_id=remove_id)
             folder.fav_item.remove(item)
             return redirect('app:folder', pk=pk)
+        if 'avatar_remove_want' in post:
+            remove_id = post['avatar_remove_want']
+            avatar = Avatar.objects.get(avatar_id=remove_id)
+            folder.want_avatar.remove(avatar)
+            return redirect('app:folder', pk=pk)
+        if 'item_remove_want' in post:
+            remove_id = post['item_remove_want']
+            item = Item.objects.get(item_id=remove_id)
+            folder.want_item.remove(item)
+            return redirect('app:folder', pk=pk)
         if 'delete' in post:
             delete = post['delete']
             if folder.name == delete:
@@ -496,6 +521,40 @@ def folder(request, pk=0):
             folder.isOpen = 'public' in post
             folder.isNSFW = 'NSFW' in post
             folder.save()
+            return redirect('app:folder', pk=pk)
+        if 'swap' in post:
+            pre_fav_avatars = []
+            pre_fav_items = []
+            pre_want_avatars = []
+            pre_want_items = []
+            for avatar in folder.fav_avatar.all():
+                pre_fav_avatars.append(avatar.avatar_id)
+                folder.fav_avatar.remove(avatar)
+            for item in folder.fav_item.all():
+                pre_fav_items.append(item.item_id)
+                folder.fav_item.remove(item)
+            for avatar in folder.want_avatar.all():
+                pre_want_avatars.append(avatar.avatar_id)
+                folder.want_avatar.remove(avatar)
+            for item in folder.want_item.all():
+                pre_want_items.append(item.item_id)
+                folder.want_item.remove(item)
+            print(pre_fav_avatars)
+            print(pre_fav_items)
+            print(pre_want_avatars)
+            print(pre_want_items)
+            for avatar_id in pre_fav_avatars:
+                avatar = Avatar.objects.get(avatar_id=avatar_id)
+                folder.want_avatar.add(avatar)
+            for item_id in pre_fav_items:
+                item = Item.objects.get(item_id=item_id)
+                folder.want_item.add(item)
+            for avatar_id in pre_want_avatars:
+                avatar = Avatar.objects.get(avatar_id=avatar_id)
+                folder.fav_avatar.add(avatar)
+            for item_id in pre_want_items:
+                item = Item.objects.get(item_id=item_id)
+                folder.fav_item.add(item)
             return redirect('app:folder', pk=pk)
 
     return render(request, 'folder.html', params)
@@ -689,6 +748,7 @@ def please(request):
         params['social'] = social
     return render(request, 'please.html', params)
 
+
 def api_avatar(request):
     avatars = Avatar.objects.all()
     res = []
@@ -699,8 +759,9 @@ def api_avatar(request):
         row['num_items'] = avatar.items.count()
         res.append(row)
     import json
-    res = json.dumps(res,ensure_ascii=False,indent=4)
+    res = json.dumps(res, ensure_ascii=False, indent=4)
     return HttpResponse(res)
+
 
 def api_item(request):
     items = Item.objects.all()
@@ -712,5 +773,5 @@ def api_item(request):
         row['num_avatars'] = item.avatar.count()
         res.append(row)
     import json
-    res = json.dumps(res,ensure_ascii=False,indent=4)
+    res = json.dumps(res, ensure_ascii=False, indent=4)
     return HttpResponse(res)

@@ -2,6 +2,12 @@
 {% block content %}
     {% load static %}
     {% load humanize %}
+    <div style="text-align:center">
+        <h4 style="color:red">！重要なお知らせ！</h4>
+        <p>2022/12/29、BOOTHのギフト機能実装に伴い、お気に入りフォルダーの仕様を変更し、ほしいもの（WANT）と所持しているもの／オススメしたいもの（OWNED/RECOMMEND）に分けて登録できるようになりました。<p>
+        <p>これに伴い、従来のシステムでお気に入りフォルダーを「欲しい物リスト」として使われていた方には、<strong>手動で変更していただく部分があります。</strong></p>
+        <p>詳しい内容や使い分けの方針については、<a style="background-color:lightpink" href="{% url 'app:info' %}">Info</a>のFAQにある<a style="background-color:lightpink" href="{% url 'app:info' %}#want_and_recommend">「WANT と OWNED/RECOMMEND はなにが違うのか」</a>をご覧ください。</p>
+    </div>
     <div class="welcome">
         <p class="deco">
             Welcome to Avatar Network

@@ -36,11 +36,19 @@
                 {% for folder in folders %}
                     <a class="dropdown-item"
                        href="{% url 'app:folder' pk=folder.pk %}"
-                       style="display:inline;margin-top:20px">{{ folder }}
+                       style="display:inline;line-height:40px">{{ folder }}
+                        {% if folder.notadd_want %}
+                            <form method="post" style="display:inline">
+                                {% csrf_token %}
+                                <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                            </form>
+                        {% else %}
+                            <button class="button_already" disabled>Added</button>
+                        {% endif %}
                         {% if folder.notadd %}
                             <form method="post" style="display:inline">
                                 {% csrf_token %}
-                                <button class="button" name="add" value="{{ folder.pk }}">+Add</button>
+                                <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                             </form>
                         {% else %}
                             <button class="button_already" disabled>Added</button>
@@ -65,7 +73,7 @@
                         </a>
                         <p>
                             <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
-                            by{{avatar.isHighlight}}
+                            by{{ avatar.isHighlight }}
                             <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator|truncatechars:30 }}</a>
                             <br />
                             {% if avatar.price > 0 %}

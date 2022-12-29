@@ -3,7 +3,15 @@
     {% load humanize %}
     {% load static %}
     <h3 class="deco">Folder Page</h3>
-    <h3>{{ folder }} {% if folder.isOpen %}(Public){% else %}(Private){% endif %}{% if folder.isNSFW %}(NSFW){% endif %}</h3>
+    <h3>
+        {{ folder }}
+        {% if folder.isOpen %}
+            (Public)
+        {% else %}
+            (Private)
+        {% endif %}
+        {% if folder.isNSFW %}(NSFW){% endif %}
+    </h3>
     <p>
         by {{ folder.editor }}
     </p>
@@ -19,12 +27,20 @@
             </p>
             <p>
                 Public:
-                <input type="checkbox" name="public" style="width:20px;height:20px;" {% if folder.isOpen %}checked{% endif %}>
+                <input type="checkbox"
+                       name="public"
+                       style="width:20px;
+                              height:20px;"
+                       {% if folder.isOpen %}checked{% endif %}>
                 「Folders」からこのフォルダーの内容を閲覧できるようになります。
             </p>
             <p>
                 NSFW:
-                <input type="checkbox" name="NSFW" style="width:20px;height:20px;" {% if folder.isNSFW %}checked{% endif %}>
+                <input type="checkbox"
+                       name="NSFW"
+                       style="width:20px;
+                              height:20px;"
+                       {% if folder.isNSFW %}checked{% endif %}>
                 公開フォルダーの一覧ではサムネイルにぼかしがつきます。
             </p>
             <p>
@@ -33,12 +49,21 @@
                 <button class="button">Change</button>
             </p>
         </form>
+        <form method="post">
+            {% csrf_token %}
+            <p>臨時機能：<button class="button" name="swap" value="swap">Swap WANT and OWNED</button></p>
+            <p>BOOTH のギフト機能実装に伴い、フォルダーの内訳を「WANT」（欲しい物）と「OWNED/RECOMMEND」（所持またはオススメ）に分けたため、臨時に設定した機能です</p>
+            <p>「WANT」と「OWNED/RECOMMEND」に設定されたアバターとアイテムをそれぞれ入れ替えます。</p>
+            <p>干し芋リストのつもりでアバターやアイテムを追加していた場合、一括で「WANT」扱いにできます。</p>
+        </form>
     {% endif %}
-    {% if folder.fav_avatar.all|length > 0 %}
+    {% if folder.want_avatar.all|length > 0 or folder.want_item.all|length > 0 %}
         <hr />
+        <h3 class="deco">WANT</h3>
+        {% if folder.want_avatar.all|length > 0 %}
         <h4 class="deco">Avatars</h4>
         <div class="boxContainer">
-            {% for avatar in folder.fav_avatar.all %}
+            {% for avatar in folder.want_avatar.all %}
                 <div class="box">
                     <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
                         <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
@@ -50,7 +75,7 @@
                                 {% csrf_token %}
                                 <button class="danger"
                                         style="font-size:15px"
-                                        name="avatar_remove"
+                                        name="avatar_remove_want"
                                         value="{{ avatar.avatar_id }}">Remove</button>
                             </form>
                         {% endif %}
@@ -58,31 +83,83 @@
                 </div>
             {% endfor %}
         </div>
+        {% endif %}
+        {% if folder.want_item.all|length > 0 %}
+            <h4 class="deco">Items</h4>
+            <div class="boxContainer">
+                {% for item in folder.want_item.all|dictsort:'price' %}
+                    <div class="box">
+                        <a href="{% url 'app:item' item_id=item.item_id %}">
+                            <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
+                        </a>
+                        <p>
+                            <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                            {% if folder.editor == user.customer %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button class="danger"
+                                            style="font-size:15px"
+                                            name="item_remove_want"
+                                            value="{{ item.item_id }}">Remove</button>
+                                </form>
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
-    {% if folder.fav_item.all|length > 0 %}
+    {% if folder.fav_avatar.all|length > 0 or folder.fav_item.all|length > 0 %}
         <hr />
-        <h4 class="deco">Items</h4>
-        <div class="boxContainer">
-            {% for item in folder.fav_item.all|dictsort:'price' %}
-                <div class="box">
-                    <a href="{% url 'app:item' item_id=item.item_id %}">
-                        <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
-                    </a>
-                    <p>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
-                        {% if folder.editor == user.customer %}
-                            <form method="post">
-                                {% csrf_token %}
-                                <button class="danger"
-                                        style="font-size:15px"
-                                        name="item_remove"
-                                        value="{{ item.item_id }}">Remove</button>
-                            </form>
-                        {% endif %}
-                    </p>
-                </div>
-            {% endfor %}
-        </div>
+        <h3 class="deco">OWNED / RECOMMEND</h3>
+        {% if folder.fav_avatar.all|length > 0 %}
+            <h4 class="deco">Avatars</h4>
+            <div class="boxContainer">
+                {% for avatar in folder.fav_avatar.all %}
+                    <div class="box">
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                            <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
+                        </a>
+                        <p>
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                            {% if folder.editor == user.customer %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button class="danger"
+                                            style="font-size:15px"
+                                            name="avatar_remove"
+                                            value="{{ avatar.avatar_id }}">Remove</button>
+                                </form>
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if folder.fav_item.all|length > 0 %}
+            <h4 class="deco">Items</h4>
+            <div class="boxContainer">
+                {% for item in folder.fav_item.all|dictsort:'price' %}
+                    <div class="box">
+                        <a href="{% url 'app:item' item_id=item.item_id %}">
+                            <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
+                        </a>
+                        <p>
+                            <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                            {% if folder.editor == user.customer %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button class="danger"
+                                            style="font-size:15px"
+                                            name="item_remove"
+                                            value="{{ item.item_id }}">Remove</button>
+                                </form>
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
     {% if user.customer == folder.editor %}
         <hr>

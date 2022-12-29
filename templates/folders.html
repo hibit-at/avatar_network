@@ -11,9 +11,10 @@
             <p>
                 {{ folder.description|truncatechars:30 }}
             </p>
-            {% if folder.fav_avatar.all|length > 0 %}
-                <div class="boxContainer">
-                    {% for avatar in folder.fav_avatar.all|slice:":10" %}
+            <div class="boxContainer">
+                {% if folder.want_avatar.all|length > 0 %}
+                    {% comment %} <div class="boxContainer"> {% endcomment %}
+                    {% for avatar in folder.want_avatar.all|slice:":7" %}
                         <div class="box" style="width:160px;height:160px">
                             <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
                                 <img alt="thumb"
@@ -23,11 +24,11 @@
                             </a>
                         </div>
                     {% endfor %}
-                </div>
-            {% endif %}
-            {% if folder.fav_item.all|length > 0 %}
-                <div class="boxContainer">
-                    {% for item in folder.fav_item.all|slice:":10" %}
+                    {% comment %} </div> {% endcomment %}
+                {% endif %}
+                {% if folder.want_item.all|length > 0 %}
+                    {% comment %} <div class="boxContainer"> {% endcomment %}
+                    {% for item in folder.want_item.all|slice:":7" %}
                         <div class="box" style="width:160px;height:160px">
                             <a href="{% url 'app:item' item_id=item.item_id %}">
                                 <img alt="thumb"
@@ -37,8 +38,37 @@
                             </a>
                         </div>
                     {% endfor %}
-                </div>
-            {% endif %}
+                    {% comment %} </div> {% endcomment %}
+                {% endif %}
+                {% if folder.fav_avatar.all|length > 0 %}
+                    {% comment %} <div class="boxContainer"> {% endcomment %}
+                    {% for avatar in folder.fav_avatar.all|slice:":7" %}
+                        <div class="box" style="width:160px;height:160px">
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                                <img alt="thumb"
+                                     src="{{ avatar.imageURL }}"
+                                     class="thumb"
+                                     {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    {% comment %} </div> {% endcomment %}
+                {% endif %}
+                {% if folder.fav_item.all|length > 0 %}
+                    {% comment %} <div class="boxContainer"> {% endcomment %}
+                    {% for item in folder.fav_item.all|slice:":7" %}
+                        <div class="box" style="width:160px;height:160px">
+                            <a href="{% url 'app:item' item_id=item.item_id %}">
+                                <img alt="thumb"
+                                     src="{{ item.imageURL }}"
+                                     class="thumb"
+                                     {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    {% comment %} </div> {% endcomment %}
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
 {% endblock content %}

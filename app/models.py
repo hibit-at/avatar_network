@@ -72,6 +72,8 @@ class Folder(models.Model):
     description = models.TextField(max_length=100)
     fav_avatar = models.ManyToManyField(Avatar)
     fav_item = models.ManyToManyField(Item)
+    want_avatar = models.ManyToManyField(Avatar,related_name='want_avatar')
+    want_item = models.ManyToManyField(Item,related_name='want_item')
     isOpen = models.BooleanField(default=False)
     isNSFW = models.BooleanField(default=False)
 

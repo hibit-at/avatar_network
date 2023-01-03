@@ -70,27 +70,21 @@ def index(request):
 
     for folder in Folder.objects.all():
         for avatar in folder.want_avatar.all():
-            print(avatar)
             avatar_want_count[avatar] += 1
         for item in folder.want_item.all():
-            print(item)
             item_want_count[item] += 1
 
     # print(avatar_want_count)
 
     avatar_want_count = sorted(avatar_want_count.items(),key=lambda x : x[1])
     item_want_count = sorted(item_want_count.items(),key=lambda x : x[1])
-    print(avatar_want_count)
-    print(item_want_count)
 
     wanted_avatars = []
     wanted_items = []
 
     for avatar, count in avatar_want_count[:5]:
-        print(avatar)
         wanted_avatars.append(avatar)
     for item, count in item_want_count[:5]:
-        print(item)
         wanted_items.append(item)
 
     params['wanted_avatars'] = wanted_avatars

@@ -49,8 +49,8 @@ def index(request):
             print('customer instance created')
     avatars = Avatar.objects.order_by('?')[:5]
     items = Item.objects.order_by('?')[:5]
-    recent_avatars = Avatar.objects.order_by('-avatar_id')[:7]
-    recent_items = Item.objects.order_by('-item_id')[:7]
+    recent_avatars = Avatar.objects.order_by('-avatar_id')[:5]
+    recent_items = Item.objects.order_by('-item_id')[:5]
     hot_avatars = Avatar.objects.order_by('-item_hot')[:5]
     params['avatars'] = avatars
     params['items'] = items
@@ -60,6 +60,42 @@ def index(request):
     supporters = Customer.objects.filter(
         isSupporter=True).exclude(user__is_staff=True)
     params['supporters'] = supporters
+
+    # wanted
+
+    from collections import defaultdict
+
+    avatar_want_count = defaultdict(int)
+    item_want_count = defaultdict(int)
+
+    for folder in Folder.objects.all():
+        for avatar in folder.want_avatar.all():
+            print(avatar)
+            avatar_want_count[avatar] += 1
+        for item in folder.want_item.all():
+            print(item)
+            item_want_count[item] += 1
+
+    # print(avatar_want_count)
+
+    avatar_want_count = sorted(avatar_want_count.items(),key=lambda x : x[1])
+    item_want_count = sorted(item_want_count.items(),key=lambda x : x[1])
+    print(avatar_want_count)
+    print(item_want_count)
+
+    wanted_avatars = []
+    wanted_items = []
+
+    for avatar, count in avatar_want_count[:5]:
+        print(avatar)
+        wanted_avatars.append(avatar)
+    for item, count in item_want_count[:5]:
+        print(item)
+        wanted_items.append(item)
+
+    params['wanted_avatars'] = wanted_avatars
+    params['wanted_items']= wanted_items
+
     return render(request, 'index.html', params)
 
 

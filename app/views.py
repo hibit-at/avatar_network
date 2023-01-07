@@ -83,9 +83,11 @@ def index(request):
     wanted_items = []
 
     for avatar, count in avatar_want_count[:5]:
-        wanted_avatars.append(avatar)
+        wanted_avatars.append({'avatar' : avatar, 'count' : count})
     for item, count in item_want_count[:5]:
-        wanted_items.append(item)
+        wanted_items.append({'item' : item, 'count' : count})
+
+    print(wanted_avatars)
 
     params['wanted_avatars'] = wanted_avatars
     params['wanted_items']= wanted_items

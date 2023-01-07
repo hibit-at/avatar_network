@@ -110,32 +110,42 @@
         <ul>
             Avatars
             <ul>
-                {% for avatar in wanted_avatars %}
-                    <li>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                        {% if avatar.price > 0 %}
-                            <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
-                        by
-                        <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                    </li>
+                {% for tuple in wanted_avatars %}
+                    {% with tuple.avatar as avatar %}
+                        <li>
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                            {% if avatar.price > 0 %}
+                                <span class="price">¥ {{ avatar.price|intcomma }}</span>
+                            {% else %}
+                                <span class="free">¥ Free</span>
+                            {% endif %}
+                            by
+                            <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                            <span class="free">
+                                ({{ tuple.count }} wanted)
+                            </span>
+                        </li>
+                    {% endwith %}
                 {% endfor %}
             </ul>
             Items
             <ul>
-                {% for item in wanted_items %}
-                    <li>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                        {% if item.price > 0 %}
-                            <span class="price">¥ {{ item.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
-                        by
-                        <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
-                    </li>
+                {% for tuple in wanted_items %}
+                    {% with tuple.item as item %}
+                        <li>
+                            <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                            {% if item.price > 0 %}
+                                <span class="price">¥ {{ item.price|intcomma }}</span>
+                            {% else %}
+                                <span class="free">¥ Free</span>
+                            {% endif %}
+                            by
+                            <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
+                            <span class="free">
+                                ({{ tuple.count }} wanted)
+                            </span>
+                        </li>
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </ul>

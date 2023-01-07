@@ -76,8 +76,8 @@ def index(request):
 
     # print(avatar_want_count)
 
-    avatar_want_count = sorted(avatar_want_count.items(),key=lambda x : x[1])
-    item_want_count = sorted(item_want_count.items(),key=lambda x : x[1])
+    avatar_want_count = sorted(avatar_want_count.items(),key=lambda x : -x[1])
+    item_want_count = sorted(item_want_count.items(),key=lambda x : -x[1])
 
     wanted_avatars = []
     wanted_items = []

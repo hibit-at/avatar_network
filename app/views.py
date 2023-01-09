@@ -354,7 +354,6 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     start = (page-1)*span
     end = page*span
     items = Item.objects.annotate(num_avatars=Count('avatar'))
-    params['total'] = items.count()
     initial = {}
     if free_only:
         items = items.filter(price=0)
@@ -404,6 +403,7 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)
     params['items'] = items
+    params['total'] = items.count()
     params['page'] = page
     params['free_only'] = free_only
     params['word'] = word

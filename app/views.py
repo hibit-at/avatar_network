@@ -139,9 +139,6 @@ def creators(request, page=1, word='', free_only=False):
         'items', queryset=item_query))
     creators = creators.annotate(total_item=Count('avatars__items'))
     creators = creators.order_by('-total_item')[start:end]
-    for creator in creators:
-        if Customer.objects.filter(highlight=creator).exists():
-            setattr(creator, 'isHighlight', True)
     # params = {'creators': creators, 'page': page}
     params['creators'] = creators
     params['page'] = page

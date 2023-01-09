@@ -40,14 +40,14 @@
         </div>
     </div>
     {% for creator in creators %}
-        {% if creator.isHighlight %}
+        {% if creator.highlight.all|length > 0 %}
             <div class="creator-highlight">
             {% else %}
                 <div class="creator">
                 {% endif %}
                 <p style="display:inline">
                     <a href="{% url 'app:creator' creator_id=creator.creator_id %}">{{ creator }}</a>
-                    {% if creator.isHighlight %}
+                    {% if creator.highlight.all|length > 0 %}
                         <img src="{% static 'star.png' %}" width="15px" height="15px">
                     {% endif %}
                     <ul>

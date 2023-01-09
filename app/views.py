@@ -60,20 +60,6 @@ def index(request):
     supporters = Customer.objects.filter(
         isSupporter=True).exclude(user__is_staff=True)
     params['supporters'] = supporters
-
-    # wanted
-
-    from collections import defaultdict
-
-    avatar_want_count = defaultdict(int)
-    item_want_count = defaultdict(int)
-
-    for folder in Folder.objects.all():
-        for avatar in folder.want_avatar.all():
-            avatar_want_count[avatar] += 1
-        for item in folder.want_item.all():
-            item_want_count[item] += 1
-
     wanted_avatars = Avatar.objects.all().annotate(want=Count('want_avatar')).exclude(want=0).order_by('-want')[:5]
     wanted_items = Item.objects.all().annotate(want=Count('want_item')).exclude(want=0).order_by('-want')[:5]
     params['wanted_avatars'] = wanted_avatars

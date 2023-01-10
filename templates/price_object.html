@@ -1,0 +1,6 @@
+{% load humanize %}
+{% if price > 0 %}
+    <span class="price">¥ {{ price|intcomma }}</span>
+{% else %}
+    <span class="free">¥ Free</span>
+{% endif %}

@@ -11,8 +11,8 @@
                     これに伴い、従来のシステムでお気に入りフォルダーを「欲しい物リスト」として使われていた方には、<strong>手動で変更していただく部分があります。</strong>
                 </p>
                 <p>
-                詳しい内容や使い分けの方針については、<a style="background-color:lightpink" href="{% url 'app:info' %}">Info</a>のFAQにある<a style="background-color:lightpink"
-   href="{% url 'app:info' %}#want_and_recommend">「WANT と OWNED/RECOMMEND はなにが違うのか」</a>をご覧ください。
+                詳しい内容や使い分けの方針については、 <a class="bg_link" href="{% url 'app:info' %}">Info</a> のFAQにある <a class="bg_link"
+   href="{% url 'app:info' %}#want_and_recommend">WANT と OWNED/RECOMMEND はなにが違うのか</a> をご覧ください。
             </p>
         </div>
         <div class="welcome">
@@ -45,11 +45,7 @@
                         by
                         <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator|truncatechars:20 }}</a>
                         <br />
-                        {% if avatar.price > 0 %}
-                            <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
+                        {% include 'price_object.html' with price=avatar.price %}
                         <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
                            target="blank">
                             <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
@@ -71,11 +67,7 @@
                         by
                         <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
                         <br />
-                        {% if item.price > 0 %}
-                            <span class="price">¥ {{ item.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
+                        {% include 'price_object.html' with price=item.price %}
                         <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
                             <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
                         </a>
@@ -89,11 +81,7 @@
             {% for avatar in hot_avatars %}
                 <li>
                     <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                    {% if avatar.price > 0 %}
-                        <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                    {% else %}
-                        <span class="free">¥ Free</span>
-                    {% endif %}
+                    {% include 'price_object.html' with price=avatar.price %}
                     by
                     <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
                     <span class="free">(+{{ avatar.item_hot }})</span>
@@ -113,11 +101,7 @@
                 {% for avatar in wanted_avatars %}
                         <li>
                             <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                            {% if avatar.price > 0 %}
-                                <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                            {% else %}
-                                <span class="free">¥ Free</span>
-                            {% endif %}
+                            {% include 'price_object.html' with price=avatar.price %}
                             by
                             <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
                             <span class="free">
@@ -131,11 +115,7 @@
                 {% for item in wanted_items %}
                         <li>
                             <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                            {% if item.price > 0 %}
-                                <span class="price">¥ {{ item.price|intcomma }}</span>
-                            {% else %}
-                                <span class="free">¥ Free</span>
-                            {% endif %}
+                            {% include 'price_object.html' with price=item.price %}
                             by
                             <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
                             <span class="free">
@@ -155,11 +135,7 @@
                 {% for avatar in recent_avatars %}
                     <li>
                         <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                        {% if avatar.price > 0 %}
-                            <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
+                        {% include 'price_object.html' with price=avatar.price %}
                         by
                         <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
                     </li>
@@ -170,11 +146,7 @@
                 {% for item in recent_items %}
                     <li>
                         <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                        {% if item.price > 0 %}
-                            <span class="price">¥ {{ item.price|intcomma }}</span>
-                        {% else %}
-                            <span class="free">¥ Free</span>
-                        {% endif %}
+                        {% include 'price_object.html' with price=item.price %}
                         by
                         <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
                     </li>

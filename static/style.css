@@ -254,3 +254,21 @@ a:hover {
 .dropdown:hover .dropdown-menu {
     display: block;
 }
+
+.under {
+    text-decoration: underline 5px;
+    text-decoration-color: lightpink;
+    text-underline-offset: -0.1em;
+}
+
+.bg_link {
+    background-color: lightpink;
+}
+
+.bg_link:hover {
+    text-decoration: None;
+}
+
+.info_offset {
+    padding: 20px;
+}

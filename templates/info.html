@@ -1,27 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
     <h3 class="deco">Avatar Networkとは？</h3>
+    <div class="info_offset">
+        <p>
+        Avatar Networkは、BOOTHの3Dモデル（アバターやアイテム）を、<b>対応アイテムや対応アバターがあるか？</b>といった観点から検索できるサービスです。
+    </p>
     <p>
-    Avatar Networkは、BOOTHの3Dモデル（アバターやアイテム）を、<b>対応アイテムや対応アバターがあるか？</b>といった観点から検索できるサービスです。
-</p>
-<p>
-    <a href="{% url 'app:avatar' avatar_id=top_avatar_id %}"
-       target="blank"
-       style="background-color:lightpink">アバターの商品ページ</a>からは対応するアイテムを一覧できたり、
+        <a href="{% url 'app:avatar' avatar_id=top_avatar_id %}"
+           target="blank"
+           class="bg_link">アバターの商品ページ</a>からは対応するアイテムを一覧できたり、
 逆に<a href="{% url 'app:item' item_id=top_item_id %}"
    target="blank"
-   style="background-color:lightpink">アイテムの商品ページ</a>から対応するアバターを一覧できたりします。
+   class="bg_link">アイテムの商品ページ</a>から対応するアバターを一覧できたりします。
 </p>
 <p>
     また、お気に入りフォルダを作ったり、欲しい物リストとして公開することもできます。
 </p>
 <p>
-もし、BOOTHに出店している方で、ここでの紹介をとりやめて欲しい場合は、お手数ですが<a href="https://twitter.com/hibit_at"
-   style="background-color:lightpink">作者のTwitter</a>にDMかリプライでお知らせください。確認とれ次第、対応します。
+もし、BOOTHに出店している方で、ここでの紹介をとりやめて欲しい場合は、お手数ですが<a href="https://twitter.com/hibit_at" class="bg_link">作者のTwitter</a>にDMかリプライでお知らせください。確認とれ次第、対応します。
 </p>
+</div>
 <hr />
 <h3 class="deco">使い方</h3>
-<h4>アバター一覧から探す</h4>
+<h4 class="under">アバター一覧から探す</h4>
+<div class="info_offset">
 <p>
     アバターをサムネイルと共に一覧できます。対応アイテムがあるアバターはその数も見ることができます。アバターは対応アイテム数に対して降順にソートされています。
 </p>
@@ -32,15 +34,21 @@
 <p>
     アバターを探すのがオススメです。
 </p>
-<h4>アイテム一覧から探す</h4>
+</div>
+<h4 class="under">アイテム一覧から探す</h4>
+<div class="info_offset">
 <p>
     アイテムをサムネイルと共に一覧できます。対応アバターがあるアイテムはその数も見ることができます。アイテムは対応アバター数に対して降順にソートされています。
 </p>
-<h4>クリエイター一覧から探す</h4>
+</div>
+<h4 class="under">クリエイター一覧から探す</h4>
+<div class="info_offset">
 <p>
     アバターとアイテムを、クリエイターごとに並べたものです。クリエイターは、アバターごとの対応アイテム数を合計した数に対して降順にソートされています。
 </p>
-<h4>フォルダー一覧から探す</h4>
+</div>
+<h4 class="under">フォルダー一覧から探す</h4>
+<div class="info_offset">
 <p>
     <strong>※ BOOTHのギフト機能実装に伴い、フォルダーの仕様に変更を加えました。（2022/12/29）</strong>
 </p>
@@ -50,13 +58,17 @@
 <p>
     なお、フォルダーは「欲しい物」（WANT）と「既に持っている物／オススメしたい物」（OWNED/RECOMMEND）に分けて登録できます。
 </p>
+</div>
 <hr />
 <h3 class="deco">FAQ</h3>
-<p><b>※ 認証システムの導入に伴い、内容を変更しました（2022/3/31）</b></p>
+<p>
+    <b>※ 認証システムの導入に伴い、内容を変更しました（2022/3/31）</b>
+</p>
 <p>
     <strong>※ BOOTHのギフト機能実装に伴い、内容を変更しました（2022/12/29）</strong>
 </p>
-<h4>アバターが登録されていない</h4>
+<h4 class="under">アバターが登録されていない</h4>
+<div class="info_offset">
 <p>
     本サービスは、BOOTHのサブカテゴリが「3Dキャラクター」になっているものをアバターとして登録しています。
 </p>
@@ -64,9 +76,11 @@
     一部のアバターは、このサブカテゴリができる前に販売され、かつサブカテゴリを登録し直していない可能性があります。
 </p>
 <p>
-なお、認証ユーザーは、<a href="{% url 'app:recommend' %}" style="background-color:lightpink">追加提案フォーム</a>からアバターまたはアイテムの追加候補を提案することができます。
+なお、認証ユーザーは、<a href="{% url 'app:recommend' %}" class="bg_link">追加提案フォーム</a>からアバターまたはアイテムの追加候補を提案することができます。
 </p>
-<h4>対応しているはずのアイテムがない</h4>
+</div>
+<h4 class="under">対応しているはずのアイテムがない</h4>
+<div class="info_offset">
 <p>
 本サービスは、<b>商品説明文にそのアバターへのリンクがあるか</b>という点で「対応アバター」を判断しております。
 </p>
@@ -82,7 +96,9 @@
 <p>
     今後、アバターとアイテムの関連付けに対しても提案フォームのような形で共同編集する対策を考えています。
 </p>
-<h4 id="want_and_recommend">WANT と OWNED/RECOMMEND はなにが違うのか</h4>
+</div>
+<h4 class="under" id="want_and_recommend">フォルダーの WANT と OWNED/RECOMMEND はなにが違うのか</h4>
+<div class="info_offset">
 <p>
     従来、お気に入りフォルダーは広い意味で「お気に入り」としていましたが、BOOTHのギフト機能実装に伴い、いわゆる「欲しい物リスト」として活用される方が増えてきました。
 </p>
@@ -104,11 +120,15 @@
 <p>
     このボタンを押すと、「WANT」と「OWNED/RECOMMEND」の欄がすべて入れ替わります。
 </p>
-<h4>持っていないけど、買いたい商品／好きな商品はどちらに入れるべきか</h4>
+</div>
+<h4 class="under">持っていないけど、買いたい商品／好きな商品はどちらに入れるべきか</h4>
+<div class="info_offset">
 <p>
     最終的には自由ですが、それを見た誰かがギフトとして送る、という事態を歓迎するなら「WANT」、避けたいなら「OWNED/RECOMMEND」に入れることを推奨します。
 </p>
-<h4>欲しい物リストや所持リストはBOOTHと連動しているのか</h4>
+</div>
+<h4 class="under">欲しい物リストや所持リストはBOOTHと連動しているのか</h4>
+<div class="info_offset">
 <p>
     残念ながら、そのような連動機能はありません。
 </p>
@@ -121,10 +141,11 @@
 <p>
     ここにある情報は、あくまで参考情報としてお使いください。
 </p>
-<h4>サイトのデザインやロジックを改良できないか</h4>
+</div>
+<h4 class="under">サイトのデザインやロジックを改良できないか</h4>
+<div class="info_offset">
 <p>
-本サービスは<a href="https://github.com/hibit-at/avatar_network"
-   style="background-color:lightpink">GitHubリポジトリ</a>を公開しております。
+本サービスは<a href="https://github.com/hibit-at/avatar_network" class="bg_link">GitHubリポジトリ</a>を公開しております。
 </p>
 <p>
     もし改善点がある方は、プルリクエストやイシューをお願いします。
@@ -135,7 +156,9 @@
 <p>
     ただし、明確な不具合や、ごく軽微な改善等ならばこれに限りません。
 </p>
-<h4>検索結果の内、金色で強調表示されているものがある</h4>
+</div>
+<h4 class="under">検索結果の内、金色で強調表示されているものがある</h4>
+<div class="info_offset">
 <p>
     後述のサポーター特典によるものです。
 </p>
@@ -151,9 +174,11 @@
 <p>
     また、<u>ハイライトの有無によって検索結果の順位が上下することはありません。</u>
 </p>
-<h4>サポーターについて</h4>
+</div>
+<h4 class="under">サポーターについて</h4>
+<div class="info_offset">
 <p>
-当サービスは、サーバー代の維持（月2千円弱かかっています）のために支援いただける<a href="https://hibit.fanbox.cc/" style="background-color:lightpink">サポーター</a>を募集しています。
+当サービスは、サーバー代の維持（月2千円弱かかっています）のために支援いただける<a href="https://hibit.fanbox.cc/" class="bg_link">サポーター</a>を募集しています。
 </p>
 <p>
     サポーターの皆様に対しては、以下のような特典を用意しています。
@@ -172,4 +197,5 @@
 <p>
     当サービスを長く続けていくためにも、ぜひご支援いただけたらと思います。
 </p>
+</div>
 {% endblock content %}

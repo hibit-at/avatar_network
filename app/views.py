@@ -102,7 +102,7 @@ def creator(request, creator_id=''):
     return render(request, 'creator.html', params)
 
 
-def creators(request, page=1, word='', free_only=False):
+def creators(request, page=1, word='', free_only=False, sort_item=None):
     params = {}
     user = request.user
     if user.is_authenticated:
@@ -137,8 +137,14 @@ def creators(request, page=1, word='', free_only=False):
         'avatars', queryset=avatar_query))
     creators = creators.prefetch_related(models.Prefetch(
         'items', queryset=item_query))
-    creators = creators.annotate(total_item=Count('avatars__items'))
-    creators = creators.order_by('-total_item')[start:end]
+    if not 'sort_item' in request.GET:
+        # sort_by_total_items
+        creators = creators.annotate(total_item=Count('avatars__items'))
+        creators = creators.order_by('-total_item')[start:end]
+    else:
+        # sort_by_total_avatars
+        creators = creators.annotate(total_avatar=Count('items__avatar'))
+        creators = creators.order_by('-total_avatar')[start:end]
     # params = {'creators': creators, 'page': page}
     params['creators'] = creators
     params['page'] = page

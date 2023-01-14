@@ -264,6 +264,14 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     for avatar in avatars:
         if Customer.objects.filter(highlight=avatar.creator).exists():
             setattr(avatar, 'isHighlight', True)
+    if user.is_authenticated:
+        folders = Folder.objects.filter(editor=user.customer).order_by('-pk')
+        folder_fav_avatars = dict([(folder, folder.fav_avatar.all()) for folder in folders])
+        folder_want_avatars = dict([(folder, folder.want_avatar.all()) for folder in folders])
+        for avatar in avatars:
+            setattr(avatar, 'folders_owned', set(filter(lambda folder: avatar in folder_fav_avatars[folder], folders)))
+            setattr(avatar, 'folders_wanted', set(filter(lambda folder: avatar in folder_want_avatars[folder], folders)))
+        params['folders'] = folders
     params['avatars'] = avatars
     params['page'] = page
     params['free_only'] = free_only

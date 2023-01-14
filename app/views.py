@@ -163,11 +163,20 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
         folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
+        some_added = False
+        some_added_want = False
         for folder in folders:
-            setattr(folder, 'notadd', avatar not in folder.fav_avatar.all())
-            setattr(folder, 'notadd_want',
-                    avatar not in folder.want_avatar.all())
+            notadd = avatar not in folder.fav_avatar.all()
+            setattr(folder, 'notadd', notadd)
+            if not notadd:
+                some_added = True
+            notadd_want = avatar not in folder.want_avatar.all()
+            setattr(folder, 'notadd_want', notadd_want)
+            if not notadd_want:
+                some_added_want = True
         params['folders'] = folders
+        params['folders_some_added'] = some_added
+        params['folders_some_added_want'] = some_added_want
     if 'page' in request.GET:
         page = int(request.GET['page'])
     if 'sort_latest' in request.GET:

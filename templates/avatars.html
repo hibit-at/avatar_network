@@ -83,12 +83,12 @@
                         <div class="btn-group dropright">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"
-                                {% if avatar.folders_want %}
+                                {% if avatar.folders_wanted %}
                                 style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
                                 {% else %}
                                 style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
                                 {% endif %}
-                                {% if avatar.folders_want %}
+                                {% if avatar.folders_wanted %}
                                 ✔ WANT
                                 {% else %}
                                 +WANT
@@ -99,7 +99,7 @@
                                 {% for folder in folders %}
                                 <a class="dropdown-item" href="{% url 'app:folder' pk=folder.pk %}"
                                     style="display:inline;line-height:40px">
-                                    {% if not folder in avatar.folders_want %}
+                                    {% if not folder in avatar.folders_wanted %}
                                     <form method="post" style="display:inline">
                                         {% csrf_token %}
                                         <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>

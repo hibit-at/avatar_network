@@ -28,8 +28,16 @@
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
-                    style="background-color:lightpink;border-style:none;font-size:20px;font-weight:bold">
-                Favorite
+                    {% if folders_some_added_want %}
+                    style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                    {% else %}
+                    style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                    {% endif %}
+                {% if folders_some_added_want %}
+                ✔ WANT
+                {% else %}
+                +WANT
+                {% endif %}
             </button>
             <div class="dropdown-menu">
                 <!-- Dropdown menu links -->
@@ -45,6 +53,34 @@
                         {% else %}
                             <button class="button_already" disabled>Added</button>
                         {% endif %}
+                        {{ folder }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="btn-group dropright">
+            <button type="button"
+                    class="btn btn-secondary dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    {% if folders_some_added %}
+                    style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                    {% else %}
+                    style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                    {% endif %}
+                {% if folders_some_added %}
+                ✔ OWNED
+                {% else %}
+                +OWNED
+                {% endif %}
+            </button>
+            <div class="dropdown-menu">
+                <!-- Dropdown menu links -->
+                {% for folder in folders %}
+                    <a class="dropdown-item"
+                       href="{% url 'app:folder' pk=folder.pk %}"
+                       style="display:inline;line-height:40px">
                         {% if folder.notadd %}
                             <form method="post" style="display:inline">
                                 {% csrf_token %}

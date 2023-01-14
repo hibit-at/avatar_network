@@ -283,10 +283,20 @@ def item(request, item_id=''):
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
         folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
+        some_added = False
+        some_added_want = False
         for folder in folders:
-            setattr(folder, 'notadd', item not in folder.fav_item.all())
-            setattr(folder, 'notadd_want', item not in folder.want_item.all())
+            notadd = item not in folder.fav_item.all()
+            setattr(folder, 'notadd', notadd)
+            if not notadd:
+                some_added = True
+            notadd_want = item not in folder.want_item.all()
+            setattr(folder, 'notadd_want', notadd_want)
+            if not notadd_want:
+                some_added_want = True
         params['folders'] = folders
+        params['folders_some_added'] = some_added
+        params['folders_some_added_want'] = some_added_want
     avatars = item.avatar.all().order_by('price')
     for avatar in avatars:
         if Customer.objects.filter(highlight=avatar.creator).exists():

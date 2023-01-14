@@ -405,6 +405,14 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)
+    if user.is_authenticated:
+        folders = Folder.objects.filter(editor=user.customer).order_by('-pk')
+        folder_fav_items = dict([(folder, folder.fav_item.all()) for folder in folders])
+        folder_want_items = dict([(folder, folder.want_item.all()) for folder in folders])
+        for item in items:
+            setattr(item, 'folders_owned', set(filter(lambda folder: item in folder_fav_items[folder], folders)))
+            setattr(item, 'folders_wanted', set(filter(lambda folder: item in folder_want_items[folder], folders)))
+        params['folders'] = folders
     params['items'] = items
     params['total'] = items.count()
     params['page'] = page

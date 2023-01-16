@@ -37,6 +37,10 @@ for item in Item.objects.filter(created_at__lt = criteria).order_by('created_at'
     link_ids2 = re.findall(pat,main_txt)
     link_ids.extend(link_ids2)
     pat = r'<script id="json_modules" type="application/json">(.*?)</script>'
+    if len(re.findall(pat,txt)) == 0:
+        # escpae for error 2023/1/17
+        print('parse impossible')
+        continue
     scr_txt = re.findall(pat,txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'
     link_ids3 = re.findall(pat,scr_txt)

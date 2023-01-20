@@ -2,6 +2,7 @@
 {% block content %}
     {% load humanize %}
     {% load static %}
+    <script src="{% static 'list_folder_form.js' %}"></script>
     <h3 class="deco">Items List</h3>
     <form method="get" action="{% url 'app:items' %}">
         {{ form }}
@@ -102,7 +103,7 @@
                                style="display:inline;line-height:40px">
                                
                                 {% if folder not in item.folders_wanted %}
-                                    <form method="post" style="display:inline">
+                                    <form class="list_folder_form" method="post" style="display:inline" action="{% url 'app:item' item_id=item.item_id %}">
                                         {% csrf_token %}
                                         <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
                                     </form>
@@ -138,7 +139,7 @@
                            href="{% url 'app:folder' pk=folder.pk %}"
                            style="display:inline;line-height:40px">
                             {% if folder not in item.folders_owned %}
-                                <form method="post" style="display:inline">
+                                <form class="list_folder_form" method="post" style="display:inline" action="{% url 'app:item' item_id=item.item_id %}">
                                     {% csrf_token %}
                                     <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                                 </form>

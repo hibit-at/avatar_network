@@ -381,27 +381,13 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
                 redirect_url += '&free_only=on'
             return redirect(redirect_url)
         print('latest!')
-        items = items.order_by('-item_id', '-num_avatars', 'price')[start:end]
+        items = items.order_by('-item_id', '-num_avatars', 'price')
     else:
-        items = items.order_by('-num_avatars', 'price')[start:end]
+        items = items.order_by('-num_avatars', 'price')
 
-    # if sort_hot:
-    #     if sort_hot == 'off':
-    #         redirect_url = reverse('app:avatars')
-    #         redirect_url += '?word=' + word
-    #         if free_only:
-    #             redirect_url += '&free_only=on'
-    #         return redirect(redirect_url)
-    #     avatars = avatars.annotate(num_items=Count('items'))
-    #     avatars = avatars.order_by(
-    #         '-item_hot', '-num_items', 'price')[start:end]
-    #     initial['sort_hot'] = sort_hot
-    # else:
-    #     avatars = avatars.annotate(num_items=Count('items'))
-    #     avatars = avatars.order_by('-num_items', 'price')[start:end]
-
-    # items = items.order_by('-num_avatars', 'price')[start:end]
-    # items = items.order_by('-weight', 'price')[start:end]
+    params['total'] = items.count()
+    items = items[start:end]
+    
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)
@@ -414,7 +400,6 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
             setattr(item, 'folders_wanted', set(filter(lambda folder: item in folder_want_items[folder], folders)))
         params['folders'] = folders
     params['items'] = items
-    params['total'] = items.count()
     params['page'] = page
     params['free_only'] = free_only
     params['word'] = word

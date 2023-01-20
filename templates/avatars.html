@@ -15,171 +15,119 @@
             <button name="sort_hot" value="on" class="button">Hot</button>
         {% endif %}
     </form>
-    <div class="div-equal-box">
-        <div>
-            {% if page > 10 %}
-                <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                    <<
-                </a>
-            {% endif %}
-        </div>
-        <div>
-            {% if page > 1 %}
-                <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                    <
-                </a>
-            {% endif %}
-        </div>
-        <div>page {{ page }}</div>
-        <div>
-            <a class="Link"
-               href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                >
-            </a>
-        </div>
-        <div>
-            <a class="Link"
-               href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                >>
-            </a>
-        </div>
-    </div>
-    <p>
-        {% for avatar in avatars %}
-            {% if avatar.isHighlight %}
-                <div class="boxrow-highlight">
-                {% else %}
-                    <div class="boxrow">
-                    {% endif %}
-                    <div style="width:200px">
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                            <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
-                        </a>
-                    </div>
-                    <div style="width:auto;margin-left:20px">
-                        <p>
-                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                        </p>
-                        <p>
-                            by
-                            <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                        </p>
-                        <p>
-                        対応アイテム：<span class="price">{{ avatar.items.all|length|intcomma }}</span> 点
-                        {% if sort_hot %}<span class="free">(+{{ avatar.item_hot }})</span>{% endif %}
-                    </p>
-                    {% if avatar.price > 0 %}
-                        <span class="price">¥ {{ avatar.price|intcomma }}</span>
-                    {% else %}
-                        <span class="free">¥ Free</span>
-                    {% endif %}
-                    <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
-                       target="blank">
-                        <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
+    {% include 'page_object.html' with keyword='app:avatars' add_bool=sort_hot add_str='sort_hot' %}
+    {% for avatar in avatars %}
+        {% if avatar.isHighlight %}
+            <div class="boxrow-highlight">
+            {% else %}
+                <div class="boxrow">
+                {% endif %}
+                <div style="width:200px">
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
                     </a>
-                    {% if user.is_authenticated %}
+                </div>
+                <div style="width:auto;margin-left:20px">
+                    <p>
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                    </p>
+                    <p>
+                        by
+                        <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                    </p>
+                    <p>
+                    対応アイテム：<span class="price">{{ avatar.items.all|length|intcomma }}</span> 点
+                    {% if sort_hot %}<span class="free">(+{{ avatar.item_hot }})</span>{% endif %}
+                </p>
+                {% include 'price_object.html' with price=avatar.price %}
+                <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
+                   target="blank">
+                    <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
+                </a>
+                {% if user.is_authenticated %}
                     <div>
                         <div class="btn-group dropright">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"
-                                {% if avatar.folders_wanted %}
-                                style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                                {% else %}
+                            <button type="button"
+                                    class="btn btn-secondary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    {% if avatar.folders_wanted %}
+                                    style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                            {% else %}
                                 style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                                {% endif %}
-                                {% if avatar.folders_wanted %}
+                            {% endif %}
+                            {% if avatar.folders_wanted %}
                                 ✔ WANT
-                                {% else %}
+                            {% else %}
                                 +WANT
-                                {% endif %}
-                            </button>
-                            <div class="dropdown-menu">
-                                <!-- Dropdown menu links -->
-                                {% for folder in folders %}
-                                <a class="dropdown-item" href="{% url 'app:folder' pk=folder.pk %}"
-                                    style="display:inline;line-height:40px">
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu">
+                            <!-- Dropdown menu links -->
+                            {% for folder in folders %}
+                                <a class="dropdown-item"
+                                   href="{% url 'app:folder' pk=folder.pk %}"
+                                   style="display:inline;line-height:40px">
                                     {% if not folder in avatar.folders_wanted %}
-                                    <form class="list_folder_form" method="post" style="display:inline" action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                                        {% csrf_token %}
-                                        <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
-                                    </form>
+                                        <form class="list_folder_form"
+                                              method="post"
+                                              style="display:inline"
+                                              action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                                            {% csrf_token %}
+                                            <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                                        </form>
                                     {% else %}
-                                    <button class="button_already" disabled>Added</button>
+                                        <button class="button_already" disabled>Added</button>
                                     {% endif %}
                                     {{ folder }}
                                 </a>
-                                {% endfor %}
-                            </div>
+                            {% endfor %}
                         </div>
-                        <div class="btn-group dropright">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"
+                    </div>
+                    <div class="btn-group dropright">
+                        <button type="button"
+                                class="btn btn-secondary dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
                                 {% if avatar.folders_owned %}
                                 style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                                {% else %}
-                                style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                                {% endif %}
-                                {% if avatar.folders_owned %}
-                                ✔ OWNED
-                                {% else %}
-                                +OWNED
-                                {% endif %}
-                            </button>
-                            <div class="dropdown-menu">
-                                <!-- Dropdown menu links -->
-                                {% for folder in folders %}
-                                <a class="dropdown-item" href="{% url 'app:folder' pk=folder.pk %}"
-                                    style="display:inline;line-height:40px">
-                                    {% if not folder in avatar.folders_owned %}
-                                    <form class="list_folder_form" method="post" style="display:inline" action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                        {% else %}
+                            style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
+                        {% endif %}
+                        {% if avatar.folders_owned %}
+                            ✔ OWNED
+                        {% else %}
+                            +OWNED
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu">
+                        <!-- Dropdown menu links -->
+                        {% for folder in folders %}
+                            <a class="dropdown-item"
+                               href="{% url 'app:folder' pk=folder.pk %}"
+                               style="display:inline;line-height:40px">
+                                {% if not folder in avatar.folders_owned %}
+                                    <form class="list_folder_form"
+                                          method="post"
+                                          style="display:inline"
+                                          action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
                                         {% csrf_token %}
                                         <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                                     </form>
-                                    {% else %}
+                                {% else %}
                                     <button class="button_already" disabled>Added</button>
-                                    {% endif %}
-                                    {{ folder }}
-                                </a>
-                                {% endfor %}
-                            </div>
-                        </div>
+                                {% endif %}
+                                {{ folder }}
+                            </a>
+                        {% endfor %}
                     </div>
-                    {% endif %}
                 </div>
             </div>
-        {% endfor %}
-        <div class="div-equal-box">
-            <div>
-                {% if page > 10 %}
-                    <a class="Link"
-                       href="{% url 'app:avatars' %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                        <<
-                    </a>
-                {% endif %}
-            </div>
-            <div>
-                {% if page > 1 %}
-                    <a class="Link"
-                       href="{% url 'app:avatars' %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                        <
-                    </a>
-                {% endif %}
-            </div>
-            <div>page {{ page }}</div>
-            <div>
-                <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                    >
-                </a>
-            </div>
-            <div>
-                <a class="Link"
-                   href="{% url 'app:avatars' %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if sort_hot %}&sort_hot=on{% endif %}">
-                    >>
-                </a>
-            </div>
-        </div>
-    </p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% include 'page_object.html' with keyword='app:avatars' add_bool=sort_hot add_str='sort_hot' %}
 {% endblock content %}

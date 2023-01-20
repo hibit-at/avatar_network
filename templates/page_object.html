@@ -1,0 +1,32 @@
+
+    <div class="div-equal-box">
+        <div>
+            {% if page > 10 %}
+            <a class="Link"
+            href="{% url keyword %}?page={{ page|add:-10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if add_bool %}&{{add_str}}=on{% endif %}">
+            <<
+            </a>
+            {% endif %}
+        </div>
+        <div>
+            {% if page > 1 %}
+            <a class="Link"
+            href="{% url keyword %}?page={{ page|add:-1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if add_bool %}&{{add_str}}=on{% endif %}">
+            <
+            </a>
+            {% endif %}
+        </div>
+        <div>page {{ page }} </div>
+        <div>
+            <a class="Link"
+               href="{% url keyword %}?page={{ page|add:1 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if add_bool %}&{{add_str}}=on{% endif %}">
+                >
+            </a>
+        </div>
+        <div>
+            <a class="Link"
+               href="{% url keyword %}?page={{ page|add:10 }}{% if word != '' %}&word={{ word }}{% endif %}{% if free_only %}&free_only=on{% endif %}{% if add_bool %}&{{add_str}}=on{% endif %}">
+                >>
+            </a>
+        </div>
+    </div>

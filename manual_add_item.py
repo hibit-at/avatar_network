@@ -95,8 +95,10 @@ def add_item(item_id):
     pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
     link_ids2 = re.findall(pat, main_txt)
     link_ids.extend(link_ids2)
-    pat = r'<script id="json_modules" type="application/json">(.*?)</script>'
+    txt = txt.replace('\n','')
+    pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)<section class="container">'
     scr_txt = re.findall(pat, txt)[0]
+    print(scr_txt)
     pat = r'https://booth.pm/(.*?)/items/(\d+)'
     link_ids3 = re.findall(pat, scr_txt)
     link_ids3 = [L[1] for L in link_ids3]

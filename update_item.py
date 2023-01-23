@@ -12,7 +12,9 @@ from app.models import Avatar, Item
 
 criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7)
 
-for item in Item.objects.filter(created_at__lt = criteria).order_by('created_at')[:100]:
+target_items = Item.objects.filter(created_at__lt = criteria).order_by('created_at')[:100]
+
+for item in target_items:
     item_id = item.item_id
     print(f'{item_id} {item}')
     # link process
@@ -25,9 +27,7 @@ for item in Item.objects.filter(created_at__lt = criteria).order_by('created_at'
     pat = r'<script type="application/ld\+json">(.*?)</script>'
     check = re.findall(pat,txt)
     if len(check) == 0:
-        print('parse impossible')
-        item.created_at = datetime.now(pytz.timezone('Asia/Tokyo'))
-        item.save()
+        print('parse impossible in first step')
         continue
     main_txt = re.findall(pat,txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'
@@ -36,10 +36,11 @@ for item in Item.objects.filter(created_at__lt = criteria).order_by('created_at'
     pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
     link_ids2 = re.findall(pat,main_txt)
     link_ids.extend(link_ids2)
-    pat = r'<script type="application/ld\+json">(.*?)</script>'
+    txt = txt.replace('\n','')
+    pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)<section class="container">'
     if len(re.findall(pat,txt)) == 0:
         # escpae for error 2023/1/17
-        print('parse impossible')
+        print('parse impossible in second step')
         continue
     scr_txt = re.findall(pat,txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'

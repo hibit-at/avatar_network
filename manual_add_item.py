@@ -84,9 +84,7 @@ def add_item(item_id):
     pat = r'<script type="application/ld\+json">(.*?)</script>'
     check = re.findall(pat, txt)
     if len(check) == 0:
-        print('parse impossible')
-        item.created_at = datetime.now(pytz.timezone('Asia/Tokyo'))
-        item.save()
+        print('parse impossible in first step')
         return
     main_txt = re.findall(pat, txt)[0]
     pat = r'https://booth.pm/(.*?)/items/(\d+)'
@@ -97,6 +95,9 @@ def add_item(item_id):
     link_ids.extend(link_ids2)
     txt = txt.replace('\n','')
     pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)<section class="container">'
+    if len(re.findall(pat,txt)) == 0:
+        print('parse impossible in second step')
+        return
     scr_txt = re.findall(pat, txt)[0]
     print(scr_txt)
     pat = r'https://booth.pm/(.*?)/items/(\d+)'

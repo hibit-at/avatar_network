@@ -483,7 +483,12 @@ def userpage(request, tid=''):
             customer.save()
         if 'create_new' in post:
             for folder in Folder.objects.filter(editor=customer):
-                if folder.fav_avatar.all().count() + folder.fav_item.all().count() == 0:
+                criteria = 0
+                criteria += folder.fav_avatar.all().count()
+                criteria += folder.fav_item.all().count()
+                criteria += folder.want_avatar.all().count()
+                criteria += folder.want_item.all().count()
+                if criteria == 0:
                     params['error'] = 'ERROR : 空のフォルダがある状態では新規フォルダは作成できません。'
                     return render(request, 'userpage.html', params)
             count = Folder.objects.filter(editor=customer).count()
@@ -748,7 +753,8 @@ def folders(request):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    folders = Folder.objects.filter(isOpen=True).order_by('-pk')
+    folders = Folder.objects.filter(isOpen=True).annotate(num=Count('fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
+    folders = folders.exclude(num=0).order_by('-pk')
     params['folders'] = folders
     return render(request, 'folders.html', params)
 

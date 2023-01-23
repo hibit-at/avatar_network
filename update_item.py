@@ -16,7 +16,7 @@ def process(force=False):
 
     target_items = Item.objects.all()
     if not force:
-        target_items.filter(created_at__lt=criteria)
+        target_items = target_items.filter(created_at__lt=criteria)
     target_items = target_items.order_by('created_at')[:100]
 
     for item in target_items:
@@ -72,4 +72,4 @@ if __name__ == '__main__':
             print('force update')
             process(True)
     else:
-        process(False)
+        process()

@@ -25,6 +25,7 @@ def process(force=False):
         # link process
         url = f"https://booth.pm/ja/items/{item_id}"
         txt = requests.get(url).text
+        txt = txt.replace('\n','')
         if 'BOOTH | お探しの商品が見つかりませんでした… (404)' in txt:
             print(f'{item} is deleted')
             item.delete()
@@ -41,8 +42,7 @@ def process(force=False):
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat, main_txt)
         link_ids.extend(link_ids2)
-        txt = txt.replace('\n', '')
-        pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)<section class="container">'
+        pat = r'<section class="grid desktop:gap-40 mobile:gap-24">(.*?)</section>'
         if len(re.findall(pat, txt)) == 0:
             # escpae for error 2023/1/17
             print('parse impossible in second step')

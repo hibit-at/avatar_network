@@ -200,7 +200,7 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
             return redirect(redirect_url)
         normal_items = normal_items.order_by('-item_id')[start:end]
     else:
-        normal_items = normal_items.order_by('num_avatars', 'price')[start:end]
+        normal_items = normal_items.order_by('num_avatars', 'price', '-item_id')[start:end]
     for normal_item in normal_items:
         if Customer.objects.filter(highlight=normal_item.creator):
             print("hit")

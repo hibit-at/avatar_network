@@ -49,13 +49,6 @@
                 <button class="button">Change</button>
             </p>
         </form>
-        <form method="post">
-            {% csrf_token %}
-            <p>臨時機能：<button class="button" name="swap" value="swap">Swap WANT and OWNED</button></p>
-            <p>BOOTH のギフト機能実装に伴い、フォルダーの内訳を「WANT」（欲しい物）と「OWNED/RECOMMEND」（所持またはオススメ）に分けたため、臨時に設定した機能です</p>
-            <p>「WANT」と「OWNED/RECOMMEND」に設定されたアバターとアイテムをそれぞれ入れ替えます。</p>
-            <p>干し芋リストのつもりでアバターやアイテムを追加していた場合、一括で「WANT」扱いにできます。</p>
-        </form>
     {% endif %}
     {% if folder.want_avatar.all|length > 0 or folder.want_item.all|length > 0 %}
         <hr />

@@ -2,169 +2,150 @@
 {% block content %}
     {% load static %}
     {% load humanize %}
-    <div style="text-align:center">
-        <h4 style="color:red">！重要なお知らせ！</h4>
+    <div class="welcome">
+        <p class="deco">
+            Welcome to Avatar Network
+        </p>
         <p>
-            2022/12/29、BOOTHのギフト機能実装に伴い、お気に入りフォルダーの仕様を変更し、ほしいもの（WANT）と所持しているもの／オススメしたいもの（OWNED/RECOMMEND）に分けて登録できるようになりました。
-            <p>
+            <a href="{% url 'app:avatars' %}">アバター一覧から探す</a>
+        </p>
+        <p>
+            <a href="{% url 'app:items' %}">アイテム一覧から探す</a>
+        </p>
+        <p>
+            <a href="{% url 'app:creators' %}">クリエイター一覧から探す</a>
+        </p>
+        <p>
+            <a href="{% url 'app:folders' %}">公開フォルダー一覧から探す</a>
+        </p>
+    </div>
+    <hr />
+    <h3 class="deco">Lucky Avatars</h3>
+    <div class="boxContainer">
+        {% for avatar in avatars %}
+            <div class="box">
+                <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                    <img src="{{ avatar.imageURL }}" class="thumb" alt="thumb" />
+                </a>
                 <p>
-                    これに伴い、従来のシステムでお気に入りフォルダーを「欲しい物リスト」として使われていた方には、<strong>手動で変更していただく部分があります。</strong>
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                    by
+                    <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator|truncatechars:20 }}</a>
+                    <br />
+                    {% include 'price_object.html' with price=avatar.price %}
+                    <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
+                       target="blank">
+                        <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
+                    </a>
                 </p>
+            </div>
+        {% endfor %}
+    </div>
+    <hr />
+    <h3 class="deco">Lucky Items</h3>
+    <div class="boxContainer">
+        {% for item in items %}
+            <div class="box">
+                <a href="{% url 'app:item' item_id=item.item_id %}">
+                    <img src="{{ item.imageURL }}" class="thumb" alt="thumb"/>
+                </a>
                 <p>
-                詳しい内容や使い分けの方針については、 <a class="bg_link" href="{% url 'app:info' %}">Info</a> のFAQにある <a class="bg_link"
-   href="{% url 'app:info' %}#want_and_recommend">WANT と OWNED/RECOMMEND はなにが違うのか</a> をご覧ください。
-            </p>
-        </div>
-        <div class="welcome">
-            <p class="deco">
-                Welcome to Avatar Network
-            </p>
-            <p>
-                <a href="{% url 'app:avatars' %}">アバター一覧から探す</a>
-            </p>
-            <p>
-                <a href="{% url 'app:items' %}">アイテム一覧から探す</a>
-            </p>
-            <p>
-                <a href="{% url 'app:creators' %}">クリエイター一覧から探す</a>
-            </p>
-            <p>
-                <a href="{% url 'app:folders' %}">公開フォルダー一覧から探す</a>
-            </p>
-        </div>
-        <hr />
-        <h3 class="deco">Lucky Avatars</h3>
-        <div class="boxContainer">
-            {% for avatar in avatars %}
-                <div class="box">
-                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                        <img src="{{ avatar.imageURL }}" class="thumb" alt="thumb" />
+                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                    by
+                    <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
+                    <br />
+                    {% include 'price_object.html' with price=item.price %}
+                    <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
+                        <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
                     </a>
-                    <p>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
-                        by
-                        <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator|truncatechars:20 }}</a>
-                        <br />
-                        {% include 'price_object.html' with price=avatar.price %}
-                        <a href="https://booth.pm/ja/items/{{ avatar.avatar_id }}"
-                           target="blank">
-                            <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
-                        </a>
-                    </p>
-                </div>
-            {% endfor %}
-        </div>
-        <hr />
-        <h3 class="deco">Lucky Items</h3>
-        <div class="boxContainer">
-            {% for item in items %}
-                <div class="box">
-                    <a href="{% url 'app:item' item_id=item.item_id %}">
-                        <img src="{{ item.imageURL }}" class="thumb" alt="thumb"/>
-                    </a>
-                    <p>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
-                        by
-                        <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
-                        <br />
-                        {% include 'price_object.html' with price=item.price %}
-                        <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
-                            <img src="{% static 'BOOTH_emoji.png' %}" class="emoji" alt="emoji" />
-                        </a>
-                    </p>
-                </div>
-            {% endfor %}
-        </div>
-        <hr />
-        <h3 class="deco">Weekly Hot</h3>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+    <hr />
+    <h3 class="deco">Weekly Hot</h3>
+    <ul>
+        {% for avatar in hot_avatars %}
+            <li>
+                <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                {% include 'price_object.html' with price=avatar.price %}
+                by
+                <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                <span class="free">(+{{ avatar.item_hot }})</span>
+            </li>
+        {% endfor %}
+        <a href="{% url 'app:avatars' %}?sort_hot=on">
+            <p>
+                More Results
+            </p>
+        </a>
+    </ul>
+    <hr />
+    <h3 class="deco">Most Wanted</h3>
+    <ul>
+        Avatars
         <ul>
-            {% for avatar in hot_avatars %}
+            {% for avatar in wanted_avatars %}
                 <li>
                     <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
                     {% include 'price_object.html' with price=avatar.price %}
                     by
                     <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                    <span class="free">(+{{ avatar.item_hot }})</span>
+                    <span class="free">({{ avatar.want }} wanted)</span>
                 </li>
             {% endfor %}
-            <a href="{% url 'app:avatars' %}?sort_hot=on">
-                <p>
-                    More Results
-                </p>
-            </a>
         </ul>
-        <hr />
-        <h3 class="deco">Most Wanted</h3>
+        Items
         <ul>
-            Avatars
-            <ul>
-                {% for avatar in wanted_avatars %}
-                        <li>
-                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                            {% include 'price_object.html' with price=avatar.price %}
-                            by
-                            <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                            <span class="free">
-                                ({{ avatar.want }} wanted)
-                            </span>
-                        </li>
-                {% endfor %}
-            </ul>
-            Items
-            <ul>
-                {% for item in wanted_items %}
-                        <li>
-                            <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                            {% include 'price_object.html' with price=item.price %}
-                            by
-                            <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
-                            <span class="free">
-                                ({{ item.want }} wanted)
-                            </span>
-                        </li>
-                {% endfor %}
-            </ul>
-        </ul>
-        <hr />
-        <h3 class="deco">
-            Recent Updates
-        </h3>
-        <ul>
-            Avatars
-            <ul>
-                {% for avatar in recent_avatars %}
-                    <li>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                        {% include 'price_object.html' with price=avatar.price %}
-                        by
-                        <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-            Items
-            <ul>
-                {% for item in recent_items %}
-                    <li>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                        {% include 'price_object.html' with price=item.price %}
-                        by
-                        <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </ul>
-        <hr />
-        <h4 class="deco">
-            Supporters
-        </h4>
-        <p>
-            以下の方々にご支援いただいています。ありがとうございます。
-        </p>
-        <ul>
-            {% for supporter in supporters %}
+            {% for item in wanted_items %}
                 <li>
-                    {{ supporter }} 様
+                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                    {% include 'price_object.html' with price=item.price %}
+                    by
+                    <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
+                    <span class="free">({{ item.want }} wanted)</span>
                 </li>
             {% endfor %}
         </ul>
-    {% endblock content %}
+    </ul>
+    <hr />
+    <h3 class="deco">Recent Updates</h3>
+    <ul>
+        Avatars
+        <ul>
+            {% for avatar in recent_avatars %}
+                <li>
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                    {% include 'price_object.html' with price=avatar.price %}
+                    by
+                    <a href="{% url 'app:creator' creator_id=avatar.creator.creator_id %}">{{ avatar.creator }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        Items
+        <ul>
+            {% for item in recent_items %}
+                <li>
+                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                    {% include 'price_object.html' with price=item.price %}
+                    by
+                    <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </ul>
+    <hr />
+    <h4 class="deco">
+        Supporters
+    </h4>
+    <p>
+        以下の方々にご支援いただいています。ありがとうございます。
+    </p>
+    <ul>
+        {% for supporter in supporters %}
+            <li>
+                {{ supporter }} 様
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

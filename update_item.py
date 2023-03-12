@@ -42,7 +42,7 @@ def process(force=False):
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat, main_txt)
         link_ids.extend(link_ids2)
-        pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)<section class="container">'
+        pat = r'<p class="autolink break-words font-noto-sans typography-16 whitespace-pre-line">(.*?)</section></div>'
         if len(re.findall(pat, txt)) > 0:
             scr_txt = re.findall(pat, txt)[0]
             pat = r'https://booth.pm/(.*?)/items/(\d+)'

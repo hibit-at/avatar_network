@@ -34,7 +34,7 @@
                                         {% endif %}
                                         {% if avatar.num_items > 0 %}
                                             対応アイテム
-                                            <span class="price">{{ avatar.num_items }}</span>
+                                            <span class="price">{{ avatar.num_items|intcomma }}</span>
                                             点
                                         {% endif %}
                                     </li>
@@ -54,7 +54,7 @@
                                         {% endif %}
                                         {% if item.num_avatars > 0 %}
                                             対応アバター
-                                            <span class="price">{{ item.num_avatars }}</span>
+                                            <span class="price">{{ item.num_avatars|intcomma }}</span>
                                             体
                                         {% endif %}
                                     </li>

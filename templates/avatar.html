@@ -162,7 +162,7 @@
         <h4>
             <form method="get"
                   action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                対応アイテム
+                対応アイテム（{{ avatar.items.all|length|intcomma }} 点）
                 {% if sort_latest %}
                     <button name="sort_latest" value="off" class="button">Price</button>
                 {% else %}

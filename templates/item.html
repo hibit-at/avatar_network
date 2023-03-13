@@ -98,7 +98,7 @@
     {% if avatars|length > 0 %}
         <hr />
         <div class="boxContainer">
-            <h4>対応アバター</h4>
+            <h4>対応アバター（{{ avatars|length|intcomma }} 体）</h4>
             {% for avatar in avatars %}
                 {% if avatar.isHighlight %}
                     <div class="box-highlight">

@@ -42,7 +42,7 @@
                         <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
                     </a>
                     <p>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:28 }}</a>
                         <br />
                         {% if avatar.price > 0 %}
                             <span class="price">¥ {{ avatar.price|intcomma }}</span>
@@ -56,7 +56,7 @@
                         {% if avatar.items.all|length > 0 %}
                             <br />
                             対応アイテム
-                            <span class="price">{{ avatar.items.all|length }}</span>
+                            <span class="price">{{ avatar.items.all|length|intcomma }}</span>
                             点
                         {% endif %}
                     </p>
@@ -74,7 +74,7 @@
                         <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
                     </a>
                     <p>
-                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
+                        <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:28 }}</a>
                         <br />
                         {% if item.price > 0 %}
                             <span class="price">¥ {{ item.price|intcomma }}</span>
@@ -87,7 +87,7 @@
                         {% if item.avatar.all|length > 0 %}
                             <br />
                             対応アバター
-                            <span class="price">{{ item.avatar.all|length }}</span>
+                            <span class="price">{{ item.avatar.all|length|intcomma }}</span>
                             体
                         {% endif %}
                     </p>

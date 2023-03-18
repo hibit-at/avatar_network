@@ -165,7 +165,9 @@
                 対応アイテム（{{ avatar.items.all|length|intcomma }} 点）
                 {% if sort_latest %}
                     <button name="sort_latest" value="off" class="button">Price</button>
+                    <span style="font-size:14px">Sort by Latest</span>
                 {% else %}
+                    <span style="font-size:14px">Sort by Price</span>
                     <button name="sort_latest" value="on" class="button">Latest</button>
                 {% endif %}
             </form>

@@ -11,7 +11,9 @@
         （{{ total|intcomma }} avatars）
         {% if sort_hot %}
             <button name="sort_hot" value="off" class="button">Total</button>
-        {% else %}
+            Sort by Hot
+            {% else %}
+            Sort by Total
             <button name="sort_hot" value="on" class="button">Hot</button>
         {% endif %}
     </form>

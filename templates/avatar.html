@@ -164,11 +164,11 @@
                   action="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
                 対応アイテム（{{ avatar.items.all|length|intcomma }} 点）
                 {% if sort_latest %}
-                    <button name="sort_latest" value="off" class="button">Price</button>
                     <span style="font-size:14px">Sort by Latest</span>
+                    <button name="sort_latest" value="off" class="button">to Price</button>
                 {% else %}
                     <span style="font-size:14px">Sort by Price</span>
-                    <button name="sort_latest" value="on" class="button">Latest</button>
+                    <button name="sort_latest" value="on" class="button">to Latest</button>
                 {% endif %}
             </form>
         </h4>

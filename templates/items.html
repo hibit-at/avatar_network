@@ -10,11 +10,11 @@
         <input type="submit" value="Filter" class="button" />
         （{{ total|intcomma }} items）
         {% if sort_latest %}
-            <button name="sort_latest" value="off" class="button">Total</button>
             Sort by Latest
+            <button name="sort_latest" value="off" class="button">to Total</button>
         {% else %}
             Sort by Total
-            <button name="sort_latest" value="on" class="button">Latest</button>
+            <button name="sort_latest" value="on" class="button">to Latest</button>
         {% endif %}
     </form>
     {% include 'page_object.html' with keyword='app:items' add_bool=sort_latest add_str='sort_latest' %}

@@ -188,6 +188,16 @@ a:hover {
     font-weight: bold;
 }
 
+.button-active {
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: pink;
+    background-color: white;
+    color: pink;
+    font-weight: bold;
+}
+
 .highlight {
     font-size: 20px;
     border-radius: 5px;

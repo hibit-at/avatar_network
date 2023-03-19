@@ -10,11 +10,11 @@
         <input type="submit" value="Filter" class="button" />
         （{{ total|intcomma }} avatars）
         {% if sort_hot %}
-            <button name="sort_hot" value="off" class="button">Total</button>
             Sort by Hot
+            <button name="sort_hot" value="off" class="button">to Total</button>
             {% else %}
             Sort by Total
-            <button name="sort_hot" value="on" class="button">Hot</button>
+            <button name="sort_hot" value="on" class="button">to Hot</button>
         {% endif %}
     </form>
     {% include 'page_object.html' with keyword='app:avatars' add_bool=sort_hot add_str='sort_hot' %}

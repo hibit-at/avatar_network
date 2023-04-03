@@ -30,6 +30,24 @@ def name_validation(org):
 
 # Create your views here.
 
+def get_random_avatars_and_items():
+    avatars = Avatar.objects.order_by('?')[:5]
+    items = Item.objects.order_by('?')[:5]
+    return avatars, items
+
+def get_recent_avatars_and_items():
+    recent_avatars = Avatar.objects.order_by('-avatar_id')[:5]
+    recent_items = Item.objects.order_by('-item_id')[:5]
+    return recent_avatars, recent_items
+
+def get_hot_avatars():
+    hot_avatars = Avatar.objects.order_by('-item_hot')[:5]
+    return hot_avatars
+
+def get_wanted_avatars_and_items():
+    wanted_avatars = Avatar.objects.all().annotate(want=Count('want_avatar')).exclude(want=0).order_by('-want')[:5]
+    wanted_items = Item.objects.all().annotate(want=Count('want_item')).exclude(want=0).order_by('-want')[:5]
+    return wanted_avatars, wanted_items
 
 def index(request):
     params = {}
@@ -39,33 +57,39 @@ def index(request):
         params['social'] = social
         # activate
         if not Customer.objects.filter(user=user).exists():
-            customer = Customer.objects.create(
-                user=user,
-            )
-            Folder.objects.create(
-                editor=customer,
-                name=f'{str(user)}\'s favorite'
-            )
+            customer = Customer.objects.create(user=user)
+            Folder.objects.create(editor=customer, name=f'{str(user)}\'s favorite')
             print('customer instance created')
-    avatars = Avatar.objects.order_by('?')[:5]
-    items = Item.objects.order_by('?')[:5]
-    recent_avatars = Avatar.objects.order_by('-avatar_id')[:5]
-    recent_items = Item.objects.order_by('-item_id')[:5]
-    hot_avatars = Avatar.objects.order_by('-item_hot')[:5]
-    params['avatars'] = avatars
-    params['items'] = items
-    params['recent_avatars'] = recent_avatars
-    params['recent_items'] = recent_items
-    params['hot_avatars'] = hot_avatars
-    supporters = Customer.objects.filter(
-        isSupporter=True).exclude(user__is_staff=True)
-    params['supporters'] = supporters
-    wanted_avatars = Avatar.objects.all().annotate(want=Count('want_avatar')).exclude(want=0).order_by('-want')[:5]
-    wanted_items = Item.objects.all().annotate(want=Count('want_item')).exclude(want=0).order_by('-want')[:5]
-    params['wanted_avatars'] = wanted_avatars
-    params['wanted_items']= wanted_items
+
+    avatars, items = get_random_avatars_and_items()
+    recent_avatars, recent_items = get_recent_avatars_and_items()
+    hot_avatars = get_hot_avatars()
+    wanted_avatars, wanted_items = get_wanted_avatars_and_items()
+    supporters = Customer.objects.filter(isSupporter=True).exclude(user__is_staff=True)
+
+    params.update({
+        'avatars': avatars,
+        'items': items,
+        'recent_avatars': recent_avatars,
+        'recent_items': recent_items,
+        'hot_avatars': hot_avatars,
+        'supporters': supporters,
+        'wanted_avatars': wanted_avatars,
+        'wanted_items': wanted_items,
+    })
 
     return render(request, 'index.html', params)
+
+
+def get_creator_with_avatars_and_items(creator_id):
+    creators = Creator.objects.all()
+    avatar_query = Avatar.objects.annotate(num_items=Count('items')).order_by('price', '-num_items')
+    item_query = Item.objects.annotate(num_avatars=Count('avatar')).order_by('price', '-num_avatars')
+    
+    creators = creators.prefetch_related(models.Prefetch('avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(models.Prefetch('items', queryset=item_query))
+    
+    return creators.get(creator_id=creator_id)
 
 
 def creator(request, creator_id=''):
@@ -74,19 +98,13 @@ def creator(request, creator_id=''):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    creators = Creator.objects.all()
-    avatar_query = Avatar.objects.annotate(num_items=Count('items'))
-    avatar_query = avatar_query.order_by('price', '-num_items')
-    item_query = Item.objects.annotate(num_avatars=Count('avatar'))
-    item_query = item_query.order_by('price', '-num_avatars')
-    creators = creators.prefetch_related(models.Prefetch(
-        'avatars', queryset=avatar_query))
-    creators = creators.prefetch_related(models.Prefetch(
-        'items', queryset=item_query))
-    creator = creators.get(creator_id=creator_id)
+        
+    creator = get_creator_with_avatars_and_items(creator_id)
+    
     if Customer.objects.filter(highlight=creator).exists():
         setattr(creator, 'isHighlight', True)
     params['creator'] = creator
+    
     if request.method == 'POST':
         post = request.POST
         print(post)
@@ -102,56 +120,67 @@ def creator(request, creator_id=''):
     return render(request, 'creator.html', params)
 
 
+def get_filtered_creators_with_avatars_and_items(word='', free_only=False, sort_item=None):
+    creators = Creator.objects.all()
+    avatar_query = Avatar.objects.annotate(num_items=Count('items'))
+    item_query = Item.objects.annotate(num_avatars=Count('avatar'))
+    
+    if free_only:
+        creators = creators.filter(Q(avatars__price=0) | Q(items__price=0))
+        avatar_query = avatar_query.filter(price=0)
+        item_query = item_query.filter(price=0)
+
+    if word != '':
+        creators = creators.filter(creator_name__contains=word)
+        
+    avatar_query = avatar_query.order_by('price', '-num_items')
+    item_query = item_query.order_by('price', '-num_avatars')
+    
+    creators = creators.prefetch_related(models.Prefetch('avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(models.Prefetch('items', queryset=item_query))
+    
+    if sort_item is None:
+        # sort_by_total_items
+        creators = creators.annotate(total_item=Count('avatars__items')).order_by('-total_item')
+    else:
+        # sort_by_total_avatars
+        creators = creators.annotate(total_avatar=Count('items__avatar')).order_by('-total_avatar')
+    
+    return creators
+
+
 def creators(request, page=1, word='', free_only=False, sort_item=None):
     params = {}
     user = request.user
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    if 'page' in request.GET:
-        page = int(request.GET['page'])
-    if 'word' in request.GET:
-        word = request.GET['word']
-    if 'free_only' in request.GET:
-        free_only = request.GET['free_only']
+        
+    page = int(request.GET.get('page', page))
+    word = request.GET.get('word', word)
+    free_only = request.GET.get('free_only', free_only)
+    
     span = 9
     start = (page-1)*span
     end = page*span
-    creators = Creator.objects.all()
-    avatar_query = Avatar.objects.annotate(num_items=Count('items'))
-    item_query = Item.objects.annotate(num_avatars=Count('avatar'))
-    initial = {}
-    if free_only:
-        creators = creators.filter(Q(avatars__price=0) | Q(items__price=0))
-        avatar_query = avatar_query.filter(price=0)
-        item_query = item_query.filter(price=0)
-        initial['free_only'] = free_only
-    if word != '':
-        creators = creators.filter(creator_name__contains=word)
-        initial['word'] = word
-    form = Filter(initial=initial)
+    
+    creators = get_filtered_creators_with_avatars_and_items(word=word, free_only=free_only, sort_item=sort_item)
+    
     total = creators.count()
-    avatar_query = avatar_query.order_by('price', '-num_items')
-    item_query = item_query.order_by('price', '-num_avatars')
-    creators = creators.prefetch_related(models.Prefetch(
-        'avatars', queryset=avatar_query))
-    creators = creators.prefetch_related(models.Prefetch(
-        'items', queryset=item_query))
-    if not 'sort_item' in request.GET:
-        # sort_by_total_items
-        creators = creators.annotate(total_item=Count('avatars__items'))
-        creators = creators.order_by('-total_item')[start:end]
-    else:
-        # sort_by_total_avatars
-        creators = creators.annotate(total_avatar=Count('items__avatar'))
-        creators = creators.order_by('-total_avatar')[start:end]
-    # params = {'creators': creators, 'page': page}
-    params['creators'] = creators
-    params['page'] = page
-    params['form'] = form
-    params['word'] = word
-    params['free_only'] = free_only
-    params['total'] = total
+    creators = creators[start:end]
+    
+    initial = {'word': word, 'free_only': free_only}
+    form = Filter(initial=initial)
+    
+    params.update({
+        'creators': creators,
+        'page': page,
+        'form': form,
+        'word': word,
+        'free_only': free_only,
+        'total': total,
+    })
+    
     return render(request, 'creators.html', params)
 
 
@@ -177,10 +206,8 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
         params['folders'] = folders
         params['folders_some_added'] = some_added
         params['folders_some_added_want'] = some_added_want
-    if 'page' in request.GET:
-        page = int(request.GET['page'])
-    if 'sort_latest' in request.GET:
-        sort_latest = request.GET['sort_latest']
+    page = int(request.GET.get('page', page))
+    sort_latest = request.GET.get('sort_latest', sort_latest)
     params['sort_latest'] = sort_latest
     span = 200
     start = (page-1)*span
@@ -205,11 +232,13 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
         if Customer.objects.filter(highlight=normal_item.creator):
             print("hit")
             setattr(normal_item, 'isHighlight', True)
-    params['page'] = page
-    params['avatar'] = avatar
-    params['total'] = total
-    params['normal_items'] = normal_items
-    params['genuine_items'] = genuine_items
+    params.update({
+        'page': page,
+        'avatar': avatar,
+        'total': total,
+        'normal_items': normal_items,
+        'genuine_items': genuine_items,
+    })
     if request.method == "POST":
         post = request.POST
         print(post)

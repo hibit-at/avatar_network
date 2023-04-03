@@ -30,24 +30,31 @@ def name_validation(org):
 
 # Create your views here.
 
+
 def get_random_avatars_and_items():
     avatars = Avatar.objects.order_by('?')[:5]
     items = Item.objects.order_by('?')[:5]
     return avatars, items
+
 
 def get_recent_avatars_and_items():
     recent_avatars = Avatar.objects.order_by('-avatar_id')[:5]
     recent_items = Item.objects.order_by('-item_id')[:5]
     return recent_avatars, recent_items
 
+
 def get_hot_avatars():
     hot_avatars = Avatar.objects.order_by('-item_hot')[:5]
     return hot_avatars
 
+
 def get_wanted_avatars_and_items():
-    wanted_avatars = Avatar.objects.all().annotate(want=Count('want_avatar')).exclude(want=0).order_by('-want')[:5]
-    wanted_items = Item.objects.all().annotate(want=Count('want_item')).exclude(want=0).order_by('-want')[:5]
+    wanted_avatars = Avatar.objects.all().annotate(
+        want=Count('want_avatar')).exclude(want=0).order_by('-want')[:5]
+    wanted_items = Item.objects.all().annotate(want=Count(
+        'want_item')).exclude(want=0).order_by('-want')[:5]
     return wanted_avatars, wanted_items
+
 
 def index(request):
     params = {}
@@ -58,14 +65,16 @@ def index(request):
         # activate
         if not Customer.objects.filter(user=user).exists():
             customer = Customer.objects.create(user=user)
-            Folder.objects.create(editor=customer, name=f'{str(user)}\'s favorite')
+            Folder.objects.create(
+                editor=customer, name=f'{str(user)}\'s favorite')
             print('customer instance created')
 
     avatars, items = get_random_avatars_and_items()
     recent_avatars, recent_items = get_recent_avatars_and_items()
     hot_avatars = get_hot_avatars()
     wanted_avatars, wanted_items = get_wanted_avatars_and_items()
-    supporters = Customer.objects.filter(isSupporter=True).exclude(user__is_staff=True)
+    supporters = Customer.objects.filter(
+        isSupporter=True).exclude(user__is_staff=True)
 
     params.update({
         'avatars': avatars,
@@ -83,12 +92,16 @@ def index(request):
 
 def get_creator_with_avatars_and_items(creator_id):
     creators = Creator.objects.all()
-    avatar_query = Avatar.objects.annotate(num_items=Count('items')).order_by('price', '-num_items')
-    item_query = Item.objects.annotate(num_avatars=Count('avatar')).order_by('price', '-num_avatars')
-    
-    creators = creators.prefetch_related(models.Prefetch('avatars', queryset=avatar_query))
-    creators = creators.prefetch_related(models.Prefetch('items', queryset=item_query))
-    
+    avatar_query = Avatar.objects.annotate(
+        num_items=Count('items')).order_by('price', '-num_items')
+    item_query = Item.objects.annotate(num_avatars=Count(
+        'avatar')).order_by('price', '-num_avatars')
+
+    creators = creators.prefetch_related(
+        models.Prefetch('avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(
+        models.Prefetch('items', queryset=item_query))
+
     return creators.get(creator_id=creator_id)
 
 
@@ -98,13 +111,13 @@ def creator(request, creator_id=''):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        
+
     creator = get_creator_with_avatars_and_items(creator_id)
-    
+
     if Customer.objects.filter(highlight=creator).exists():
         setattr(creator, 'isHighlight', True)
     params['creator'] = creator
-    
+
     if request.method == 'POST':
         post = request.POST
         print(post)
@@ -124,7 +137,7 @@ def get_filtered_creators_with_avatars_and_items(word='', free_only=False, sort_
     creators = Creator.objects.all()
     avatar_query = Avatar.objects.annotate(num_items=Count('items'))
     item_query = Item.objects.annotate(num_avatars=Count('avatar'))
-    
+
     if free_only:
         creators = creators.filter(Q(avatars__price=0) | Q(items__price=0))
         avatar_query = avatar_query.filter(price=0)
@@ -132,20 +145,24 @@ def get_filtered_creators_with_avatars_and_items(word='', free_only=False, sort_
 
     if word != '':
         creators = creators.filter(creator_name__contains=word)
-        
+
     avatar_query = avatar_query.order_by('price', '-num_items')
     item_query = item_query.order_by('price', '-num_avatars')
-    
-    creators = creators.prefetch_related(models.Prefetch('avatars', queryset=avatar_query))
-    creators = creators.prefetch_related(models.Prefetch('items', queryset=item_query))
-    
+
+    creators = creators.prefetch_related(
+        models.Prefetch('avatars', queryset=avatar_query))
+    creators = creators.prefetch_related(
+        models.Prefetch('items', queryset=item_query))
+
     if sort_item is None:
         # sort_by_total_items
-        creators = creators.annotate(total_item=Count('avatars__items')).order_by('-total_item')
+        creators = creators.annotate(total_item=Count(
+            'avatars__items')).order_by('-total_item')
     else:
         # sort_by_total_avatars
-        creators = creators.annotate(total_avatar=Count('items__avatar')).order_by('-total_avatar')
-    
+        creators = creators.annotate(total_avatar=Count(
+            'items__avatar')).order_by('-total_avatar')
+
     return creators
 
 
@@ -155,23 +172,24 @@ def creators(request, page=1, word='', free_only=False, sort_item=None):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        
+
     page = int(request.GET.get('page', page))
     word = request.GET.get('word', word)
     free_only = request.GET.get('free_only', free_only)
-    
+
     span = 9
     start = (page-1)*span
     end = page*span
-    
-    creators = get_filtered_creators_with_avatars_and_items(word=word, free_only=free_only, sort_item=sort_item)
-    
+
+    creators = get_filtered_creators_with_avatars_and_items(
+        word=word, free_only=free_only, sort_item=sort_item)
+
     total = creators.count()
     creators = creators[start:end]
-    
+
     initial = {'word': word, 'free_only': free_only}
     form = Filter(initial=initial)
-    
+
     params.update({
         'creators': creators,
         'page': page,
@@ -180,7 +198,7 @@ def creators(request, page=1, word='', free_only=False, sort_item=None):
         'free_only': free_only,
         'total': total,
     })
-    
+
     return render(request, 'creators.html', params)
 
 
@@ -191,7 +209,8 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
+        folders = Folder.objects.filter(
+            editor=request.user.customer).order_by('-pk')
         some_added = False
         some_added_want = False
         for folder in folders:
@@ -227,7 +246,8 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
             return redirect(redirect_url)
         normal_items = normal_items.order_by('-item_id')[start:end]
     else:
-        normal_items = normal_items.order_by('num_avatars', 'price', '-item_id')[start:end]
+        normal_items = normal_items.order_by(
+            'num_avatars', 'price', '-item_id')[start:end]
     for normal_item in normal_items:
         if Customer.objects.filter(highlight=normal_item.creator):
             print("hit")
@@ -304,11 +324,15 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
             setattr(avatar, 'isHighlight', True)
     if user.is_authenticated:
         folders = Folder.objects.filter(editor=user.customer).order_by('-pk')
-        folder_fav_avatars = dict([(folder, folder.fav_avatar.all()) for folder in folders])
-        folder_want_avatars = dict([(folder, folder.want_avatar.all()) for folder in folders])
+        folder_fav_avatars = dict(
+            [(folder, folder.fav_avatar.all()) for folder in folders])
+        folder_want_avatars = dict(
+            [(folder, folder.want_avatar.all()) for folder in folders])
         for avatar in avatars:
-            setattr(avatar, 'folders_owned', set(filter(lambda folder: avatar in folder_fav_avatars[folder], folders)))
-            setattr(avatar, 'folders_wanted', set(filter(lambda folder: avatar in folder_want_avatars[folder], folders)))
+            setattr(avatar, 'folders_owned', set(
+                filter(lambda folder: avatar in folder_fav_avatars[folder], folders)))
+            setattr(avatar, 'folders_wanted', set(
+                filter(lambda folder: avatar in folder_want_avatars[folder], folders)))
         params['folders'] = folders
     params['avatars'] = avatars
     params['page'] = page
@@ -328,7 +352,8 @@ def item(request, item_id=''):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-        folders = Folder.objects.filter(editor=request.user.customer).order_by('-pk')
+        folders = Folder.objects.filter(
+            editor=request.user.customer).order_by('-pk')
         some_added = False
         some_added_want = False
         for folder in folders:
@@ -416,17 +441,21 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
 
     params['total'] = items.count()
     items = items[start:end]
-    
+
     for item in items:
         if Customer.objects.filter(highlight=item.creator).exists():
             setattr(item, 'isHighlight', True)
     if user.is_authenticated:
         folders = Folder.objects.filter(editor=user.customer).order_by('-pk')
-        folder_fav_items = dict([(folder, folder.fav_item.all()) for folder in folders])
-        folder_want_items = dict([(folder, folder.want_item.all()) for folder in folders])
+        folder_fav_items = dict(
+            [(folder, folder.fav_item.all()) for folder in folders])
+        folder_want_items = dict(
+            [(folder, folder.want_item.all()) for folder in folders])
         for item in items:
-            setattr(item, 'folders_owned', set(filter(lambda folder: item in folder_fav_items[folder], folders)))
-            setattr(item, 'folders_wanted', set(filter(lambda folder: item in folder_want_items[folder], folders)))
+            setattr(item, 'folders_owned', set(
+                filter(lambda folder: item in folder_fav_items[folder], folders)))
+            setattr(item, 'folders_wanted', set(
+                filter(lambda folder: item in folder_want_items[folder], folders)))
         params['folders'] = folders
     params['items'] = items
     params['page'] = page
@@ -782,7 +811,8 @@ def folders(request):
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-    folders = Folder.objects.filter(isOpen=True).annotate(num=Count('fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
+    folders = Folder.objects.filter(isOpen=True).annotate(num=Count(
+        'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
     folders = folders.exclude(num=0).order_by('-pk')
     params['folders'] = folders
     return render(request, 'folders.html', params)

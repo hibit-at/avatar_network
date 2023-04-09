@@ -813,7 +813,7 @@ def folders(request):
         params['social'] = social
     folders = Folder.objects.filter(isOpen=True).annotate(num=Count(
         'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
-    folders = folders.exclude(num=0).order_by('-pk')
+    folders = folders.exclude(num=0).order_by('?')
     params['folders'] = folders
     return render(request, 'folders.html', params)
 

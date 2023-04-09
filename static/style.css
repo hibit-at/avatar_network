@@ -261,6 +261,32 @@ a:hover {
     margin-left: 10px;
 }
 
+.big-icon {
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+    box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, .3);
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.image-crop {
+    width: 80px;
+    /* 任意の幅 */
+    height: 80px;
+    /* 任意の高さ */
+    overflow: hidden;
+    position: relative;
+}
+
+.image-crop img {
+    object-fit: cover;
+    /* 画像をクロップする */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
 .dropdown:hover .dropdown-menu {
     display: block;
 }
@@ -281,4 +307,28 @@ a:hover {
 
 .info_offset {
     padding: 20px;
+}
+
+.image-crop {
+    width: 200px;
+    /* 任意の幅 */
+    height: 150px;
+    /* 任意の高さ */
+    overflow: hidden;
+    position: relative;
+}
+
+.image-crop a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.image-crop img {
+    object-fit: cover;
+    /* 画像をクロップする */
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }

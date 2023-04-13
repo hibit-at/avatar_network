@@ -840,7 +840,6 @@ def folders(request):
 
 def all_folders(request):
 
-    from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
     params = {}
     user = request.user
@@ -853,19 +852,11 @@ def all_folders(request):
 
     # Pagination
     page = request.GET.get('page', 1)  # Get the 'page' query parameter, default to 1 if not found
-    paginator = Paginator(customers, 9)  # Show 9 customers per page
-
-
-    try:
-        customers_page = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        customers_page = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        print('exceed!')
-        page = paginator.num_pages
-        customers_page = paginator.page(paginator.num_pages)
+    page = int(page)
+    span = 9
+    start = (page-1)*span
+    end = page*span
+    customers_page = customers[start:end]
 
     params['customers'] = customers_page
     params['page'] = page

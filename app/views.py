@@ -839,16 +839,35 @@ def folders(request):
 
 
 def all_folders(request):
+
+    from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
     params = {}
     user = request.user
     if user.is_authenticated:
         social = SocialAccount.objects.get(user=user)
         params['social'] = social
-
     customers = Customer.objects.annotate(open_folder_count=Count('folder', filter=Q(folder__isOpen=True)))
     customers = customers.filter(open_folder_count__gte=1)
-    params['customers'] = customers
-    return render(request, 'all_folders.html',params)
+    customers = customers.order_by('-pk')
+
+    # Pagination
+    page = request.GET.get('page', 1)  # Get the 'page' query parameter, default to 1 if not found
+    paginator = Paginator(customers, 9)  # Show 9 customers per page
+
+
+    try:
+        customers_page = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        customers_page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        print('exceed!')
+        customers_page = paginator.page(paginator.num_pages)
+
+    params['customers'] = customers_page
+    return render(request, 'all_folders.html', params)
 
 @login_required
 def debug_folders(request):

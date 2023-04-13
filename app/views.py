@@ -75,6 +75,10 @@ def index(request):
     wanted_avatars, wanted_items = get_wanted_avatars_and_items()
     supporters = Customer.objects.filter(
         isSupporter=True).exclude(user__is_staff=True)
+    folders = Folder.objects.filter(isOpen=True).annotate(num=Count(
+        'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
+    folders = folders.filter(num__gte=1)
+    lucky_folder = folders.order_by('?').first()
 
     params.update({
         'avatars': avatars,
@@ -85,6 +89,7 @@ def index(request):
         'supporters': supporters,
         'wanted_avatars': wanted_avatars,
         'wanted_items': wanted_items,
+        'folder' : lucky_folder,
     })
 
     return render(request, 'index.html', params)

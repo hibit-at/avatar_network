@@ -3,6 +3,10 @@
     {% load static %}
     {% load humanize %}
     <h3 class="deco">Folders List</h3>
+    <a href="{% url 'app:all_folders' %}">
+        <button class="button">All Folders</button>
+    </a>
+    <hr>
     {% for folder in folders %}
         <div class="creator">
             <p>

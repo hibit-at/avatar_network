@@ -63,6 +63,74 @@
         {% endfor %}
     </div>
     <hr />
+    <h3 class="deco">Lucky Folder</h3>
+    <div class="creator">
+        <p>
+            <a href="{% url 'app:folder' pk=folder.pk %}"><b>{{ folder }}</b> by {{ folder.editor }}</a>
+        </p>
+        <p>
+            {{ folder.description|truncatechars:30 }}
+        </p>
+        <div class="boxContainer">
+            {% if folder.want_avatar.all|length > 0 %}
+                {% comment %} <div class="boxContainer"> {% endcomment %}
+                {% for avatar in folder.want_avatar.all|slice:":7" %}
+                    <div class="box" style="width:160px;height:160px">
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                            <img alt="thumb"
+                                 src="{{ avatar.imageURL }}"
+                                 class="thumb"
+                                 {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% comment %} </div> {% endcomment %}
+            {% endif %}
+            {% if folder.want_item.all|length > 0 %}
+                {% comment %} <div class="boxContainer"> {% endcomment %}
+                {% for item in folder.want_item.all|slice:":7" %}
+                    <div class="box" style="width:160px;height:160px">
+                        <a href="{% url 'app:item' item_id=item.item_id %}">
+                            <img alt="thumb"
+                                 src="{{ item.imageURL }}"
+                                 class="thumb"
+                                 {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% comment %} </div> {% endcomment %}
+            {% endif %}
+            {% if folder.fav_avatar.all|length > 0 %}
+                {% comment %} <div class="boxContainer"> {% endcomment %}
+                {% for avatar in folder.fav_avatar.all|slice:":7" %}
+                    <div class="box" style="width:160px;height:160px">
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                            <img alt="thumb"
+                                 src="{{ avatar.imageURL }}"
+                                 class="thumb"
+                                 {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% comment %} </div> {% endcomment %}
+            {% endif %}
+            {% if folder.fav_item.all|length > 0 %}
+                {% comment %} <div class="boxContainer"> {% endcomment %}
+                {% for item in folder.fav_item.all|slice:":7" %}
+                    <div class="box" style="width:160px;height:160px">
+                        <a href="{% url 'app:item' item_id=item.item_id %}">
+                            <img alt="thumb"
+                                 src="{{ item.imageURL }}"
+                                 class="thumb"
+                                 {% if folder.isNSFW %} style="width:150px;height:150px;filter:blur(10px)" {% else %} style="width:150px;height:150px" {% endif %}/>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% comment %} </div> {% endcomment %}
+            {% endif %}
+        </div>
+    </div>
+    <hr />
     <h3 class="deco">Weekly Hot</h3>
     <ul>
         {% for avatar in hot_avatars %}
@@ -75,9 +143,9 @@
             </li>
         {% endfor %}
         <a href="{% url 'app:avatars' %}?sort_hot=on">
-            <p>
+            <button class="button">
                 More Results
-            </p>
+            </button>
         </a>
     </ul>
     <hr />

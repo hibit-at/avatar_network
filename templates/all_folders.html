@@ -3,6 +3,7 @@
     {% load humanize %}
     {% load static %}
     <h3 class="deco">Customers List</h3>
+    {% include 'page_object.html' with keyword='app:all_folders' %}
     {% for customer in customers %}
         <div class="creator">
             <h4>{{ customer }}</h4>
@@ -38,4 +39,6 @@
             {% endfor %}
         </div>
     {% endfor %}
+    
+    {% include 'page_object.html' with keyword='app:all_folders' %}
 {% endblock content %}

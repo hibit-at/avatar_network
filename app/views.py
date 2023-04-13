@@ -864,9 +864,11 @@ def all_folders(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         print('exceed!')
+        page = paginator.num_pages
         customers_page = paginator.page(paginator.num_pages)
 
     params['customers'] = customers_page
+    params['page'] = page
     return render(request, 'all_folders.html', params)
 
 @login_required

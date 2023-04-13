@@ -303,7 +303,19 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     if word != '':
         initial['word'] = word
         for w in words:
-            avatars = avatars.filter(avatar_name__contains=w)
+            if "-" in w:  # "-"が含まれる単語を検出
+                exclude_words = w.split('-')[1:]  # 単語を"-"で分割し、除外する単語を取得
+                exclude_query = Q()
+                for e_word in exclude_words:
+                    exclude_query = exclude_query | Q(avatar_name__contains=e_word)
+                avatars = avatars.exclude(exclude_query)  # 除外条件を適用
+            else:
+                or_words = w.split('||')
+                or_query = Q()
+                for o in or_words:
+                    print(o)
+                    or_query = or_query | Q(avatar_name__contains=o)
+                avatars = avatars.filter(or_query)
     params['total'] = avatars.count()
     if sort_hot:
         if sort_hot == 'off':
@@ -419,12 +431,20 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     if word != '':
         initial['word'] = word
         for w in words:
-            or_words = w.split('||')
-            or_query = Q()
-            for o in or_words:
-                print(o)
-                or_query = or_query | Q(item_name__contains=o)
-            items = items.filter(or_query)
+            if "-" in w:  # "-"が含まれる単語を検出
+                exclude_words = w.split('-')[1:]  # 単語を"-"で分割し、除外する単語を取得
+                exclude_query = Q()
+                for e_word in exclude_words:
+                    exclude_query = exclude_query | Q(item_name__contains=e_word)
+                items = items.exclude(exclude_query)  # 除外条件を適用
+            else:
+                or_words = w.split('||')
+                or_query = Q()
+                for o in or_words:
+                    print(o)
+                    or_query = or_query | Q(item_name__contains=o)
+                items = items.filter(or_query)
+
 
     if sort_latest:
         if sort_latest == 'off':
@@ -813,10 +833,22 @@ def folders(request):
         params['social'] = social
     folders = Folder.objects.filter(isOpen=True).annotate(num=Count(
         'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
-    folders = folders.exclude(num=0).order_by('?')
+    folders = folders.exclude(num=0).order_by('?')[:7]
     params['folders'] = folders
     return render(request, 'folders.html', params)
 
+
+def all_folders(request):
+    params = {}
+    user = request.user
+    if user.is_authenticated:
+        social = SocialAccount.objects.get(user=user)
+        params['social'] = social
+
+    customers = Customer.objects.annotate(open_folder_count=Count('folder', filter=Q(folder__isOpen=True)))
+    customers = customers.filter(open_folder_count__gte=1)
+    params['customers'] = customers
+    return render(request, 'all_folders.html',params)
 
 @login_required
 def debug_folders(request):

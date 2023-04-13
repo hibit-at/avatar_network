@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load humanize %}
+    {% load static %}
+    <h3 class="deco">Customers List</h3>
+    {% for customer in customers %}
+        <div class="creator">
+            <h4>{{ customer }}</h4>
+            {% for folder in customer.folder.all %}
+                {% if folder.isOpen %}
+                <div class="folder">
+                    <ul><a href="{% url 'app:folder' pk=folder.pk %}">{{ folder }}</a>
+                    <ul>
+                            {% for avatar in folder.want_avatar.all %}
+                                <li>
+                                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                                </li>
+                            {% endfor %}
+                            {% for item in folder.want_item.all %}
+                                <li>
+                                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                                </li>
+                            {% endfor %}
+                            {% for avatar in folder.fav_avatar.all %}
+                                <li>
+                                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                                </li>
+                            {% endfor %}
+                            {% for item in folder.fav_item.all %}
+                                <li>
+                                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                                </li>
+                            {% endfor %}
+                    </ul>
+                </ul>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock content %}

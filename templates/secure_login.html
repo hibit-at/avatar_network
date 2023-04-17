@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <form method="post" action="{% url 'twitter_login' %}">
+        {% csrf_token %}
+        <button class="button">Twitter認証</button>
+    </form>
+    <form method="post" action="{% url 'discord_login' %}">
+        {% csrf_token %}
+        <button class="button">Discord認証</button>
+        ※ 以下の【既存ユーザーへの注意】も参照
+    </form>
+    <img src="{% static 'flowchart.png' %}" width="900">
+    <h4 class="deco">【既存ユーザーへの注意】</h4>
+    <ul>
+        <li>
+            Twitter で認証済みのユーザーが、
+            <ul>
+                <li>ログインしてない状態</li>
+                <li>Discord 未追加の状態</li>
+            </ul>
+            で Discord 認証ボタンを押すと、別ユーザーとして登録されてしまいます。
+            <li>必ず、Twitter でログインした後、ユーザーページの「追加」から操作を行ってください</li>
+            <li>一旦アカウントを追加すれば、どちらの認証ボタンでも同じユーザーとしてログインできます</li>
+        </ul>
+    {% endblock content %}

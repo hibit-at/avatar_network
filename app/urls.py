@@ -24,4 +24,5 @@ urlpatterns = [
     # path('please/', views.please, name='please'),
     path('api/avatar/', views.api_avatar, name='api_avatar'),
     path('api/item/', views.api_item, name='api_item'),
+    path('secure_login/',views.secure_login, name='secure_login'),
 ]

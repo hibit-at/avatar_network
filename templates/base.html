@@ -69,25 +69,7 @@
                         </div>
                         {% else %}
                             <div class="dropdown" style="margin-right:200px">
-                                <button class="btn btn-secondary dropdown-toggle"
-                                        type="button"
-                                        id="dropdownMenuButton"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        style="background-color:lightpink;border-style:none;font-size:20px;font-weight:bold">
-                                    ログイン
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form method="post" action="{% url 'twitter_login' %}">
-                                        {% csrf_token %}
-                                        <button class="dropdown-item">Twitter認証</button>
-                                    </form>
-                                    <form method="post" action="{% url 'discord_login' %}">
-                                        {% csrf_token %}
-                                        <button class="dropdown-item">Discord認証</button>
-                                    </form>
-                                </div>
+                                <a href="{% url 'app:secure_login' %}" >ログイン</a>
                             </div>
                         {% endif %}
                 </div>

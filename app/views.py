@@ -923,3 +923,10 @@ def api_item(request):
     import json
     res = json.dumps(res, ensure_ascii=False, indent=4)
     return HttpResponse(res)
+
+def secure_login(request):
+    params = {}
+    user = request.user
+    if user.is_authenticated:
+        return redirect('app:index')
+    return render(request,'secure_login.html')

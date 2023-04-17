@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
     <h3 class="deco">Avatar Networkとは？</h3>
     <div class="info_offset">
         <p>
@@ -20,6 +21,19 @@
 もし、BOOTHに出店している方で、ここでの紹介をとりやめて欲しい場合は、お手数ですが<a href="https://twitter.com/hibit_at" class="bg_link">作者のTwitter</a>にDMかリプライでお知らせください。確認とれ次第、対応します。
 </p>
 </div>
+<hr />
+<h4 class="deco">【重要】認証機能の追加について【重要】</h4>
+<ul>
+    <li>本サービスは、本人確認のために Twitter の認証システムを使わせてもらっていました</li>
+    <li>2023 年以降、Twitter の経営方針が不安定になり、認証システムが使えなくなる可能性が現実的になってきました</li>
+    <li>そのため、代理の認証システムとして Discord を使用することにしました</li>
+    <li>今まで作ってきたカスタムフォルダ等の情報を保存したい方は、Discord 認証を追加することで万が一の事態に備えることを推奨します</li>
+    <li>Twitter の方針が固まったと判断できるまで、この通知を表示します</li>
+</ul>
+<p>
+    Discord 認証を使うかどうかの判断は、以下のフローチャートも参考にしてください。
+</p>
+<img src="{% static 'flowchart.png' %}" width="800">
 <hr />
 <h3 class="deco">使い方</h3>
 <h4 class="under">アバター一覧から探す</h4>
@@ -59,6 +73,7 @@
     なお、フォルダーは「欲しい物」（WANT）と「既に持っている物／オススメしたい物」（OWNED/RECOMMEND）に分けて登録できます。
 </p>
 </div>
+<hr />
 <hr />
 <h3 class="deco">FAQ</h3>
 <p>

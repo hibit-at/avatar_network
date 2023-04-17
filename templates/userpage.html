@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+    {% load socialaccount %}
     {% load static %}
     <h3 class="deco">{{ customer }} さんの個人ページ</h3>
     <p>
@@ -41,8 +42,30 @@
         <form method="post">
             {% csrf_token %}
             <button class="button" name="create_new">+Create New</button>
-            <span style="color:red">{{error}}</span>
+            <span style="color:red">{{ error }}</span>
         </form>
+    {% endif %}
+    {% if user.customer == customer %}
 
+    
+    <hr />
+    <h3 class="deco">Social Account</h3>
+    <h4>連携済み</h4>
+    <ul>
+        {% for account in user.socialaccount_set.all %}<li>{{ account }} - {{ account.provider.capitalize }}</li>{% endfor %}
+    </ul>
+    {% if not has_discord_account %}
+    <h4>Discord 追加処理</h4>
+    <ul>
+        <li>本サービスは、本人確認のために Twitter の認証システムを使わせてもらっていました</li>
+        <li>2023 年以降、Twitterの経営方針が不安定になり、認証システムが使えなくなる可能性が現実的になってきました</li>
+        <li>そのため、代理の認証システムとして Discord を使用することにしました</li>
+        <li>今まで作ってきたカスタムフォルダ等の情報を保存したい方は、Discord 認証を追加することで万が一の事態に備えることを推奨します</li>
+    </ul>
+    <form method="post" action="{% url 'discord_login' %}">
+        {% csrf_token %}
+        <button class="button">ログイン（Discord認証）</button>
+    </form>
+    {% endif %}
     {% endif %}
 {% endblock content %}

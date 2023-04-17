@@ -60,7 +60,7 @@ def index(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
         # activate
         if not Customer.objects.filter(user=user).exists():
@@ -114,7 +114,7 @@ def creator(request, creator_id=''):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
 
     creator = get_creator_with_avatars_and_items(creator_id)
@@ -175,7 +175,7 @@ def creators(request, page=1, word='', free_only=False, sort_item=None):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
 
     page = int(request.GET.get('page', page))
@@ -212,7 +212,7 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
     user = request.user
     avatar = Avatar.objects.get(avatar_id=avatar_id)
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
         folders = Folder.objects.filter(
             editor=request.user.customer).order_by('-pk')
@@ -286,7 +286,7 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     if 'page' in request.GET:
         page = int(request.GET['page'])
@@ -367,7 +367,7 @@ def item(request, item_id=''):
     item = Item.objects.get(item_id=item_id)
     params['item'] = item
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
         folders = Folder.objects.filter(
             editor=request.user.customer).order_by('-pk')
@@ -412,7 +412,7 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     if 'page' in request.GET:
         page = int(request.GET['page'])
@@ -496,7 +496,7 @@ def info(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     avatars = Avatar.objects.annotate(num_items=Count('items'))
     avatars = avatars.order_by('-num_items')
@@ -543,15 +543,21 @@ def debug(request):
     return render(request, 'debug.html', params)
 
 
-def userpage(request, tid=''):
+def userpage(request, pk=0):
     params = {}
     user = request.user
+    has_discord_account = False
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
-    customer = Customer.objects.get(user__username=tid)
+        has_discord_account = SocialAccount.objects.filter(user=user, provider='discord').exists()
+
+    print(has_discord_account)
+    params['has_discord_account'] = has_discord_account
+    customer = Customer.objects.get(user__pk=pk)
     params['customer'] = customer
     folders = Folder.objects.filter(editor=customer)
+
     params['folders'] = folders
     if request.method == 'POST':
         post = request.POST
@@ -582,7 +588,7 @@ def userpage(request, tid=''):
                 editor=user.customer,
                 name=f'{user.customer}\'s favorite {count+1}',
             )
-            return redirect('app:userpage', tid=tid)
+            return redirect('app:userpage', pk=pk)
 
     return render(request, 'userpage.html', params)
 
@@ -591,7 +597,7 @@ def folder(request, pk=0):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     folder = Folder.objects.get(pk=pk)
     if not folder.isOpen and user.customer != folder.editor:
@@ -624,7 +630,7 @@ def folder(request, pk=0):
             delete = post['delete']
             if folder.name == delete:
                 folder.delete()
-            return redirect('app:userpage', tid=request.user.username)
+            return redirect('app:userpage', pk=request.user.pk)
         if 'name' in post:
             name = post['name']
             folder.name = name
@@ -681,7 +687,7 @@ def recommend(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     params['avatars'] = AvatarQueue.objects.all()
     params['items'] = ItemQueue.objects.all()
@@ -834,7 +840,7 @@ def folders(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     folders = Folder.objects.filter(isOpen=True).annotate(num=Count(
         'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
@@ -849,7 +855,7 @@ def all_folders(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     customers = Customer.objects.annotate(open_folder_count=Count('folder', filter=Q(folder__isOpen=True)))
     customers = customers.filter(open_folder_count__gte=1)
@@ -875,7 +881,7 @@ def debug_folders(request):
     if not user.is_staff:
         return redirect('app:index')
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     folders = Folder.objects.all()
     params['folders'] = folders
@@ -886,7 +892,7 @@ def please(request):
     params = {}
     user = request.user
     if user.is_authenticated:
-        social = SocialAccount.objects.get(user=user)
+        social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
     return render(request, 'please.html', params)
 

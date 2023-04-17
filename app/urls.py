@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.views.generic import TemplateView
 
 app_name = 'app'
 
@@ -14,7 +15,7 @@ urlpatterns = [
     path('items/', views.items, name='items'),
     path('info/', views.info, name='info'),
     path('debug/', views.debug, name='debug'),
-    path('userpage/<slug:tid>', views.userpage, name='userpage'),
+    path('userpage/<int:pk>', views.userpage, name='userpage'),
     path('folder/<int:pk>', views.folder, name='folder'),
     path('recommend/', views.recommend, name='recommend'),
     path('folders/', views.folders, name='folders'),

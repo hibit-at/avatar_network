@@ -8,3 +8,4 @@ avatar.json
 item.json
 check.html
 manual_check_of_item.py
+*.dump

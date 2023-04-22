@@ -713,7 +713,7 @@ def recommend(request):
             if len(res) == 0:
                 params['error'] = 'URL の解析に失敗しました。'
                 return render(request, 'recommend.html', params)
-            avatar_name = name_validation(res[0])
+            avatar_name = name_validation(res[0][:200])
             pat = r'"description":"(.*?)"'
             res = re.findall(pat, text)
             print(res)
@@ -747,7 +747,7 @@ def recommend(request):
             if len(res) == 0:
                 params['error'] = 'URL の解析に失敗しました。'
                 return render(request, 'recommend.html', params)
-            item_name = name_validation(res[0])
+            item_name = name_validation(res[0][:200])
             pat = r'"description":"(.*?)"'
             res = re.findall(pat, text)
             print(res)

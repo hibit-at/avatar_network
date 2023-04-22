@@ -49,7 +49,8 @@ def add_avatar(avatar_id):
     imageURL = f'https://booth.pximg.net/c/620x620{res[0]}_base_resized.jpg'
     print(imageURL)
 
-    pat = r'rel="noopener" href="https://(.*?).booth.pm/"><div class="u-d-flex u-align-items-center"><img alt="(.*?)"'
+    # pat = r'rel="noopener" href="https://(.*?).booth.pm/"><div class="u-d-flex u-align-items-center"><img alt="(.*?)"'
+    pat = r'rel="noopener" href="https://(.*?).booth.pm/"><img alt="(.*?)"'
     res = re.findall(pat,text)
     creator_id, creator_name = res[0]
     print(creator_id, creator_name)

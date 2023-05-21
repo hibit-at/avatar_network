@@ -24,6 +24,7 @@ def item_link_process(item_id):
     pat = r'<script type="application/ld\+json">(.*?)</script>'
     txt = txt.replace('\n','')
     check = re.findall(pat, txt)
+    total_link = []
     if len(check) > 0:
         main_txt = re.findall(pat, txt)[0]
         pat = r'https://booth.pm/(.*?)/items/(\d+)'
@@ -32,6 +33,7 @@ def item_link_process(item_id):
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat, main_txt)
         link_ids.extend(link_ids2)
+        total_link.extend(link_ids)
     else:
         print('first parse failure')
     # parse second step
@@ -46,6 +48,7 @@ def item_link_process(item_id):
         link_ids4 = re.findall(pat, scr_txt)
         link_ids.extend(link_ids3)
         link_ids.extend(link_ids4)
+        total_link.extend(link_ids)
     else:
         print('second step failure')
     # parse third step
@@ -59,9 +62,10 @@ def item_link_process(item_id):
         pat = r'https://[0-9a-zA-Z_\-]+.booth.pm/items/(\d+)'
         link_ids2 = re.findall(pat, main_txt)
         link_ids.extend(link_ids2)
-    link_ids = list(set(link_ids))
-    print(link_ids)
-    for link_id in link_ids:
+        total_link.extend(link_ids)
+    total_link = list(set(total_link))
+    print(total_link)
+    for link_id in total_link:
         if Avatar.objects.filter(avatar_id=link_id).exists():
             avatar_object = Avatar.objects.get(avatar_id=link_id)
             item.avatar.add(avatar_object)

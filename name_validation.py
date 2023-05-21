@@ -1,21 +1,9 @@
-targets = [
-    ('&amp;', '&'),
-    ('&gt;', '>'),
-    ('&lt;', '<'),
-    ('&#39;', "'"),
-    ('&quot;', '"'),
-]
-
+import html
 
 def org_rep(org):
-    ans = org
-    debug_count = 0
-    for target in targets:
-        before = target[0]
-        after = target[1]
-        if before in org:
-            ans = ans.replace(before, after)
-            print(f'{before} is replaced to {after} in {org}')
+    ans = html.unescape(org)
+    if org != ans:
+        print(f'{org} is unescaped to {ans}')
     return ans
 
 

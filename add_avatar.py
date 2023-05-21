@@ -2,30 +2,20 @@ import requests
 import re
 import os
 import django
-from datetime import date, datetime
+from datetime import datetime
 import pytz
+import html
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
 django.setup()
 
 from app.models import Creator, Avatar
 
-targets = [
-    ('&amp;', '&'),
-    ('&gt;', '>'),
-    ('&lt;', '<'),
-    ('&#39;', "'"),
-    ('&quot;', '"'),
-]
-
 
 def name_validation(org):
-    ans = org
-    for target in targets:
-        before = target[0]
-        after = target[1]
-        if before in org:
-            ans = ans.replace(before, after)
+    ans = html.unescape(org)
+    if org != ans:
+        print(f'{org} is unescaped to {ans}')
     return ans
 
 

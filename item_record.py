@@ -11,7 +11,7 @@ def process():
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
     django.setup()
-    from app.models import Avatar, Item
+    from app.models import Avatar
 
     for avatar in Avatar.objects.all():
         print(avatar)

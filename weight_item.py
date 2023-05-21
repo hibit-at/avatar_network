@@ -1,9 +1,4 @@
 import os
-from datetime import datetime
-import pytz
-import re
-import requests
-
 
 def weight_item_process(item_id):
     import django

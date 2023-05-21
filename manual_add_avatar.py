@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
-from urllib import request
 import pytz
 import re
 import requests
 
+from name_validation import org_rep
 
 def add_avatar(avatar_id):
     import django
@@ -12,31 +12,12 @@ def add_avatar(avatar_id):
     django.setup()
     from app.models import Creator, Avatar
 
-    targets = [
-        ('&amp;', '&'),
-        ('&gt;', '>'),
-        ('&lt;', '<'),
-        ('&#39;', "'"),
-        ('&quot;', '"'),
-    ]
 
     url = f'https://booth.pm/ja/items/{avatar_id}'
-
     text = requests.get(url).text
-
-    def name_validation(org):
-        ans = org
-        for target in targets:
-            before = target[0]
-            after = target[1]
-            if before in org:
-                ans = ans.replace(before, after)
-        return ans
-
-
     pat = r'<title>(.*?) - (.*?) - BOOTH</title>'
     res = re.findall(pat, text)
-    avatar_name = name_validation(res[0][0])
+    avatar_name = org_rep(res[0][0])
     print(avatar_name)
 
     pat = r'<div class="variation-price u-text-right">¥ (.*?)</div>'
@@ -79,4 +60,7 @@ def add_avatar(avatar_id):
     )
 
 if __name__ == '__main__':
-    add_avatar(0)
+    import sys
+    arg = sys.argv
+    if len(arg) == 2:
+        add_avatar(arg[1])

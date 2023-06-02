@@ -6,11 +6,11 @@
     <h3>
         {{ folder }}
         {% if folder.isOpen %}
-            (Public)
+            <button class="button-active" disabled>Public</button>
         {% else %}
-            (Private)
+            <button class="button-active" disabled>Private</button>
         {% endif %}
-        {% if folder.isNSFW %}(NSFW){% endif %}
+        {% if folder.isNSFW %}<button class="button-active" disabled>NSFW</button>{% endif %}
     </h3>
     <p>
         by {{ folder.editor }}
@@ -54,28 +54,28 @@
         <hr />
         <h3 class="deco">WANT</h3>
         {% if folder.want_avatar.all|length > 0 %}
-        <h4 class="deco">Avatars</h4>
-        <div class="boxContainer">
-            {% for avatar in folder.want_avatar.all %}
-                <div class="box">
-                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
-                        <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
-                    </a>
-                    <p>
-                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
-                        {% if folder.editor == user.customer %}
-                            <form method="post">
-                                {% csrf_token %}
-                                <button class="danger"
-                                        style="font-size:15px"
-                                        name="avatar_remove_want"
-                                        value="{{ avatar.avatar_id }}">Remove</button>
-                            </form>
-                        {% endif %}
-                    </p>
-                </div>
-            {% endfor %}
-        </div>
+            <h4 class="deco">Avatars</h4>
+            <div class="boxContainer">
+                {% for avatar in folder.want_avatar.all %}
+                    <div class="box">
+                        <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">
+                            <img alt="thumb" src="{{ avatar.imageURL }}" class="thumb" />
+                        </a>
+                        <p>
+                            <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar|truncatechars:30 }}</a>
+                            {% if folder.editor == user.customer %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button class="danger"
+                                            style="font-size:15px"
+                                            name="avatar_remove_want"
+                                            value="{{ avatar.avatar_id }}">Remove</button>
+                                </form>
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
         {% if folder.want_item.all|length > 0 %}
             <h4 class="deco">Items</h4>

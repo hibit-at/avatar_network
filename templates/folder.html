@@ -8,7 +8,7 @@
         {% if folder.isOpen %}
             <button class="button-active" disabled>Public</button>
         {% else %}
-            <button class="button-active" disabled>Private</button>
+            <img src="{% static 'private.png' %}"  height=30 width=30/>
         {% endif %}
         {% if folder.isNSFW %}<button class="button-active" disabled>NSFW</button>{% endif %}
     </h3>

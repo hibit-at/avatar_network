@@ -861,6 +861,9 @@ def all_folders(request):
     word = request.GET.get('word', '')
 
     folders = Folder.objects.filter(isOpen=True, name__contains=word).order_by('-editor')
+    folders = folders.annotate(num=Count(
+        'fav_avatar') + Count('fav_item') + Count('want_avatar') + Count('want_item'))
+    folders = folders.exclude(num=0)
 
     # Pagination
     # Get the 'page' query parameter, default to 1 if not found

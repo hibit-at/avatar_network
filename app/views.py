@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum
 from django.urls import reverse
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
@@ -89,7 +89,7 @@ def index(request):
         'supporters': supporters,
         'wanted_avatars': wanted_avatars,
         'wanted_items': wanted_items,
-        'folder' : lucky_folder,
+        'folder': lucky_folder,
     })
 
     return render(request, 'index.html', params)
@@ -312,7 +312,8 @@ def avatars(request, page=1, word='', free_only=False, sort_hot=False):
                 exclude_words = w.split('-')[1:]  # 単語を"-"で分割し、除外する単語を取得
                 exclude_query = Q()
                 for e_word in exclude_words:
-                    exclude_query = exclude_query | Q(avatar_name__contains=e_word)
+                    exclude_query = exclude_query | Q(
+                        avatar_name__contains=e_word)
                 avatars = avatars.exclude(exclude_query)  # 除外条件を適用
             else:
                 or_words = w.split('||')
@@ -440,7 +441,8 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
                 exclude_words = w.split('-')[1:]  # 単語を"-"で分割し、除外する単語を取得
                 exclude_query = Q()
                 for e_word in exclude_words:
-                    exclude_query = exclude_query | Q(item_name__contains=e_word)
+                    exclude_query = exclude_query | Q(
+                        item_name__contains=e_word)
                 items = items.exclude(exclude_query)  # 除外条件を適用
             else:
                 or_words = w.split('||')
@@ -449,7 +451,6 @@ def items(request, page=1, word='', free_only=False, sort_latest=False):
                     print(o)
                     or_query = or_query | Q(item_name__contains=o)
                 items = items.filter(or_query)
-
 
     if sort_latest:
         if sort_latest == 'off':
@@ -550,7 +551,8 @@ def userpage(request, pk=0):
     if user.is_authenticated:
         social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
-        has_discord_account = SocialAccount.objects.filter(user=user, provider='discord').exists()
+        has_discord_account = SocialAccount.objects.filter(
+            user=user, provider='discord').exists()
 
     print(has_discord_account)
     params['has_discord_account'] = has_discord_account
@@ -850,28 +852,35 @@ def folders(request):
 
 
 def all_folders(request):
-
-
     params = {}
     user = request.user
     if user.is_authenticated:
         social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
-    customers = Customer.objects.annotate(open_folder_count=Count('folder', filter=Q(folder__isOpen=True)))
-    customers = customers.filter(open_folder_count__gte=1)
-    customers = customers.order_by('-pk')
+
+    word = request.GET.get('word', '')
+
+    folders = Folder.objects.filter(isOpen=True, name__contains=word).order_by('-editor')
 
     # Pagination
-    page = request.GET.get('page', 1)  # Get the 'page' query parameter, default to 1 if not found
+    # Get the 'page' query parameter, default to 1 if not found
+    page = request.GET.get('page', 1)
     page = int(page)
     span = 9
     start = (page-1)*span
     end = page*span
-    customers_page = customers[start:end]
+    folder_page = folders[start:end]
 
-    params['customers'] = customers_page
+    initial = {'word': word}
+    form = Filter(initial=initial)
+
+    params['folders'] = folder_page
     params['page'] = page
+    params['word'] = word
+    params['total_folder_count'] = folders.count()
+    params['form'] = form
     return render(request, 'all_folders.html', params)
+
 
 @login_required
 def debug_folders(request):
@@ -924,9 +933,10 @@ def api_item(request):
     res = json.dumps(res, ensure_ascii=False, indent=4)
     return HttpResponse(res)
 
+
 def secure_login(request):
     params = {}
     user = request.user
     if user.is_authenticated:
         return redirect('app:index')
-    return render(request,'secure_login.html')
+    return render(request, 'secure_login.html')

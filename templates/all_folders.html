@@ -3,42 +3,38 @@
     {% load humanize %}
     {% load static %}
     <h3 class="deco">All Folders List</h3>
+    <form method="get" action="{% url 'app:all_folders' %}">
+        {{ form }}
+        <input type="submit" class="button" value="Filter" />
+        （{{ total_folder_count|intcomma }} creators）
+    </form>
     {% include 'page_object.html' with keyword='app:all_folders' %}
-    {% for customer in customers %}
+    {% for folder in folders %}
         <div class="creator">
-            <h4>{{ customer }}</h4>
-            {% for folder in customer.folder.all %}
-                {% if folder.isOpen %}
-                <div class="folder">
-                    <ul><a href="{% url 'app:folder' pk=folder.pk %}">{{ folder }}</a>
-                    <ul>
-                            {% for avatar in folder.want_avatar.all %}
-                                <li>
-                                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                                </li>
-                            {% endfor %}
-                            {% for item in folder.want_item.all %}
-                                <li>
-                                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                                </li>
-                            {% endfor %}
-                            {% for avatar in folder.fav_avatar.all %}
-                                <li>
-                                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
-                                </li>
-                            {% endfor %}
-                            {% for item in folder.fav_item.all %}
-                                <li>
-                                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
-                                </li>
-                            {% endfor %}
-                    </ul>
-                </ul>
-                </div>
-                {% endif %}
+            <a href="{% url 'app:folder' pk=folder.pk %}">{{ folder }}</a> by {{ folder.editor }}
+        <ul>
+            {% for avatar in folder.want_avatar.all %}
+                <li>
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                </li>
             {% endfor %}
-        </div>
-    {% endfor %}
-    
-    {% include 'page_object.html' with keyword='app:all_folders' %}
+            {% for item in folder.want_item.all %}
+                <li>
+                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                </li>
+            {% endfor %}
+            {% for avatar in folder.fav_avatar.all %}
+                <li>
+                    <a href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}">{{ avatar }}</a>
+                </li>
+            {% endfor %}
+            {% for item in folder.fav_item.all %}
+                <li>
+                    <a href="{% url 'app:item' item_id=item.item_id %}">{{ item }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+{% include 'page_object.html' with keyword='app:all_folders' %}
 {% endblock content %}

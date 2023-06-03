@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import dj_database_url
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -80,7 +81,6 @@ WSGI_APPLICATION = 'kaogaii2.wsgi.application'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-import dj_database_url
 
 if os.path.exists('local.py'):
     DEBUG = True
@@ -91,6 +91,17 @@ if os.path.exists('local.py'):
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+    from local import LOCALDB_NAME,LOCALDB_USER,LOCALDB_PASSWORD,LOCALDB_HOST,LOCALDB_PORT
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': LOCALDB_NAME,
+            'USER': LOCALDB_USER,
+            'PASSWORD': LOCALDB_PASSWORD,
+            'HOST': LOCALDB_HOST,
+            'PORT': LOCALDB_PORT,
         }
     }
 else:

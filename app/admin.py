@@ -6,9 +6,11 @@ from .models import *
 
 class AvatarAdmin(admin.ModelAdmin):
     search_fields = ['avatar_name']
+    readonly_fields = ['creator']
 
 class ItemAdmin(admin.ModelAdmin):
     search_fields = ['item_name']
+    readonly_fields = ['creator','avatar']
 
 admin.site.register(Creator)
 admin.site.register(Avatar, AvatarAdmin)

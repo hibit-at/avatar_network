@@ -6,7 +6,7 @@
     <form method="get" action="{% url 'app:all_folders' %}">
         {{ form }}
         <input type="submit" class="button" value="Filter" />
-        （{{ total_folder_count|intcomma }} creators）
+        （{{ total_folder_count|intcomma }} folders）
     </form>
     {% include 'page_object.html' with keyword='app:all_folders' %}
     {% for folder in folders %}

@@ -211,6 +211,8 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
     params = {}
     user = request.user
     avatar = Avatar.objects.get(avatar_id=avatar_id)
+    folder_fav_items = None
+    folder_want_items = None
     if user.is_authenticated:
         social = SocialAccount.objects.filter(user=user).first()
         params['social'] = social
@@ -230,6 +232,10 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
         params['folders'] = folders
         params['folders_some_added'] = some_added
         params['folders_some_added_want'] = some_added_want
+        folder_fav_items = dict(
+            [(folder, folder.fav_item.all()) for folder in folders])
+        folder_want_items = dict(
+            [(folder, folder.want_item.all()) for folder in folders])
     page = int(request.GET.get('page', page))
     sort_latest = request.GET.get('sort_latest', sort_latest)
     params['sort_latest'] = sort_latest
@@ -257,6 +263,20 @@ def avatar(request, avatar_id=1, page=1, sort_latest=False):
         if Customer.objects.filter(highlight=normal_item.creator):
             print("hit")
             setattr(normal_item, 'isHighlight', True)
+    if folder_fav_items:
+        for item in genuine_items:
+            setattr(item, 'folders_owned', set(
+                filter(lambda folder: item in folder_fav_items[folder], folders)))
+        for item in normal_items:
+            setattr(item, 'folders_owned', set(
+                filter(lambda folder: item in folder_fav_items[folder], folders)))
+    if folder_want_items:
+        for item in genuine_items:
+            setattr(item, 'folders_wanted', set(
+                filter(lambda folder: item in folder_want_items[folder], folders)))
+        for item in normal_items:
+            setattr(item, 'folders_wanted', set(
+                filter(lambda folder: item in folder_want_items[folder], folders)))
     params.update({
         'page': page,
         'avatar': avatar,

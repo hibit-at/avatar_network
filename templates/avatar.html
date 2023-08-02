@@ -2,6 +2,7 @@
 {% block content %}
     {% load humanize %}
     {% load static %}
+    <script src="{% static 'list_folder_form.js' %}"></script>
     <h3 class="deco">Avatar Page</h3>
     <h3>{{ avatar }}</h3>
     <p>
@@ -28,9 +29,9 @@
            target="blank">BOOTH Link</a>
     </p>
     {% if user.is_authenticated %}
-        <div class="btn-group dropright">
+        <div class="list_folder_button_container btn-group dropright">
             <button type="button"
-                    class="btn btn-secondary dropdown-toggle {% if folders_some_added_want %}button_already{% else %}button{% endif %}"
+                    class="list_folder_button btn btn-secondary dropdown-toggle {% if folders_some_added_want %}button_already{% else %}button{% endif %}"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false">
@@ -47,7 +48,7 @@
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
                        {% if folder.notadd_want %}
-                       <form method="post" style="display:inline">
+                       <form class="list_folder_form" method="post" style="display:inline">
                            {% csrf_token %}
                            <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
                         </form>
@@ -59,9 +60,9 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="btn-group dropright">
+        <div class="list_folder_button_container btn-group dropright">
             <button type="button"
-                    class="btn btn-secondary dropdown-toggle {% if folders_some_added %}button_already{% else %}button{% endif %}"
+                    class="list_folder_button btn btn-secondary dropdown-toggle {% if folders_some_added %}button_already{% else %}button{% endif %}"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false">
@@ -78,7 +79,7 @@
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
                         {% if folder.notadd %}
-                        <form method="post" style="display:inline">
+                        <form class="list_folder_form" method="post" style="display:inline">
                             {% csrf_token %}
                             <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                         </form>

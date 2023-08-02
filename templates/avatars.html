@@ -48,9 +48,9 @@
                 </a>
                 {% if user.is_authenticated %}
                     <div>
-                        <div class="btn-group dropright">
+                        <div class="list_folder_button_container btn-group dropright">
                             <button type="button"
-                                    class="btn btn-secondary dropdown-toggle {% if avatar.folders_wanted %}button_already{% else %}button{% endif %}"
+                                    class="list_folder_button btn btn-secondary dropdown-toggle {% if avatar.folders_wanted %}button_already{% else %}button{% endif %}"
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
@@ -82,9 +82,9 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="btn-group dropright">
+                    <div class="list_folder_button_container btn-group dropright">
                         <button type="button"
-                                class="btn btn-secondary dropdown-toggle {% if avatar.folders_owned %}button_already{% else %}button{% endif %}"
+                                class="list_folder_button btn btn-secondary dropdown-toggle {% if avatar.folders_owned %}button_already{% else %}button{% endif %}"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">

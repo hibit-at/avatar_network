@@ -2,7 +2,7 @@
 {% block content %}
     {% load humanize %}
     {% load static %}
-    <script src="{% static 'list_folder_form.js' %}"></script>
+    <script src="{% static 'folder_form.js' %}"></script>
     <h3 class="deco">Items List</h3>
     <form method="get" action="{% url 'app:items' %}">
         {{ form }}
@@ -45,9 +45,9 @@
                     </a>
                 </p>
                 {% if user.is_authenticated %}
-                    <div class="list_folder_button_container btn-group dropright">
+                    <div class="folder_button_container btn-group dropright">
                         <button type="button"
-                                class="list_folder_button btn btn-secondary dropdown-toggle {% if item.folders_wanted %}button_already{% else %}button{% endif %}"
+                                class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_wanted %}button_already{% else %}button{% endif %}"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
@@ -64,7 +64,7 @@
                                href="{% url 'app:folder' pk=folder.pk %}"
                                style="display:inline;line-height:40px">
                                 {% if folder not in item.folders_wanted %}
-                                    <form class="list_folder_form"
+                                    <form class="folder_form"
                                           method="post"
                                           style="display:inline"
                                           action="{% url 'app:item' item_id=item.item_id %}">
@@ -79,9 +79,9 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="list_folder_button_container btn-group dropright">
+                <div class="folder_button_container btn-group dropright">
                     <button type="button"
-                            class="list_folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
+                            class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
                             data-toggle="dropdown"
                             aria-haspopup="true"
                             aria-expanded="false"
@@ -99,7 +99,7 @@
                            href="{% url 'app:folder' pk=folder.pk %}"
                            style="display:inline;line-height:40px">
                             {% if folder not in item.folders_owned %}
-                                <form class="list_folder_form"
+                                <form class="folder_form"
                                       method="post"
                                       style="display:inline"
                                       action="{% url 'app:item' item_id=item.item_id %}">

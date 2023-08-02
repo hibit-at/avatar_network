@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {HTMLDivElement} $container 
      */
     function setupButtonContainer($container) {
-        const $parentButton = /** @type {HTMLButtonElement} */($container.querySelector(".list_folder_button"));
-        const $forms = /** @type {NodeListOf<HTMLFormElement>} */($container.querySelectorAll(".list_folder_form"));
+        const $parentButton = /** @type {HTMLButtonElement} */($container.querySelector(".folder_button"));
+        const $forms = /** @type {NodeListOf<HTMLFormElement>} */($container.querySelectorAll(".folder_form"));
 
         for (let i = 0; i < $forms.length; i++) {
             const $form = $forms[i];
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const $containers = /** @type {NodeListOf<HTMLDivElement>} */(document.querySelectorAll(".list_folder_button_container"));
+    const $containers = /** @type {NodeListOf<HTMLDivElement>} */(document.querySelectorAll(".folder_button_container"));
     for (let i = 0; i < $containers.length; i++) {
         setupButtonContainer($containers[i]);
     }

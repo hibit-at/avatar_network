@@ -218,6 +218,18 @@ a:hover {
     font-weight: bold;
 }
 
+.thumbnail_box_folder_button_container
+{
+    display: inline-block;
+}
+
+.thumbnail_box_folder_button_container .button_already,
+.thumbnail_box_folder_button_container .button
+{
+    font-size: .8rem;
+    padding: .2rem;
+}
+
 .danger {
     font-size: 20px;
     border-radius: 5px;

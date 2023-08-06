@@ -2,6 +2,7 @@
 {% block content %}
     {% load humanize %}
     {% load static %}
+    <script src="{% static 'folder_form.js' %}"></script>
     <h3 class="deco">Avatar Page</h3>
     <h3>{{ avatar }}</h3>
     <p>
@@ -28,17 +29,12 @@
            target="blank">BOOTH Link</a>
     </p>
     {% if user.is_authenticated %}
-        <div class="btn-group dropright">
+        <div class="folder_button_container btn-group dropright">
             <button type="button"
-                    class="btn btn-secondary dropdown-toggle"
+                    class="folder_button btn btn-secondary dropdown-toggle {% if folders_some_added_want %}button_already{% else %}button{% endif %}"
                     data-toggle="dropdown"
                     aria-haspopup="true"
-                    aria-expanded="false"
-                    {% if folders_some_added_want %}
-                    style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                    {% else %}
-                    style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                    {% endif %}
+                    aria-expanded="false">
                 {% if folders_some_added_want %}
                 ✔ WANT
                 {% else %}
@@ -52,7 +48,7 @@
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
                        {% if folder.notadd_want %}
-                       <form method="post" style="display:inline">
+                       <form class="folder_form" method="post" style="display:inline">
                            {% csrf_token %}
                            <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
                         </form>
@@ -64,17 +60,12 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="btn-group dropright">
+        <div class="folder_button_container btn-group dropright">
             <button type="button"
-                    class="btn btn-secondary dropdown-toggle"
+                    class="folder_button btn btn-secondary dropdown-toggle {% if folders_some_added %}button_already{% else %}button{% endif %}"
                     data-toggle="dropdown"
                     aria-haspopup="true"
-                    aria-expanded="false"
-                    {% if folders_some_added %}
-                    style="background-color:white;color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                    {% else %}
-                    style="background-color:lightpink;border: 2px solid lightpink;font-size:20px;font-weight:bold">
-                    {% endif %}
+                    aria-expanded="false">
                 {% if folders_some_added %}
                 ✔ OWNED
                 {% else %}
@@ -88,7 +79,7 @@
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
                         {% if folder.notadd %}
-                        <form method="post" style="display:inline">
+                        <form class="folder_form" method="post" style="display:inline">
                             {% csrf_token %}
                             <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                         </form>
@@ -110,7 +101,7 @@
                     <a href="{% url 'app:item' item_id=item.item_id %}">
                         <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
                     </a>
-                    <p>
+                    <div>
                         <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
                         by
                         <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
@@ -123,7 +114,81 @@
                         <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
                             <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}"  />
                         </a>
-                    </p>
+
+
+                        {% if user.is_authenticated %}
+                            <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
+                                <button type="button"
+                                        class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_wanted %}button_already{% else %}button{% endif %}"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                    {% if item.folders_wanted %}
+                                        ✔ W
+                                    {% else %}
+                                        +W
+                                    {% endif %}
+                                </button>
+                                <div class="dropdown-menu">
+                                    <!-- Dropdown menu links -->
+                                    {% for folder in folders %}
+                                        <a class="dropdown-item"
+                                        href="{% url 'app:folder' pk=folder.pk %}"
+                                        style="display:inline;line-height:40px">
+                                            {% if folder not in item.folders_wanted %}
+                                                <form class="folder_form"
+                                                    method="post"
+                                                    style="display:inline"
+                                                    action="{% url 'app:item' item_id=item.item_id %}">
+                                                    {% csrf_token %}
+                                                    <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                                                </form>
+                                            {% else %}
+                                                <button class="button_already" disabled>Added</button>
+                                            {% endif %}
+                                            {{ folder }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
+                                <button type="button"
+                                        class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                        >
+                                    {% if item.folders_owned %}
+                                        ✔ O
+                                    {% else %}
+                                        +O
+                                    {% endif %}
+                                </button>
+                                <div class="dropdown-menu">
+                                    <!-- Dropdown menu links -->
+                                    {% for folder in folders %}
+                                        <a class="dropdown-item"
+                                        href="{% url 'app:folder' pk=folder.pk %}"
+                                        style="display:inline;line-height:40px">
+                                            {% if folder not in item.folders_owned %}
+                                                <form class="folder_form"
+                                                    method="post"
+                                                    style="display:inline"
+                                                    action="{% url 'app:item' item_id=item.item_id %}">
+                                                    {% csrf_token %}
+                                                    <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
+                                                </form>
+                                            {% else %}
+                                                <button class="button_already" disabled>Added</button>
+                                            {% endif %}
+                                            {{ folder }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -182,7 +247,7 @@
                         <a href="{% url 'app:item' item_id=item.item_id %}">
                             <img alt="thumb" src="{{ item.imageURL }}" class="thumb" />
                         </a>
-                        <p>
+                        <div>
                             <a href="{% url 'app:item' item_id=item.item_id %}">{{ item|truncatechars:30 }}</a>
                             by
                             <a href="{% url 'app:creator' creator_id=item.creator.creator_id %}">{{ item.creator|truncatechars:30 }}</a>
@@ -195,7 +260,80 @@
                             <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
                                 <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}" />
                             </a>
-                        </p>
+
+                            {% if user.is_authenticated %}
+                                <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
+                                    <button type="button"
+                                            class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_wanted %}button_already{% else %}button{% endif %}"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                        {% if item.folders_wanted %}
+                                            ✔ W
+                                        {% else %}
+                                            +W
+                                        {% endif %}
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <!-- Dropdown menu links -->
+                                        {% for folder in folders %}
+                                            <a class="dropdown-item"
+                                            href="{% url 'app:folder' pk=folder.pk %}"
+                                            style="display:inline;line-height:40px">
+                                                {% if folder not in item.folders_wanted %}
+                                                    <form class="folder_form"
+                                                        method="post"
+                                                        style="display:inline"
+                                                        action="{% url 'app:item' item_id=item.item_id %}">
+                                                        {% csrf_token %}
+                                                        <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                                                    </form>
+                                                {% else %}
+                                                    <button class="button_already" disabled>Added</button>
+                                                {% endif %}
+                                                {{ folder }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
+                                    <button type="button"
+                                            class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            >
+                                        {% if item.folders_owned %}
+                                            ✔ O
+                                        {% else %}
+                                            +O
+                                        {% endif %}
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <!-- Dropdown menu links -->
+                                        {% for folder in folders %}
+                                            <a class="dropdown-item"
+                                            href="{% url 'app:folder' pk=folder.pk %}"
+                                            style="display:inline;line-height:40px">
+                                                {% if folder not in item.folders_owned %}
+                                                    <form class="folder_form"
+                                                        method="post"
+                                                        style="display:inline"
+                                                        action="{% url 'app:item' item_id=item.item_id %}">
+                                                        {% csrf_token %}
+                                                        <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
+                                                    </form>
+                                                {% else %}
+                                                    <button class="button_already" disabled>Added</button>
+                                                {% endif %}
+                                                {{ folder }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
                     </div>
                 {% endfor %}
             </div>

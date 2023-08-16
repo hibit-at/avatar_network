@@ -299,6 +299,10 @@ a:hover {
     position: absolute;
 }
 
+.dropdown-menu {
+    margin-top: 0;
+}
+
 .dropdown:hover .dropdown-menu {
     display: block;
 }

@@ -1,10 +1,17 @@
 import html
 
 def org_rep(org):
+    # HTMLエスケープ文字の変換
     ans = html.unescape(org)
     if org != ans:
         print(f'{org} is unescaped to {ans}')
-    return ans
+    
+    # NUL文字の削除
+    cleaned_ans = ans.replace("\x00", "")
+    if ans != cleaned_ans:
+        print(f'NUL characters removed from {ans} to {cleaned_ans}')
+    
+    return cleaned_ans
 
 
 if __name__ == '__main__':

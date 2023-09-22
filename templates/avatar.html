@@ -36,9 +36,9 @@
                     aria-haspopup="true"
                     aria-expanded="false">
                 {% if folders_some_added_want %}
-                ✔ WANT
+                    ✔ WANT
                 {% else %}
-                +WANT
+                    +WANT
                 {% endif %}
             </button>
             <div class="dropdown-menu">
@@ -47,13 +47,13 @@
                     <a class="dropdown-item"
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
-                       {% if folder.notadd_want %}
-                       <form class="folder_form" method="post" style="display:inline">
-                           {% csrf_token %}
-                           <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
-                        </form>
+                        {% if folder.notadd_want %}
+                            <form class="folder_form" method="post" style="display:inline">
+                                {% csrf_token %}
+                                <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                            </form>
                         {% else %}
-                        <button class="button_already" disabled>Added</button>
+                            <button class="button_already" disabled>Added</button>
                         {% endif %}
                         {{ folder }}
                     </a>
@@ -67,9 +67,9 @@
                     aria-haspopup="true"
                     aria-expanded="false">
                 {% if folders_some_added %}
-                ✔ OWNED
+                    ✔ OWNED
                 {% else %}
-                +OWNED
+                    +OWNED
                 {% endif %}
             </button>
             <div class="dropdown-menu">
@@ -79,12 +79,12 @@
                        href="{% url 'app:folder' pk=folder.pk %}"
                        style="display:inline;line-height:40px">
                         {% if folder.notadd %}
-                        <form class="folder_form" method="post" style="display:inline">
-                            {% csrf_token %}
-                            <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
-                        </form>
+                            <form class="folder_form" method="post" style="display:inline">
+                                {% csrf_token %}
+                                <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
+                            </form>
                         {% else %}
-                        <button class="button_already" disabled>Added</button>
+                            <button class="button_already" disabled>Added</button>
                         {% endif %}
                         {{ folder }}
                     </a>
@@ -114,8 +114,6 @@
                         <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
                             <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}"  />
                         </a>
-
-
                         {% if user.is_authenticated %}
                             <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
                                 <button type="button"
@@ -133,13 +131,13 @@
                                     <!-- Dropdown menu links -->
                                     {% for folder in folders %}
                                         <a class="dropdown-item"
-                                        href="{% url 'app:folder' pk=folder.pk %}"
-                                        style="display:inline;line-height:40px">
+                                           href="{% url 'app:folder' pk=folder.pk %}"
+                                           style="display:inline;line-height:40px">
                                             {% if folder not in item.folders_wanted %}
                                                 <form class="folder_form"
-                                                    method="post"
-                                                    style="display:inline"
-                                                    action="{% url 'app:item' item_id=item.item_id %}">
+                                                      method="post"
+                                                      style="display:inline"
+                                                      action="{% url 'app:item' item_id=item.item_id %}">
                                                     {% csrf_token %}
                                                     <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
                                                 </form>
@@ -156,8 +154,7 @@
                                         class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
                                         data-toggle="dropdown"
                                         aria-haspopup="true"
-                                        aria-expanded="false"
-                                        >
+                                        aria-expanded="false">
                                     {% if item.folders_owned %}
                                         ✔ O
                                     {% else %}
@@ -168,13 +165,13 @@
                                     <!-- Dropdown menu links -->
                                     {% for folder in folders %}
                                         <a class="dropdown-item"
-                                        href="{% url 'app:folder' pk=folder.pk %}"
-                                        style="display:inline;line-height:40px">
+                                           href="{% url 'app:folder' pk=folder.pk %}"
+                                           style="display:inline;line-height:40px">
                                             {% if folder not in item.folders_owned %}
                                                 <form class="folder_form"
-                                                    method="post"
-                                                    style="display:inline"
-                                                    action="{% url 'app:item' item_id=item.item_id %}">
+                                                      method="post"
+                                                      style="display:inline"
+                                                      action="{% url 'app:item' item_id=item.item_id %}">
                                                     {% csrf_token %}
                                                     <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
                                                 </form>
@@ -187,7 +184,6 @@
                                 </div>
                             </div>
                         {% endif %}
-
                     </div>
                 </div>
             {% endfor %}
@@ -233,7 +229,9 @@
                     <button name="sort_latest" value="off" class="button">to Price</button>
                 {% else %}
                     <span style="font-size:14px">Sort by Price</span>
-                    <button name="sort_latest" value="on" class="button">to Latest</button>
+                    <button name="sort_latest" value="on" class="button">
+                        to Latest
+                    </button>
                 {% endif %}
             </form>
         </h4>
@@ -260,7 +258,6 @@
                             <a href="https://booth.pm/ja/items/{{ item.item_id }}" target="blank">
                                 <img alt="emoji" class="emoji" src="{% static 'BOOTH_emoji.png' %}" />
                             </a>
-
                             {% if user.is_authenticated %}
                                 <div class="folder_button_container thumbnail_box_folder_button_container btn-group dropright">
                                     <button type="button"
@@ -278,18 +275,22 @@
                                         <!-- Dropdown menu links -->
                                         {% for folder in folders %}
                                             <a class="dropdown-item"
-                                            href="{% url 'app:folder' pk=folder.pk %}"
-                                            style="display:inline;line-height:40px">
+                                               href="{% url 'app:folder' pk=folder.pk %}"
+                                               style="display:inline;line-height:40px">
                                                 {% if folder not in item.folders_wanted %}
                                                     <form class="folder_form"
-                                                        method="post"
-                                                        style="display:inline"
-                                                        action="{% url 'app:item' item_id=item.item_id %}">
+                                                          method="post"
+                                                          style="display:inline"
+                                                          action="{% url 'app:item' item_id=item.item_id %}">
                                                         {% csrf_token %}
-                                                        <button class="button" name="add_want" value="{{ folder.pk }}">+WANT</button>
+                                                        <button class="button" name="add_want" value="{{ folder.pk }}">
+                                                            +WANT
+                                                        </button>
                                                     </form>
                                                 {% else %}
-                                                    <button class="button_already" disabled>Added</button>
+                                                    <button class="button_already" disabled>
+                                                        Added
+                                                    </button>
                                                 {% endif %}
                                                 {{ folder }}
                                             </a>
@@ -301,8 +302,7 @@
                                             class="folder_button btn btn-secondary dropdown-toggle {% if item.folders_owned %}button_already{% else %}button{% endif %}"
                                             data-toggle="dropdown"
                                             aria-haspopup="true"
-                                            aria-expanded="false"
-                                            >
+                                            aria-expanded="false">
                                         {% if item.folders_owned %}
                                             ✔ O
                                         {% else %}
@@ -313,18 +313,22 @@
                                         <!-- Dropdown menu links -->
                                         {% for folder in folders %}
                                             <a class="dropdown-item"
-                                            href="{% url 'app:folder' pk=folder.pk %}"
-                                            style="display:inline;line-height:40px">
+                                               href="{% url 'app:folder' pk=folder.pk %}"
+                                               style="display:inline;line-height:40px">
                                                 {% if folder not in item.folders_owned %}
                                                     <form class="folder_form"
-                                                        method="post"
-                                                        style="display:inline"
-                                                        action="{% url 'app:item' item_id=item.item_id %}">
+                                                          method="post"
+                                                          style="display:inline"
+                                                          action="{% url 'app:item' item_id=item.item_id %}">
                                                         {% csrf_token %}
-                                                        <button class="button" name="add" value="{{ folder.pk }}">+OWNED</button>
+                                                        <button class="button" name="add" value="{{ folder.pk }}">
+                                                            +OWNED
+                                                        </button>
                                                     </form>
                                                 {% else %}
-                                                    <button class="button_already" disabled>Added</button>
+                                                    <button class="button_already" disabled>
+                                                        Added
+                                                    </button>
                                                 {% endif %}
                                                 {{ folder }}
                                             </a>
@@ -332,7 +336,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-
                         </div>
                     </div>
                 {% endfor %}
@@ -356,7 +359,9 @@
                             </a>
                         {% endif %}
                     </div>
-                    <div>page {{ page }}</div>
+                    <div>
+                        page {{ page }}
+                    </div>
                     <div>
                         <a class="Link"
                            href="{% url 'app:avatar' avatar_id=avatar.avatar_id %}?page={{ page|add:1 }}{% if sort_latest %}&sort_latest=on{% endif %}">></a>

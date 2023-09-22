@@ -7,7 +7,7 @@ def weight_item_process(item_id):
     from app.models import Creator, Item, Avatar
 
     for item in Item.objects.all():
-        # print(item)
+        print(item)
         weight_value = 0
         for avatar in item.avatar.all():
             # print(f'...{avatar}')

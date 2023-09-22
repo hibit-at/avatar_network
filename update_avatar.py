@@ -26,8 +26,5 @@ for avatar in Avatar.objects.filter(created_at__lt = criteria).order_by('created
     check = re.findall(pat,txt)
     if len(check) == 0:
         print('parse impossible')
-        avatar.created_at = datetime.now(pytz.timezone('Asia/Tokyo'))
-        avatar.save()
-        continue
     avatar.created_at = datetime.now(pytz.timezone('Asia/Tokyo'))
     avatar.save()

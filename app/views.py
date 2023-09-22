@@ -930,16 +930,10 @@ def please(request):
 
 
 def api_avatar(request):
-    avatars = Avatar.objects.all()
-    res = []
-    for avatar in avatars:
-        row = {}
-        row['name'] = avatar.avatar_name
-        row['price'] = avatar.price
-        row['num_items'] = avatar.items.count()
-        res.append(row)
+    limit = request.GET.get('limit',0)
+    avatars = Avatar.objects.annotate(item_count=Count('items')).filter(item_count__gte=limit).order_by('-item_count').values('avatar_name','price','item_count','imageURL')
     import json
-    res = json.dumps(res, ensure_ascii=False, indent=4)
+    res = json.dumps(list(avatars), ensure_ascii=False, indent=4)
     return HttpResponse(res)
 
 

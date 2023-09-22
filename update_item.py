@@ -6,6 +6,9 @@ import django
 from datetime import datetime, timedelta
 import pytz
 
+DAYS_AGO = 7
+MAX_ITEMS = 100
+
 def item_link_process(item_id):
     import django
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
@@ -75,14 +78,14 @@ def item_link_process(item_id):
 def process(force=False):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kaogaii2.settings')
     django.setup()
-    from app.models import Avatar, Item
+    from app.models import Item
 
-    criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=7)
+    criteria = datetime.now(pytz.timezone('Asia/Tokyo')) - timedelta(days=DAYS_AGO)
 
     target_items = Item.objects.all()
     if not force:
         target_items = target_items.filter(created_at__lt=criteria)
-    target_items = target_items.order_by('created_at')[:100]
+    target_items = target_items.order_by('created_at')[:MAX_ITEMS]
 
     for item in target_items:
         item_id = item.item_id

@@ -1,10 +1,5 @@
-import requests
-import re
 import os
-import sys
 import django
-from datetime import datetime, timedelta
-import pytz
 
 
 def process():
@@ -24,6 +19,7 @@ def process():
         avatar.item_num_0 = avatar.items.all().count()
         avatar.item_hot = avatar.item_num_0 - avatar.item_num_6
         avatar.save()
+
 
 if __name__ == '__main__':
     process()

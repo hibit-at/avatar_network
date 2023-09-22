@@ -931,7 +931,7 @@ def please(request):
 
 def api_avatar(request):
     limit = request.GET.get('limit',0)
-    limit = max(limit,1)
+    limit = max(int(limit),1)
     avatars = Avatar.objects.annotate(item_count=Count('items')).filter(item_count__gte=limit).order_by('-item_count').values('avatar_name','price','item_count','imageURL')
     import json
     res = json.dumps(list(avatars), ensure_ascii=False, indent=4)

@@ -872,6 +872,14 @@ def folders(request):
 
 
 def all_folders(request):
+
+    # emergency blocking
+    page = request.GET.get('page', 1)
+    if int(page) >= 100:
+        print('emergency blocking')
+        return redirect('app:index')
+    # 
+
     params = {}
     user = request.user
     if user.is_authenticated:

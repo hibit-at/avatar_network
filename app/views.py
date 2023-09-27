@@ -877,7 +877,7 @@ def all_folders(request):
     page = request.GET.get('page', 1)
     if int(page) >= 100:
         print('emergency blocking')
-        return redirect('app:index')
+        return render(request,'emergency.html')
     # 
 
     params = {}

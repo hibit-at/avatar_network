@@ -79,7 +79,7 @@ def upload_to_s3(img_data, file_name):
     timestamped_file_name = f"{date_str}-{file_name}"
 
     # バイトデータをS3バケットにアップロード
-    s3.put_object(Bucket=BUCKET_NAME,
+    s3.put_object(Bucket=str(BUCKET_NAME),
                   Key=timestamped_file_name,
                   Body=BytesIO(img_data),
                   ContentType='image/png')
@@ -91,6 +91,8 @@ if __name__ == '__main__':
         limit = int(sys.argv[1])
     print(limit)
     data = get_data(limit)
+    print(len(data))
     # create_image(data)
     img_data = create_image(data)
     upload_to_s3(img_data, 'summary.png')
+    print('finished')

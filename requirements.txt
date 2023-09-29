@@ -4,3 +4,5 @@ django-heroku
 requests
 django-allauth
 pytz
+Pillow
+boto3
